@@ -28,7 +28,7 @@ Além disso, o sistema também poderá auxiliar no controle de participantes nos
   npm i 
   npm run dev
   ``` 
- Faça login como admin Admin@123
+ Faça login como admin Admin123
 
 Criado por:
 - [Camila Sbrussi](https://github.com/camisbrussi/) 
