@@ -24,7 +24,8 @@ Além disso, o sistema também poderá auxiliar no controle de participantes nos
 ## Instalação local
 1. Faça clone do projeto;
 2. na pasta do projeto
-  ```npm i 
+  ```
+  npm i 
   npm run dev
   ``` 
  Faça login como admin Admin@123
