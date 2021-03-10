@@ -2,8 +2,8 @@
 
 <p align="center">
  
-  <a href="https://github.com/camisbrussi/4School_API/commits/master">
-    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/camisbrussi/4School_API">
+  <a href="https://github.com/camisbrussi/4School_frontend_JS/commits/master">
+    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/camisbrussi/4School_frontend_JS">
   </a>
 
 </p>
