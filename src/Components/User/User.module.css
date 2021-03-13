@@ -1,0 +1,23 @@
+.users {
+  margin-top: 30px;
+}
+
+.list {
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  margin: 10px 0 20px 0;
+}
+
+.list span {
+  width: 100%;
+}
+
+.buttons {
+  width: 40%;
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+}

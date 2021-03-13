@@ -1,18 +1,21 @@
 import React from 'react';
-import UserHeaderNav from './UserHeaderNav';
-import styles from './UserHeader.module.css';
+import AdminPanelHeaderNav from '../AdminPanel/AdminPanelHeaderNav';
+import styles from './AdminPanelHeader.module.css';
 import { useLocation } from 'react-router-dom';
 
-const UserHeader = () => {
+const AdminPanelHeader = () => {
   const [title, setTitle] = React.useState('');
   const location = useLocation();
 
   React.useEffect(() => {
     const { pathname } = location;
     switch (pathname) {
-      case '/conta/postar':
-        setTitle('Criar um usuário');
+      case '/conta/users':
+        setTitle('Usuários');
         break;
+        case '/conta/activities':
+          setTitle('Atividades');
+          break;
       default:
         setTitle('Painel Administrativo');
     }
@@ -21,9 +24,9 @@ const UserHeader = () => {
   return (
     <header className={styles.header}>
       <h1 className="title">{title}</h1>
-      <UserHeaderNav />
+      <AdminPanelHeaderNav />
     </header>
   );
 };
 
-export default UserHeader;
+export default AdminPanelHeader;

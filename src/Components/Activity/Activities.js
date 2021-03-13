@@ -1,0 +1,65 @@
+import React, { useEffect, useState } from 'react';
+import Head from '../Helper/Head';
+import { FaEdit, FaWindowClose } from 'react-icons/fa'
+import { Link } from 'react-router-dom';
+import styles from './Activities.module.css'
+import axios from "axios";
+import stylesBtn from '../Forms/Button.module.css';
+
+const Activities = () => {
+
+  const [activities, setActivities] = useState([]);
+
+
+  useEffect(() =>{ 
+    async function getData(){
+      const userdata = await axios.get(`http://localhost:3002/activities`);
+      setActivities(userdata.data)
+    } 
+    getData();
+  },[ ]);
+
+  function date(datetime){
+    var date = new Date(datetime)
+
+    return date.toLocaleString('pt-BR')
+  }
+
+
+
+  return (
+    <section className="animeLeft">
+      <Head title="User" />
+      <h1 className="title title-2">Atividades</h1>
+      <Link className={stylesBtn.button} to="createactivity">Cadastrar</Link>
+      <div className={styles.activities}>
+      {activities.map(activity => (
+        
+        <div key={String(activity.id) } className={styles.list}>
+          
+            <span>{activity.name}</span>
+
+            <span>{date(activity.start)}</span>
+            <span>{date(activity.end)}</span>
+          <div className={styles.buttons}> 
+            <Link 
+              to={`edit/${activity.id}`}>
+                <FaEdit 
+                size={16}
+                style={{color: 'blue'}}/>
+                </Link>
+            <Link 
+            to={`delete/${activity.id}`}>
+              <FaWindowClose 
+              size={16}
+              style={{color: 'red'}}/>
+              </Link>
+            </div>
+        </div>
+      ))}
+      </div>
+    </section>
+  );
+};
+
+export default Activities;

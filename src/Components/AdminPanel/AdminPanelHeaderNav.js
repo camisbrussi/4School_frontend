@@ -1,11 +1,10 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
-import { ReactComponent as Adicionar } from '../../Assets/adicionar.svg';
-import styles from './UserHeaderNav.module.css';
+import styles from './AdminPanelHeaderNav.module.css';
 import useMedia from '../../Hooks/useMedia';
 
-const UserHeaderNav = () => {
+const AdminPanelHeaderNav = () => {
   
   const mobile = useMedia('(max-width: 40rem)');
   const [mobileMenu, setMobileMenu] = React.useState(false);
@@ -32,15 +31,15 @@ const UserHeaderNav = () => {
           mobileMenu && styles.navMobileActive
         }`}
       >
-        <NavLink to="/conta/createuser" end activeClassName={styles.active}>Criar Usuário
-          {mobile && 'Criar Usuário'}
+        <NavLink to="/conta/users" end activeClassName={styles.active} className={styles.menu}>Usuário
+          {mobile && 'Usuário'}
         </NavLink>
-        <NavLink to="/conta/createactivity" end activeClassName={styles.active}>Criar Atividade
-          {mobile && 'Criar Usuário'}
+        <NavLink to="/conta/activities" end activeClassName={styles.active} className={styles.menu}>Atividade
+          {mobile && 'Atividades'}
         </NavLink>
       </nav>
     </>
   );
 };
 
-export default UserHeaderNav;
+export default AdminPanelHeaderNav;

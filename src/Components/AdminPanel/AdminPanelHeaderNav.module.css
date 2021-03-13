@@ -1,7 +1,9 @@
-.nav {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+.menu {
+  margin-bottom: 10px;
+}
+
+h1 {
+  white-space: nowrap !important;
 }
 
 .nav a,
@@ -31,11 +33,11 @@
 .nav a.active {
   background: white;
   filter: brightness(0.9);
-  border-color: var(--color-primary);
+  border-color: var(--color-first);
 }
 
 .nav a.active svg > * {
-  fill: var(--color-primary);
+  fill: var(--color-first);
 }
 
 .mobileButton {
@@ -69,8 +71,8 @@
   outline: none;
   background: white;
   filter: brightness(0.9);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--color-first);
+  color: var(--color-first);
 }
 
 .mobileButtonActive::after {

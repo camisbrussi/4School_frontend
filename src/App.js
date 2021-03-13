@@ -5,7 +5,7 @@ import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Home from './Components/Home';
 import Login from './Components/Login/Login';
-import User from './Components/User/User';
+import AdminPanel from './Components/AdminPanel/AdminPanel';
 import { UserStorage } from './Contexts/UserContext';
 import ProtectedRoute from './Components/Helper/ProtectedRoute';
 import NotFound from './Components/NotFound';
@@ -19,7 +19,7 @@ function App() {
           <main className="AppBody">
             <Routes>
               <ProtectedRoute path="/" element={<Home />} />
-              <Route path="conta/*" element={<User />} />
+              <Route path="conta/*" element={<AdminPanel />} />
               <Route path="login/*" element={<Login />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

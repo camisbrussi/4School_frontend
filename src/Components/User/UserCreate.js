@@ -3,18 +3,21 @@ import Input from '../Forms/Input';
 import Button from '../Forms/Button';
 import Error from '../Helper/Error';
 import useForm from '../../Hooks/useForm';
-import { USER_POST } from '../../Api';
-import { UserContext } from '../../Contexts/UserContext';
+import { USER_POST } from '../../Api_User';
 import useFetch from '../../Hooks/useFetch';
-import Head from '../Helper/Head';
+import { UserContext } from '../../Contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 
-const LoginCreate = () => {
+const UserCreate = () => {
   const name = useForm();
   const login = useForm();
   const password = useForm();
+  const navigate = useNavigate();
 
-  const { userLogin } = React.useContext(UserContext);
-  const { loading, error, request } = useFetch();
+
+  const { loading, request } = useFetch();
+
+  const { error } = React.useContext(UserContext);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -23,14 +26,16 @@ const LoginCreate = () => {
       login: login.value,
       password: password.value,
     });
-    const { response } = await request(url, options);
-    if (response.ok) userLogin(name.value, password.value);
+    const response = await request(url, options);
+
+    if (response.json) navigate('/conta/users');
+   
   }
 
   return (
     <section className="animeLeft">
-      <Head title="Crie um usuário" />
 
+      <h1 className="title title-2">Criar Usuário</h1>
       <form onSubmit={handleSubmit}>
         <Input label="Usuário" type="text" name="name" {...name} />
         <Input label="Login" type="login" name="login" {...login} />
@@ -40,10 +45,10 @@ const LoginCreate = () => {
         ) : (
           <Button>Cadastrar</Button>
         )}
-        <Error error={error} />
+        <Error error={error && 'Login já existe.'} />
       </form>
     </section>
   );
 };
 
-export default LoginCreate;
+export default UserCreate;

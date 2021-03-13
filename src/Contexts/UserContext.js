@@ -1,5 +1,5 @@
 import React from 'react';
-import { TOKEN_POST, TOKEN_VALIDATE_POST, USER_GET } from '../Api';
+import { TOKEN_POST, TOKEN_VALIDATE_POST, USER_GET, USER_SHOW } from '../Api_User';
 import { useNavigate } from 'react-router-dom';
 
 export const UserContext = React.createContext();
@@ -31,6 +31,7 @@ export const UserStorage = ({ children }) => {
     setLogin(true);
   }
 
+
   async function userLogin(login, password) {
     try {
       setError(null);
@@ -49,6 +50,23 @@ export const UserStorage = ({ children }) => {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function userShow(id, token) {
+    try {
+      setLoading(true);
+      const { url, options } = USER_SHOW(id, token) ;
+      const response = await fetch(url, options);
+      const json = await response.json();
+      setData(json);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+    
+
+    console.log(data)
   }
 
   React.useEffect(() => {
@@ -76,7 +94,7 @@ export const UserStorage = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ userLogin, userLogout, data, error, loading, login }}
+      value={{ userLogin, userLogout, data, error, loading, login, userShow }}
     >
       {children}
     </UserContext.Provider>

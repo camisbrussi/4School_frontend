@@ -1,7 +1,6 @@
 import React from 'react';
 import Head from './Helper/Head';
-import User from './User/User';
-
+import AdminPanel from './AdminPanel/AdminPanel'
 
 const Home = () => {
   return (
@@ -10,7 +9,8 @@ const Home = () => {
         title="Home"
         description="Home do site 4|Scholl"
       />
-      <User />
+      <AdminPanel />
+    
     </section>
   );
 };

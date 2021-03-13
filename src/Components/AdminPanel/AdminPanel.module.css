@@ -1,0 +1,15 @@
+.user {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  min-height: 100vh;
+}
+
+.forms {
+  margin-top: 20vh;
+}
+
+@media (max-width: 40rem) {
+  .forms {
+    max-width: 100%;
+  }
+}

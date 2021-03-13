@@ -3,43 +3,65 @@ import Input from '../Forms/Input';
 import Button from '../Forms/Button';
 import Error from '../Helper/Error';
 import useForm from '../../Hooks/useForm';
-import Head from '../Helper/Head';
+import { ACTIVITY_POST } from '../../Api_Activity';
 import useFetch from '../../Hooks/useFetch';
-import styles from './ActivityCreate.module.css';
+import { useNavigate } from 'react-router-dom';
+
+import styles from './ActivityCreate.module.css'
 
 const ActivityCreate = () => {
   const name = useForm();
-  const description = useForm();
+  const description = useForm(false);
   const start = useForm();
   const end = useForm();
-  const generate_certificate = useForm();
+  let generate_certificate = 0;
   const vacancies = useForm();
+  const navigate = useNavigate();
+
+
+  const { loading, request, error } = useFetch();
+
+  
 
   async function handleSubmit(event) {
     event.preventDefault();
-  }
+    var check = document.getElementsByName("generate_certificate"); 
+    if (check === true){
+      generate_certificate = 1;
+    }
+    const { url, options } = ACTIVITY_POST({
+      name: name.value,
+      description: description.value,
+      start: start.value,
+      end: end.value,
+      generate_certificate: generate_certificate,
+      vacancies: vacancies.value,
+    });
+    const response = await request(url, options);
 
-  const { loading, error, request } = useFetch();
+    if (response.json) navigate('/conta/activities');
+   
+  }
 
   return (
     <section className="animeLeft">
-      <Head title="Crie uma atividade" />
 
-      <form onSubmit={handleSubmit} className={styles.activityCreate}>
-        <Input label="Atividade" type="text" name="atividade" {...name} />
-        <Input label="Descrição" type="text-area" name="description" {...description} />
-        <Input label="Início" type="date" name="start" {...start} />
-        <Input label="Fim" type="date" name="" {...end} />
-        <Input label="Vagas" type="text" name="" {...vacancies} className={styles.checkbox} />
-        <Input label="Gera Certificado?" type="checkbox" name="" {...generate_certificate} />
-       
-        
+      <h1 className="title title-2">Criar Atividade</h1>
+      <form onSubmit={handleSubmit} className={styles.activity}>
+        <Input label="Nome" type="text" name="name" {...name} />
+        <Input label="Descrição" type="text" name="description" {...description} />
+        <Input label="Inicio" type="datetime-local" name="start" {...start} />
+        <Input label="Fim" type="datetime-local" name="end" {...end} />
+        <div className={styles.checkbox}>
+        <Input label="Gera Certificado" type="checkbox" name="generate_certificate"/>
+        </div>
+        <Input label="Vagas" type="number" name="vacancies" {...vacancies} />
         {loading ? (
           <Button disabled>Cadastrando...</Button>
         ) : (
           <Button>Cadastrar</Button>
         )}
-        <Error error={error} />
+        <Error error={error && 'Login já existe.'} />
       </form>
     </section>
   );
