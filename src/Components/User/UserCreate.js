@@ -3,10 +3,14 @@ import Input from '../Forms/Input';
 import Button from '../Forms/Button';
 import Error from '../Helper/Error';
 import useForm from '../../Hooks/useForm';
-import { USER_POST } from '../../Api_User';
+
 import useFetch from '../../Hooks/useFetch';
 import { UserContext } from '../../Contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
+
+
+import { USER_POST } from '../../API/Api_User';
+import axios from "axios";
 
 const UserCreate = () => {
   const name = useForm();
@@ -14,21 +18,19 @@ const UserCreate = () => {
   const password = useForm();
   const navigate = useNavigate();
 
-
-  const { loading, request } = useFetch();
+  const { loading } = useFetch();
 
   const { error } = React.useContext(UserContext);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const { url, options } = USER_POST({
+    const { url, body, options } = USER_POST({
       name: name.value,
       login: login.value,
       password: password.value,
     });
-    const response = await request(url, options);
-
-    if (response.json) navigate('/conta/users');
+    const response = await axios.post(url, body, options);
+    if (response.statusText === 'OK') navigate("/conta/users");
    
   }
 

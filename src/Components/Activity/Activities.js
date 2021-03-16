@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Head from '../Helper/Head';
 import { FaEdit, FaWindowClose } from 'react-icons/fa'
 import { Link } from 'react-router-dom';
+
 import styles from './Activities.module.css'
-import axios from "axios";
 import stylesBtn from '../Forms/Button.module.css';
 
+import { ACTIVITY_GET } from '../../API/Api_Activity';
+import axios from 'axios'
 const Activities = () => {
 
   const [activities, setActivities] = useState([]);
@@ -13,8 +15,9 @@ const Activities = () => {
 
   useEffect(() =>{ 
     async function getData(){
-      const userdata = await axios.get(`http://localhost:3002/activities`);
-      setActivities(userdata.data)
+     const { url, options } = ACTIVITY_GET();
+      const response = await axios.get(url, options);
+      setActivities(response.data)
     } 
     getData();
   },[ ]);

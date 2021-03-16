@@ -5,19 +5,19 @@ import { Link } from 'react-router-dom';
 import styles from './User.module.css'
 import stylesBtn from '../Forms/Button.module.css';
 
-import axios from "../../services/axios";
+import { USER_GET } from '../../API/Api_User';
+import axios from 'axios'
 
 const Users = () => {
-
-
 
   const [users, setUsers] = useState([]);
 
 
   useEffect(() =>{ 
     async function getData(){
-      const userdata = await axios.get(`http://localhost:3001/users`);
-      setUsers(userdata.data)
+      const { url, options } = USER_GET();
+      const response = await axios.get(url, options);
+      setUsers(response.data);
     } 
     getData();
   },[]);

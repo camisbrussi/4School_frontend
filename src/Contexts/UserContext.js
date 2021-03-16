@@ -1,6 +1,8 @@
 import React from 'react';
-import { TOKEN_POST, TOKEN_VALIDATE_POST, USER_GET, USER_SHOW } from '../Api_User';
+import { TOKEN_POST, TOKEN_VALIDATE_POST, USER_GET, USER_SHOW } from '../API/Api_User';
 import { useNavigate } from 'react-router-dom';
+
+import axios from 'axios'
 
 export const UserContext = React.createContext();
 
@@ -23,11 +25,10 @@ export const UserStorage = ({ children }) => {
     [navigate],
   );
 
-  async function getUser(token) {
-    const { url, options } = USER_GET(token);
-    const response = await fetch(url, options);
-    const json = await response.json();
-    setData(json);
+  async function getUser() {
+    const { url, options } = USER_GET();
+    const response = await axios.get(url, options);
+    setData(response.data);
     setLogin(true);
   }
 
@@ -36,15 +37,19 @@ export const UserStorage = ({ children }) => {
     try {
       setError(null);
       setLoading(true);
-      const { url, options } = TOKEN_POST({ login, password });
-      const tokenRes = await fetch(url, options);
-      console.log(url, options)
-      if (!tokenRes.ok) throw new Error(`Error: ${tokenRes.statusText}`);
-      const { token } = await tokenRes.json();
+  
+      const { url, body, options } = TOKEN_POST({login, password});
+      const tokenRes = await axios.post(url, body, options);
+
+      if (tokenRes.statusText !== 'OK') throw new Error(`Error: ${tokenRes.statusText}`);
+      const { token } = await tokenRes.data;
       window.localStorage.setItem('token', token);
-      await getUser(token);
-      navigate('/');
+      navigate('/conta');
+      
+      
+
     } catch (err) {
+      console.log(err)
       setError(err.message);
       setLogin(false);
     } finally {
@@ -94,7 +99,7 @@ export const UserStorage = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ userLogin, userLogout, data, error, loading, login, userShow }}
+      value={{ userLogin, userLogout, data, error, loading, login, userShow, getUser }}
     >
       {children}
     </UserContext.Provider>

@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import Input from "../Forms/Input";
 import Button from "../Forms/Button";
 import Error from "../Helper/Error";
-import { USER_PUT } from "../../Api_User";
-import useFetch from "../../Hooks/useFetch";
+
 import { UserContext } from "../../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
-import axios from "../../services/axios";
+
+import { USER_PUT, USER_SHOW } from "../../API/Api_User";
+import axios from "axios"
 
 const UserEdit = () => {
   const [name, setName] = useState('');
@@ -17,31 +18,29 @@ const UserEdit = () => {
 
   const { error, loading } = React.useContext(UserContext);
 
-  const { request } = useFetch();
 
   var params = window.location.href.substr(1).split("/");
   let userId = params[6];
 
   useEffect(() => {
     async function getData() {
-      const userData = await axios.get(`http://localhost:3001/users/${userId}`);
-      setName(userData.data.name);
-      setLogin(userData.data.login);
+      const { url, options } = USER_SHOW(userId);
+      const response = await axios.get(url, options);
+      setName(response.data.name);
+      setLogin(response.data.login);
     }
     getData();
-  }, []);
+  }, [userId]);
 
   async function handleSubmit(event) {
-    console.log(password)
     event.preventDefault();
-    const { url, options } = USER_PUT(userId, {
+    const { url, body, options } = USER_PUT(userId, {
       name,
       login,
       password,
     });
-    const response = await request(url, options);
-
-    if (response.json) navigate("/conta/users");
+    const response = await axios.put(url, body, options);
+    if (response.statusText === 'OK') navigate("/conta/users");
   }
 
   return (

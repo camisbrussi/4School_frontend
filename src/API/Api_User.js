@@ -1,25 +1,24 @@
 export const API_URL = 'http://localhost:3001'
-
+const token = window.localStorage.getItem('token');
 
 export function TOKEN_POST(body) {
-  
+
   return {
     url: API_URL + '/tokens',
+    body: JSON.stringify(body),
     options: {
-      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
+      },     
     },
   };
 }
+
 
 export function TOKEN_VALIDATE_POST(token) {
   return {
     url: API_URL + '/tokens/validate',
     options: {
-      method: 'GET',
       headers: {
         Authorization: 'Bearer ' + token,
       },
@@ -28,11 +27,10 @@ export function TOKEN_VALIDATE_POST(token) {
 }
 
 
-export function USER_GET(token) {
+export function USER_GET() {
   return {
     url: API_URL + '/users',
     options: {
-      method: 'GET',
       headers: {
         Authorization: 'Bearer ' + token,
       },
@@ -40,25 +38,23 @@ export function USER_GET(token) {
   };
 }
 
-export function USER_POST(body, token) {
+export function USER_POST(body) {
   return {
     url: API_URL + '/users',
+    body: JSON.stringify(body),
     options: {
-      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
       },
-      body: JSON.stringify(body),
     },
   };
 }
 
-export function USER_SHOW(id, token) {
+export function USER_SHOW(id) {
   return {
-    url: API_URL + '/users/' + id,
+    url: API_URL + '/users/'+id,
     options: {
-      method: 'GET',
       headers: {
         Authorization: 'Bearer ' + token,
       },
@@ -66,24 +62,22 @@ export function USER_SHOW(id, token) {
   };
 }
 
-export function USER_PUT(id, body, token) {
+export function USER_PUT(id, body) {
   return {
-    url: API_URL + '/users/'+ id,
+    url: API_URL + '/users/' +id,
+    body: JSON.stringify(body),
     options: {
-      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
       },
-      body: JSON.stringify(body),
     },
   };
 }
-export function USER_DELETE(id, token) {
+export function USER_DELETE(id) {
   return {
     url: API_URL + '/users/'+ id,
     options: {
-      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
@@ -115,20 +109,6 @@ export function PASSWORD_RESET(body) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    },
-  };
-}
-
-export function ACTIVITY_POST(body, token) {
-  return {
-    url: API_URL + '/activities',
-    options: {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token,
       },
       body: JSON.stringify(body),
     },

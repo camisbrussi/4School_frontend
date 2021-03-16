@@ -1,58 +1,75 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../Forms/Button';
 import Error from '../Helper/Error';
-import { USER_DELETE } from '../../Api_User';
+import { USER_DELETE, USER_SHOW } from '../../API/Api_User';
 import useFetch from '../../Hooks/useFetch';
 import { UserContext } from '../../Contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
-import axios from "../../services/axios";
+import axios from "axios"
 
 const UserDelete = () => {
    
   const navigate = useNavigate();
 
   const { error} = React.useContext(UserContext);
-  const [user, setUsers] = useState({});
+  const [user, setUser] = useState('');
 
-  const { request, loading } = useFetch();
+  const { loading } = useFetch();
 
+        var params = window.location.href.substr(1).split('/');
+        let userId = params[6];
 
     useEffect(() =>{ 
       async function getData(){
-        var params = window.location.href.substr(1).split('/');
-        let userId = params[6];
-        const userdata = await axios.get(`http://localhost:3001/users/${userId}`);
-        setUsers(userdata.data)
+
+        const { url, options } = USER_SHOW(userId);
+        const response = await axios.get(url, options);
+        setUser(response.data);
       } 
       getData();
-    },[]);
+    },[userId]);
 
 
-  async function handleSubmit(event) {
+  async function confirm(event) {
     event.preventDefault();
     const { url, options } = USER_DELETE(user.id)
-    const response = await request(url, options);
+    const response = await axios.delete(url, options);
 
-    if (response.json) navigate('/conta/users');
+    if (response.statusText === 'OK') navigate("/conta/users");
   }
 
-  console.log('name'+user.name)
+  async function cancel(event) {
+    event.preventDefault();
+    navigate('/conta/users');
+
+  }
+
+
+  
 
   return (
     <section className="animeLeft">
 
       <h1 className="title title-2">Deletar Usuário</h1>
-      <form onSubmit={handleSubmit}>
+  
         
         <label value={user.name}>Deseja inativar o usuário {user.name}?</label>
         
         {loading ? (
-          <Button disabled>Confirmar...</Button>
+          <Button disabled>Confirmando...</Button>
         ) : (
-          <Button>Confirmar</Button>
+          <Button onClick={confirm}>Confirmar</Button>
         )}
+
+        {loading ? (
+          <Button disabled>Cancelando...</Button>
+        ) : (
+          <Button onClick={cancel}>Cancelar</Button>
+        )}
+
+        
         <Error error={error && 'Login já existe.'} />
-      </form>
+
     </section>
   );
 };

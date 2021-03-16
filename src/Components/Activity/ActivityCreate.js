@@ -3,11 +3,14 @@ import Input from '../Forms/Input';
 import Button from '../Forms/Button';
 import Error from '../Helper/Error';
 import useForm from '../../Hooks/useForm';
-import { ACTIVITY_POST } from '../../Api_Activity';
+
 import useFetch from '../../Hooks/useFetch';
 import { useNavigate } from 'react-router-dom';
 
 import styles from './ActivityCreate.module.css'
+
+import { ACTIVITY_POST } from '../../API/Api_Activity';
+import axios from "axios";
 
 const ActivityCreate = () => {
   const name = useForm();
@@ -18,10 +21,7 @@ const ActivityCreate = () => {
   const vacancies = useForm();
   const navigate = useNavigate();
 
-
-  const { loading, request, error } = useFetch();
-
-  
+  const { loading, error } = useFetch();
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -29,7 +29,7 @@ const ActivityCreate = () => {
     if (check === true){
       generate_certificate = 1;
     }
-    const { url, options } = ACTIVITY_POST({
+    const { url, body, options } = ACTIVITY_POST({
       name: name.value,
       description: description.value,
       start: start.value,
@@ -37,9 +37,9 @@ const ActivityCreate = () => {
       generate_certificate: generate_certificate,
       vacancies: vacancies.value,
     });
-    const response = await request(url, options);
-
-    if (response.json) navigate('/conta/activities');
+    const response = await axios.post(url, body, options);
+    
+    if (response.statusText === 'OK') navigate("/conta/activities");
    
   }
 

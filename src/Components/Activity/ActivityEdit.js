@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import Input from "../Forms/Input";
 import Button from "../Forms/Button";
 import Error from "../Helper/Error";
-import { ACTIVITY_PUT } from "../../Api_Activity";
-import useFetch from "../../Hooks/useFetch";
-import { UserContext } from "../../Contexts/UserContext";
-import { useNavigate } from "react-router-dom";
-import axios from "../../services/axios";
 
+import useFetch from "../../Hooks/useFetch";
+import { useNavigate } from "react-router-dom";
 import styles from "./ActivityCreate.module.css";
 
+import axios from "axios"
+import { ACTIVITY_PUT, ACTIVITY_SHOW } from "../../API/Api_Activity";
+
+
 const UserEdit = () => {
-  const { loading, request, error } = useFetch();
+  const { loading, error } = useFetch();
 
   const navigate = useNavigate();
 
@@ -27,24 +28,24 @@ const UserEdit = () => {
 
   useEffect(() => {
     async function getData() {
+
+      const { url, options } = ACTIVITY_SHOW(id);
      
-      const activityData = await axios.get(
-        `http://localhost:3002/activities/${id}`
-      );
-      setName(activityData.data.name);
-      setDescription(activityData.data.description);
-      setStart(activityData.data.start);
-      setEnd(activityData.data.end);
-      setGenerate_certificate(activityData.data.generate_certificate);
-      setVacancies(activityData.data.vacancies);
+      const response = await axios.get(url, options);
+      setName(response.data.name);
+      setDescription(response.data.description);
+      setStart(response.data.start);
+      setEnd(response.data.end);
+      setGenerate_certificate(response.data.generate_certificate);
+      setVacancies(response.data.vacancies);
       
     }
     getData();
-  }, []);
+  }, [id]);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const { url, options } = ACTIVITY_PUT(id, {
+    const { url, body, options } = ACTIVITY_PUT(id, {
       name,
       description,
       start,
@@ -52,9 +53,8 @@ const UserEdit = () => {
       generate_certificate,
       vacancies,
     });
-    const response = await request(url, options);
-
-    if (response.json) navigate("/conta/activities");
+    const response = await axios.put(url, body, options);
+    if (response.statusText === 'OK') navigate("/conta/activities");
   }
 
   function date(datetime) {
@@ -125,9 +125,9 @@ const UserEdit = () => {
           }}
         />
         {loading ? (
-          <Button disabled>Cadastrando...</Button>
+          <Button disabled>Salvando...</Button>
         ) : (
-          <Button>Cadastrar</Button>
+          <Button>Salvar</Button>
         )}
         <Error error={error && ""} />
       </form>
