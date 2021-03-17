@@ -26,9 +26,9 @@ Além disso, o sistema também poderá auxiliar no controle de participantes nos
 2. na pasta do projeto
   ```
   npm i 
-  npm run dev
+  npm start
   ``` 
- Faça login como admin Admin123
+ Faça login como admin admin123
 
 Criado por:
 - [Camila Sbrussi](https://github.com/camisbrussi/) 
