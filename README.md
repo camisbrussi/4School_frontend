@@ -23,7 +23,7 @@ Além disso, o sistema também poderá auxiliar no controle de participantes nos
 
 ## Instalação local
 1. Faça clone do projeto;
-2. na pasta do projeto
+2. Na pasta do projeto execute:
   ```
   npm i 
   npm start
