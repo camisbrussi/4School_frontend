@@ -1,7 +1,7 @@
 export const API_URL = 'http://localhost:3002'
-const token = window.localStorage.getItem('token');
 
-export function ACTIVITY_GET() {
+
+export function ACTIVITY_GET(token) {
 
   return {
     url: API_URL + '/activities',
@@ -13,7 +13,7 @@ export function ACTIVITY_GET() {
   };
 }
 
-export function ACTIVITY_POST(body) {
+export function ACTIVITY_POST(body, token) {
   return {
     url: API_URL + '/activities',
     body: JSON.stringify(body),
@@ -26,7 +26,7 @@ export function ACTIVITY_POST(body) {
   };
 }
 
-export function ACTIVITY_SHOW(id) {
+export function ACTIVITY_SHOW(id, token) {
   return {
     url: API_URL + '/activities/' + id,
     options: {
@@ -38,7 +38,7 @@ export function ACTIVITY_SHOW(id) {
   };
 }
 
-export function ACTIVITY_PUT(id, body) {
+export function ACTIVITY_PUT(id, body, token) {
   return {
     url: API_URL + '/activities/'+ id,
     body: JSON.stringify(body),
@@ -52,7 +52,7 @@ export function ACTIVITY_PUT(id, body) {
   };
 }
 
-export function ACTIVITY_DELETE(id) {
+export function ACTIVITY_DELETE(id, token) {
   return {
     url: API_URL + '/activities/'+ id,
     options: {

@@ -11,16 +11,17 @@ import axios from 'axios'
 const Users = () => {
 
   const [users, setUsers] = useState([]);
-
+  const token = window.localStorage.getItem('token');
 
   useEffect(() =>{ 
     async function getData(){
-      const { url, options } = USER_GET();
+      
+      const { url, options } = USER_GET(token);
       const response = await axios.get(url, options);
       setUsers(response.data);
     } 
     getData();
-  },[]);
+  },[token]);
 
 
   function status(status) {
@@ -39,7 +40,7 @@ const Users = () => {
   return (
     <section className="animeLeft">
  
-      <h1 className="title title-2">Usuários</h1>
+  
       <Link className={stylesBtn.button} to="createuser">Cadastrar</Link>
       <div className={styles.users}>
  

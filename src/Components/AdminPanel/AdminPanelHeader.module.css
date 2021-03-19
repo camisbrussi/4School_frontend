@@ -4,3 +4,12 @@
   margin-top: 1rem;
   position: relative;
 }
+
+@media (max-width: 40rem) {
+  .header {
+    position: relative;
+
+    width: 14em;
+    margin-top: -0.5em;
+  }
+}

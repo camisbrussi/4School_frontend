@@ -18,9 +18,7 @@ const Header = () => {
           <Button onClick={userLogout}>Sair
         </Button>
         ) : (
-          <Link className={styles.login} to="/login">
-            Login
-          </Link>
+          ''
         )}
       </nav>
     </header>

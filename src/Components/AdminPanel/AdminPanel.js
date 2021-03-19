@@ -18,7 +18,7 @@ const AdminPanel = () => {
 
 
   return (
-    <section className= {`${styles.user} container`} >
+    <section className= {`${styles.panel} container`} >
       <Head title="Painel Administrador" />
       <AdminPanelHeader />
 

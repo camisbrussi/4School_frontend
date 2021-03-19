@@ -17,7 +17,7 @@ const AdminPanelHeader = () => {
           setTitle('Atividades');
           break;
       default:
-        setTitle('Painel Administrativo');
+        setTitle('Painel');
     }
   }, [location]);
 

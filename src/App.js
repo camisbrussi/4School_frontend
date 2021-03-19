@@ -18,8 +18,8 @@ function App() {
           <Header />
           <main className="AppBody">
             <Routes>
-              <ProtectedRoute path="/" element={<Home />} />
-              <Route path="conta/*" element={<AdminPanel />} />
+              <ProtectedRoute path="/*" element={<Home />} />
+              <ProtectedRoute path="conta/*" element={<AdminPanel />} />
               <Route path="login/*" element={<Login />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -23,13 +23,15 @@ const UserEdit = () => {
   const [generate_certificate, setGenerate_certificate] = useState(false);
   const [vacancies, setVacancies] = useState("");
 
+  const token = window.localStorage.getItem('token');
+
   var params = window.location.href.substr(1).split("/");
   let id = params[6];
 
   useEffect(() => {
     async function getData() {
 
-      const { url, options } = ACTIVITY_SHOW(id);
+      const { url, options } = ACTIVITY_SHOW(id, token);
      
       const response = await axios.get(url, options);
       setName(response.data.name);
@@ -41,7 +43,7 @@ const UserEdit = () => {
       
     }
     getData();
-  }, [id]);
+  }, [id, token]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -52,7 +54,7 @@ const UserEdit = () => {
       end,
       generate_certificate,
       vacancies,
-    });
+    }, token);
     const response = await axios.put(url, body, options);
     if (response.statusText === 'OK') navigate("/conta/activities");
   }

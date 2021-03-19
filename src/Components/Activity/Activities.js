@@ -11,16 +11,19 @@ import axios from 'axios'
 const Activities = () => {
 
   const [activities, setActivities] = useState([]);
-
+ const token = window.localStorage.getItem('token');
 
   useEffect(() =>{ 
     async function getData(){
-     const { url, options } = ACTIVITY_GET();
+      
+      const { url, options } = ACTIVITY_GET(token);
+      console.log(url, options)
       const response = await axios.get(url, options);
+      console.log(response.data)
       setActivities(response.data)
     } 
     getData();
-  },[ ]);
+  },[ token]);
 
   function date(datetime){
     var date = new Date(datetime)
@@ -33,7 +36,6 @@ const Activities = () => {
   return (
     <section className="animeLeft">
       <Head title="User" />
-      <h1 className="title title-2">Atividades</h1>
       <Link className={stylesBtn.button} to="createactivity">Cadastrar</Link>
       <div className={styles.activities}>
       {activities.map(activity => (

@@ -26,7 +26,8 @@ export const UserStorage = ({ children }) => {
   );
 
   async function getUser() {
-    const { url, options } = USER_GET();
+    const token = window.localStorage.getItem('token');
+    const { url, options } = USER_GET(token);
     const response = await axios.get(url, options);
     setData(response.data);
     setLogin(true);
@@ -37,17 +38,17 @@ export const UserStorage = ({ children }) => {
     try {
       setError(null);
       setLoading(true);
+      
   
       const { url, body, options } = TOKEN_POST({login, password});
       const tokenRes = await axios.post(url, body, options);
 
       if (tokenRes.statusText !== 'OK') throw new Error(`Error: ${tokenRes.statusText}`);
       const { token } = await tokenRes.data;
+      setLogin(true);
       window.localStorage.setItem('token', token);
-      navigate('/conta');
+      navigate('/');
       
-      
-
     } catch (err) {
       console.log(err)
       setError(err.message);
@@ -57,8 +58,9 @@ export const UserStorage = ({ children }) => {
     }
   }
 
-  async function userShow(id, token) {
+  async function userShow(id) {
     try {
+      const token = window.localStorage.getItem('token');
       setLoading(true);
       const { url, options } = USER_SHOW(id, token) ;
       const response = await fetch(url, options);

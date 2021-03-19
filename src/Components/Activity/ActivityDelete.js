@@ -12,7 +12,7 @@ const ActivityDelete = () => {
 
   const { loading, error } = useFetch();
 
-  
+  const token = window.localStorage.getItem('token');
   const [activity, setactivitys] = useState({});
    
   var params = window.location.href.substr(1).split('/');
@@ -21,17 +21,17 @@ const ActivityDelete = () => {
     useEffect(() =>{ 
       async function getData(){
         
-      const { url, options } = ACTIVITY_SHOW(activityId);
+        const { url, options } = ACTIVITY_SHOW(activityId, token);
         const response = await axios.get(url, options);
         setactivitys(response.data);
       } 
       getData();
-    },[activityId]);
+    },[activityId, token]);
 
 
   async function confirm(event) {
     event.preventDefault();
-    const { url, options } = ACTIVITY_DELETE(activity.id)
+    const { url, options } = ACTIVITY_DELETE(activity.id, token)
     const response = await axios.delete(url, options);
 
     if (response.statusText === 'OK') navigate("/conta/activities");

@@ -1,5 +1,5 @@
 export const API_URL = 'http://localhost:3001'
-const token = window.localStorage.getItem('token');
+
 
 export function TOKEN_POST(body) {
 
@@ -27,7 +27,7 @@ export function TOKEN_VALIDATE_POST(token) {
 }
 
 
-export function USER_GET() {
+export function USER_GET(token) {
   return {
     url: API_URL + '/users',
     options: {
@@ -38,7 +38,7 @@ export function USER_GET() {
   };
 }
 
-export function USER_POST(body) {
+export function USER_POST(body, token) {
   return {
     url: API_URL + '/users',
     body: JSON.stringify(body),
@@ -51,7 +51,7 @@ export function USER_POST(body) {
   };
 }
 
-export function USER_SHOW(id) {
+export function USER_SHOW(id, token) {
   return {
     url: API_URL + '/users/'+id,
     options: {
@@ -62,7 +62,7 @@ export function USER_SHOW(id) {
   };
 }
 
-export function USER_PUT(id, body) {
+export function USER_PUT(id, body, token) {
   return {
     url: API_URL + '/users/' +id,
     body: JSON.stringify(body),
@@ -74,7 +74,7 @@ export function USER_PUT(id, body) {
     },
   };
 }
-export function USER_DELETE(id) {
+export function USER_DELETE(id, token) {
   return {
     url: API_URL + '/users/'+ id,
     options: {

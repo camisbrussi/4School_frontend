@@ -1,6 +1,6 @@
-.user {
+.panel {
   display: grid;
-  grid-template-columns: 170px 1fr;
+  grid-template-columns: 10rem 1fr;
   min-height: 100vh;
 }
 
@@ -9,6 +9,9 @@
 }
 
 @media (max-width: 40rem) {
+  .panel {
+    grid-template-columns: 0rem 1fr;
+  }
   .forms {
     max-width: 100%;
   }

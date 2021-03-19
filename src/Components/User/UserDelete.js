@@ -13,7 +13,7 @@ const UserDelete = () => {
 
   const { error} = React.useContext(UserContext);
   const [user, setUser] = useState('');
-
+  const token = window.localStorage.getItem('token');
   const { loading } = useFetch();
 
         var params = window.location.href.substr(1).split('/');
@@ -22,17 +22,17 @@ const UserDelete = () => {
     useEffect(() =>{ 
       async function getData(){
 
-        const { url, options } = USER_SHOW(userId);
+        const { url, options } = USER_SHOW(userId, token);
         const response = await axios.get(url, options);
         setUser(response.data);
       } 
       getData();
-    },[userId]);
+    },[userId, token]);
 
 
   async function confirm(event) {
     event.preventDefault();
-    const { url, options } = USER_DELETE(user.id)
+    const { url, options } = USER_DELETE(user.id, token)
     const response = await axios.delete(url, options);
 
     if (response.statusText === 'OK') navigate("/conta/users");
@@ -52,9 +52,7 @@ const UserDelete = () => {
 
       <h1 className="title title-2">Deletar Usuário</h1>
   
-        
         <label value={user.name}>Deseja inativar o usuário {user.name}?</label>
-        
         {loading ? (
           <Button disabled>Confirmando...</Button>
         ) : (
