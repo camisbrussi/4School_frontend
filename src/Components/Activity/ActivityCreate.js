@@ -25,7 +25,7 @@ const ActivityCreate = () => {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    var check = document.getElementsByName("generate_certificate"); 
+    var check = document.getElementsByName("generate_certificate")[0].checked;
     if (check === true){
       generate_certificate = 1;
     }
