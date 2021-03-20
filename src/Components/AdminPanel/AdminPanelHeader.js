@@ -1,7 +1,6 @@
 import React from "react";
 import AdminPanelHeaderNav from "../AdminPanel/AdminPanelHeaderNav";
 import styles from "./AdminPanelHeader.module.css";
-import { useLocation } from "react-router-dom";
 
 const AdminPanelHeader = () => {
   return (
