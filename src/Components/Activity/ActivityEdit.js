@@ -11,7 +11,7 @@ import axios from "axios"
 import { ACTIVITY_PUT, ACTIVITY_SHOW } from "../../API/Api_Activity";
 
 
-const UserEdit = () => {
+const ActivityEdit = () => {
   const { loading, error } = useFetch();
 
   const navigate = useNavigate();
@@ -137,4 +137,4 @@ const UserEdit = () => {
   );
 };
 
-export default UserEdit;
+export default ActivityEdit;

@@ -40,7 +40,7 @@ const Users = () => {
   return (
     <section className="animeLeft">
  
-  
+      <h1 className="title title-2">Usuários</h1>
       <Link className={stylesBtn.button} to="createuser">Cadastrar</Link>
       <div className={styles.users}>
  
