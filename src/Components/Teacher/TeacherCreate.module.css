@@ -1,0 +1,14 @@
+.teacher {
+  margin: 30px 0 30px 0;
+}
+
+.checkbox input[type="checkbox"] {
+  float: left;
+  align-items: left;
+  width: auto;
+}
+
+.checkbox label {
+  display: inline;
+  margin-left: 1rem;
+}

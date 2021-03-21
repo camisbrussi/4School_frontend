@@ -1,4 +1,5 @@
-export const API_URL = 'http://177.44.248.32:8080'
+// export const API_URL = 'http://177.44.248.32:8080'
+export const API_URL = 'http://localhost:3001'
 
 
 export function TOKEN_POST(body) {

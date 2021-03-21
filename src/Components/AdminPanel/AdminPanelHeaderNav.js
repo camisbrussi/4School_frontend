@@ -16,7 +16,6 @@ const AdminPanelHeaderNav = () => {
 
   return (
     <>
-
       {mobile && (
         <button
           aria-label="Menu"
@@ -37,6 +36,9 @@ const AdminPanelHeaderNav = () => {
         </NavLink>
         <NavLink to="/conta/activities" end activeClassName={styles.active} className={styles.menu}>Atividade
           {mobile && 'Atividades'}
+        </NavLink>
+        <NavLink to="/conta/teachers" end activeClassName={styles.active} className={styles.menu}>Professores
+          {mobile && 'Professores'}
         </NavLink>
         <NavLink to="/conta/teams" end activeClassName={styles.active} className={styles.menu}>Turmas
           {mobile && 'Turmas'}
