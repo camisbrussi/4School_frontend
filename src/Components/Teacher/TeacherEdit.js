@@ -6,6 +6,7 @@ import Error from "../Helper/Error";
 import useFetch from "../../Hooks/useFetch";
 import {useNavigate} from "react-router-dom";
 import styles from "./TeacherCreate.module.css";
+import CardPhone from "./CardPhone";
 
 import axios from "axios"
 import {TEACHER_PUT, TEACHER_SHOW} from "../../API/Api_Teacher";
@@ -32,26 +33,20 @@ const TeacherEdit = () => {
             const {url, options} = TEACHER_SHOW(id, token);
 
             const response = await axios.get(url, options);
-            console.log(response.data);
 
             setName(response.data.person.name);
             setCpf(response.data.person.cpf);
             setEmail(response.data.person.email);
             setBirthDate(response.data.person.birth_date);
             if (response.data.person.phones.length) {
+                let phonesNewState = [];
                 for (let i = 0; i < response.data.person.phones.length; i++) {
                     let number = response.data.person.phones[i].number;
                     let is_whatsapp = response.data.person.phones[i].is_whatsapp;
 
-                    setPhones([...phones, {number, is_whatsapp}]);
-                    // console.log(...phones);
-                    // console.log({number, is_whatsapp});
-
-                    // console.log(number, is_whatsapp);
-                    // console.log(phones);
-                    // console.log(...phones);
-                    // setPhones([...phones, {number, is_whatsapp}]);
+                    phonesNewState.push({number, is_whatsapp});
                 }
+                setPhones(phonesNewState);
             }
         }
 
@@ -93,6 +88,15 @@ const TeacherEdit = () => {
         document.getElementById("is_whatsapp").checked = false;
     }
 
+    function removerPhone(k) {
+        if (!window.confirm("Realmente deseja remover este número de telefone?")) {
+            return;
+        }
+        let phonesNewState = phones;
+        phonesNewState.splice(k,1);
+        setPhones([...phonesNewState]);
+    }
+
     return (
         <section className="animeLeft">
             <h1 className="title title-2">Editar Professor</h1>
@@ -115,12 +119,13 @@ const TeacherEdit = () => {
                     <div styl style={{width: "50%", float: "left"}}>
                         <Input label="Número" type="text" name="number" id="number"/>
                     </div>
-                    <div style={{width: "25%", float: "left"}}>
+                    <div style={{width: "25%", float: "left", "margin-top":"35px"}}>
                         <div className={styles.checkbox}>
                             <Input label="É WhatsApp?" type="checkbox" name="is_whatsapp" id="is_whatsapp"/>
                         </div>
                     </div>
                     <div style={{width: "25%", float: "left"}}>
+                        <label htmlFor="">&nbsp;</label>
                         <Button onClick={addPhone}>Add fone</Button>
                     </div>
                 </div>
@@ -128,10 +133,7 @@ const TeacherEdit = () => {
                 <div style={{width: "100%", float: "left"}}>
                     {phones.map((v, k) => {
                         return (
-                            <section key={k}>
-                                <label>{v.number}</label>
-                                <label>{v.is_whatsapp ? " - WhatsApp" : ""}</label>
-                            </section>
+                            <CardPhone key={k} indice={k} number={v.number} is_whatsapp={v.is_whatsapp} removerPhone={removerPhone}/>
                         );
                     })}
                 </div>
