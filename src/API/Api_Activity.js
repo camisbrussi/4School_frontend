@@ -1,4 +1,4 @@
-export const API_URL = 'http://177.44.248.32:8081'
+export const API_URL = 'http://177.44.248.32:8082'
 //export const API_URL = 'http://localhost:3002'
 
 

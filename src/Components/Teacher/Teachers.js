@@ -26,11 +26,6 @@ const Teachers = () => {
         getData();
     }, [token]);
 
-    function date(datetime) {
-        var date = new Date(datetime)
-        return date.toLocaleString('pt-BR')
-    }
-
     return (
         <section className="animeLeft">
             <Head title="Professores"/>
@@ -44,7 +39,6 @@ const Teachers = () => {
                         <span>{teacher.person.name}</span>
 
                         <span>{teacher.person.cpf}</span>
-                        <span>{teacher.person.email}</span>
                         <span>{teacher.status.description}</span>
                         <div className={styles.buttons}>
                             <Link

@@ -9,6 +9,8 @@ import styles from "./TeamCreate.module.css";
 
 import axios from "axios"
 import { TEAM_PUT, TEAM_SHOW } from "../../API/Api_Team";
+import { TEACHER_GET } from "../../API/Api_Teacher";
+import Select from "../Forms/Select";
 
 
 const TeamEdit = () => {
@@ -17,7 +19,8 @@ const TeamEdit = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
-  const [teacher, setTeacher] = useState("");
+  const [idTeacher, setIdTeacher] = useState(0);
+  const [teachers, setTeachers] = useState([]);
   const [year, setYear] = useState("");
 
 
@@ -33,17 +36,44 @@ const TeamEdit = () => {
      
       const response = await axios.get(url, options);
       setName(response.data.name);
-      setTeacher(response.data.description);
-      setYear(response.data.start);
+      setIdTeacher(response.data.teacher.id)
+      setYear(response.data.year);
     }
     getData();
-  }, [id, token]);
+  }, [id, idTeacher, token]);
+
+  useEffect(() => {
+    async function getData() {
+      const { url, options } = TEACHER_GET(token);
+      const response = await axios.get(url, options);
+      setTeachers(response.data);
+    }
+    getData();
+  }, [token, idTeacher]);
+
+  useEffect(() => {   
+    teachers.map(teacher => addOption(teacher.id, teacher.person.name, idTeacher===teacher.id))
+
+    function addOption(id, name, selected) {
+      var option = new Option(name, id, selected, selected);
+     
+      var select = document.getElementById("teacher");
+      select.add(option);
+    }
+  }, [teachers, idTeacher]);
+
 
   async function handleSubmit(event) {
     event.preventDefault();
+
+    const token = window.localStorage.getItem("token");
+    
+    var select = document.getElementById('teacher');
+	  var teacher_id = select.options[select.selectedIndex].value;
+
     const { url, body, options } = TEAM_PUT(id, {
       name,
-      teacher,
+      teacher_id,
       year,
     }, token);
     const response = await axios.put(url, body, options);
@@ -64,19 +94,11 @@ const TeamEdit = () => {
             setName(e.target.value);
           }}
         />
+        <Select label="Professor" name="teacher" />
         <Input
-          label="Professor"
-          type="text"
-          name="description"
-          value={teacher}
-          onChange={(e) => {
-            setTeacher(e.target.value);
-          }}
-        />
-        <Input
-          label="Inicio"
-          type="datetime-local"
-          name="start"
+            label="Ano"
+            type="number"
+          name="year"
           value={year}
           onChange={(e) => {
             setYear(e.target.value);

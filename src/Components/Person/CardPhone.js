@@ -1,4 +1,4 @@
-import React, {Component, useState} from "react";
+import React from "react";
 
 function CardPhone ({indice, number, is_whatsapp, removerPhone}) {
     return (

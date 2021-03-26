@@ -1,4 +1,5 @@
-export const API_URL = 'http://localhost:3004'
+export const API_URL = 'http://177.44.248.32:8084'
+//export const API_URL = 'http://localhost:3004'
 
 
 export function TEAM_GET(token) {

@@ -32,16 +32,16 @@ const AdminPanelHeaderNav = () => {
         }`}
       >
         <NavLink to="/conta/users" end activeClassName={styles.active} className={styles.menu}>Usuário
-          {mobile && 'Usuário'}
+          
         </NavLink>
         <NavLink to="/conta/activities" end activeClassName={styles.active} className={styles.menu}>Atividade
-          {mobile && 'Atividades'}
+          
         </NavLink>
         <NavLink to="/conta/teachers" end activeClassName={styles.active} className={styles.menu}>Professores
-          {mobile && 'Professores'}
+         
         </NavLink>
         <NavLink to="/conta/teams" end activeClassName={styles.active} className={styles.menu}>Turmas
-          {mobile && 'Turmas'}
+          
         </NavLink>
       </nav>
     </>

@@ -11,25 +11,17 @@ import axios from 'axios'
 const Teams = () => {
 
   const [teams, setTeams] = useState([]);
- const token = window.localStorage.getItem('token');
+  const token = window.localStorage.getItem('token');
 
   useEffect(() =>{ 
     async function getData(){
       
       const { url, options } = TEAM_GET(token);
-      console.log(url, options)
       const response = await axios.get(url, options);
-      console.log(response.data)
       setTeams(response.data)
     } 
     getData();
-  },[ token]);
-
-  function date(datetime){
-    var date = new Date(datetime)
-
-    return date.toLocaleString('pt-BR')
-  }
+  },[token]);
 
 
 
@@ -44,9 +36,10 @@ const Teams = () => {
         <div key={String(team.id) } className={styles.list}>
           
             <span>{team.name}</span>
-
-            <span>{date(team.teacher)}</span>
-            <span>{date(team.year)}</span>
+           
+            
+            <span>{team.teacher.person.name}</span>
+            <span>{team.year}</span>
           <div className={styles.buttons}> 
             <Link 
               to={`edit/${team.id}`}>

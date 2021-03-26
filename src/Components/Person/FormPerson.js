@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 import CardPhone from "./CardPhone";
 import styles from "./Person.module.css";
 import Input from "../Forms/Input";
