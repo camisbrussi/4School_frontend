@@ -6,13 +6,14 @@ import Button from "../Forms/Button";
 import Error from "../Helper/Error";
 import useFetch from "../../Hooks/useFetch";
 
-function FormPerson({titulo, handleSubmit, dados}) {
+function FormPerson({titulo, handleSubmit, dados, addPassword}) {
     const {loading, error} = useFetch();
 
     const [name, setName] = useState(dados.name ?? "");
     const [cpf, setCpf] = useState(dados.cpf ?? "");
     const [email, setEmail] = useState(dados.email ?? "");
     const [birth_date, setBirthDate] = useState(date(dados.birth_date ?? ""));
+    const [password, setPassword] = useState("");
     const [phones, setPhones] = useState(dados.phones ?? []);
 
     function addPhone(e) {
@@ -50,11 +51,15 @@ function FormPerson({titulo, handleSubmit, dados}) {
     return (
         <section className="animeLeft">
             <h1 className="title title-2">{titulo}</h1>
-            <form onSubmit={(e) => { handleSubmit(e,{name,cpf,email,birth_date,phones}) }} className={styles.person}>
+            <form onSubmit={(e) => { handleSubmit(e,{name,cpf,email,birth_date,phones,password}) }} className={styles.person}>
                 <Input label="Nome" type="text" name="name" value={name} onChange={(e) => {setName(e.target.value)}} />
                 <Input label="CPF" type="text" name="cpf" value={cpf} onChange={(e) => {setCpf(e.target.value)}} />
                 <Input label="E-mail" type="email" name="email" value={email} onChange={(e) => {setEmail(e.target.value)}} />
                 <Input label="Data de nascimento" type="date" name="birth_date" value={birth_date} onChange={(e) => {setBirthDate(e.target.value)}} />
+
+                {addPassword ? (
+                    <Input label="Senha" type="password" name="password" onChange={(e) => {setPassword(e.target.value)}} />
+                ) : ""}
 
                 <div style={{width: "100%", float: "left"}}>
                     <div styl style={{width: "50%", float: "left"}}>
