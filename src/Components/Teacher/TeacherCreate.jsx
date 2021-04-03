@@ -22,7 +22,7 @@ const TeacherCreate = () => {
     }
 
     return (
-        <FormPerson titulo="Cadastro de Professores" handleSubmit={handleSubmit} loading={loading} error={error} dados={{}} />
+        <FormPerson titulo="Cadastro de Professores" handleSubmit={handleSubmit} loading={loading} error={error} dados={{}} addPassword={true} />
     );
 };
 

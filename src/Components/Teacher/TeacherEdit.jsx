@@ -44,7 +44,7 @@ const TeacherEdit = () => {
         if (response.statusText === 'OK') navigate("/conta/teachers");
     }
 
-    return podeAtualziar ? <FormPerson titulo="Editar Professor" handleSubmit={handleSubmit} dados={dados} /> : null;
+    return podeAtualziar ? <FormPerson titulo="Editar Professor" handleSubmit={handleSubmit} dados={dados} addPassword={true} /> : null;
 };
 
 export default TeacherEdit;
