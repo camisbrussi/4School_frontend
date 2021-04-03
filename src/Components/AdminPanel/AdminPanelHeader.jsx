@@ -1,5 +1,5 @@
 import React from "react";
-import AdminPanelHeaderNav from "../AdminPanel/AdminPanelHeaderNav";
+import AdminPanelHeaderNav from "./AdminPanelHeaderNav";
 import styles from "./AdminPanelHeader.module.css";
 
 const AdminPanelHeader = () => {
