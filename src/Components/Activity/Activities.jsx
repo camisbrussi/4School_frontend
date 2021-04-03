@@ -11,7 +11,7 @@ import axios from 'axios'
 const Activities = () => {
 
   const [activities, setActivities] = useState([]);
- const token = window.localStorage.getItem('token');
+  const token = window.localStorage.getItem('token');
 
   useEffect(() =>{ 
     async function getData(){
@@ -23,6 +23,16 @@ const Activities = () => {
     } 
     getData();
   },[ token]);
+
+
+  function status(status) {
+    if(status === 1){
+      return 'Ativo';
+    }
+    if(status === 2){
+      return 'Inativo';
+    }
+  }
 
   function date(datetime){
     var date = new Date(datetime)
@@ -46,6 +56,7 @@ const Activities = () => {
 
             <span>{date(activity.start)}</span>
             <span>{date(activity.end)}</span>
+            <span>{status(activity.status_id)}</span>
           <div className={styles.buttons}> 
             <Link 
               to={`edit/${activity.id}`}>

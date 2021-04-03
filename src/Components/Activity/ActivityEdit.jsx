@@ -7,9 +7,8 @@ import useFetch from "../../Hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import styles from "./ActivityCreate.module.css";
 
-import axios from "axios"
+import axios from "axios";
 import { ACTIVITY_PUT, ACTIVITY_SHOW } from "../../API/Api_Activity";
-
 
 const ActivityEdit = () => {
   const { loading, error } = useFetch();
@@ -22,17 +21,17 @@ const ActivityEdit = () => {
   const [end, setEnd] = useState("");
   const [generate_certificate, setGenerate_certificate] = useState(false);
   const [vacancies, setVacancies] = useState("");
+  const [activeActivity, setActiveActivity] = useState(false);
 
-  const token = window.localStorage.getItem('token');
+  const token = window.localStorage.getItem("token");
 
   var params = window.location.href.substr(1).split("/");
   let id = params[6];
+  let status_id = 2;
 
   useEffect(() => {
     async function getData() {
-
       const { url, options } = ACTIVITY_SHOW(id, token);
-     
       const response = await axios.get(url, options);
       setName(response.data.name);
       setDescription(response.data.description);
@@ -40,29 +39,41 @@ const ActivityEdit = () => {
       setEnd(response.data.end);
       setGenerate_certificate(response.data.generate_certificate);
       setVacancies(response.data.vacancies);
-      
+      if (response.data.status_id === 1) {
+        setActiveActivity(response.data.status_id);
+      }
     }
     getData();
   }, [id, token]);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const { url, body, options } = ACTIVITY_PUT(id, {
-      name,
-      description,
-      start,
-      end,
-      generate_certificate,
-      vacancies,
-    }, token);
+
+    var check = document.getElementsByName("active_ativity")[0].checked;
+    if (check === true) {
+      status_id = 1;
+    }
+
+    const { url, body, options } = ACTIVITY_PUT(
+      id,
+      {
+        status_id,
+        name,
+        description,
+        start,
+        end,
+        generate_certificate,
+        vacancies,
+      },
+      token
+    );
     const response = await axios.put(url, body, options);
-    if (response.statusText === 'OK') navigate("/conta/activities");
+   
+    if (response.statusText === "OK") navigate("/conta/activities");
   }
 
   function date(datetime) {
     if (datetime) var date = datetime.replace(/Z/, "");
-
-    console.log(date);
     return date;
   }
 
@@ -126,6 +137,17 @@ const ActivityEdit = () => {
             setVacancies(e.target.value);
           }}
         />
+        <div className={styles.checkbox}>
+          <Input
+            label="Atividade Ativa"
+            type="checkbox"
+            name="active_ativity"
+            checked={activeActivity}
+            onChange={(e) => {
+              setActiveActivity(e.target.checked);
+            }}
+          />
+        </div>
         {loading ? (
           <Button disabled>Salvando...</Button>
         ) : (

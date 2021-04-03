@@ -15,7 +15,7 @@ const UserEdit = () => {
   const [name, setName] = useState('');
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-  const [active_user, setActiveUser] = useState(false);
+  const [activeUser, setActiveUser] = useState(false);
 
   const navigate = useNavigate();
 
@@ -23,11 +23,9 @@ const UserEdit = () => {
 
   const token = window.localStorage.getItem('token');
 
-
-
   var params = window.location.href.substr(1).split("/");
   let userId = params[6];
-  let status_id = 0;
+  let status_id = 2;
 
   useEffect(() => {
     async function getData() {
@@ -35,7 +33,6 @@ const UserEdit = () => {
       const response = await axios.get(url, options);
       setName(response.data.name);
       setLogin(response.data.login);
-      console.log(response)
       if(response.data.status_id === 1){
       setActiveUser(response.data.status_id)
       }
@@ -50,6 +47,7 @@ const UserEdit = () => {
     if (check === true){
       status_id = 1;
     }
+    
 
     const { url, body, options } = USER_PUT(userId, {
       status_id,
@@ -58,7 +56,7 @@ const UserEdit = () => {
       password,
     }, token);
     const response = await axios.put(url, body, options);
-    console.log(response);
+    
     if (response.statusText === 'OK') navigate("/conta/users");
   }
 
@@ -98,7 +96,7 @@ const UserEdit = () => {
             label="Usuário Ativo"
             type="checkbox"
             name="active_user"
-            checked={active_user}
+            checked={activeUser}
             onChange={(e) => {
               setActiveUser(e.target.checked);
             }}

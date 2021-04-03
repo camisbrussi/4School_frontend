@@ -23,6 +23,15 @@ const Teams = () => {
     getData();
   },[token]);
 
+  function status(status) {
+    if(status === 1){
+      return 'Ativo';
+    }
+    if(status === 2){
+      return 'Inativo';
+    }
+  }
+
 
 
   return (
@@ -40,6 +49,7 @@ const Teams = () => {
             
             <span>{team.teacher.person.name}</span>
             <span>{team.year}</span>
+            <span>{status(team.status_id)}</span>
           <div className={styles.buttons}> 
             <Link 
               to={`edit/${team.id}`}>
