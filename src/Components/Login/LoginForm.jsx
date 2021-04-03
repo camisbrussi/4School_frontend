@@ -1,11 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Input from '../Forms/Input';
 import Button from '../Forms/Button';
 import useForm from '../../Hooks/useForm';
 import { UserContext } from '../../Contexts/UserContext';
 import Error from '../Helper/Error';
-import styles from './LoginForm.module.css';
 import Head from '../Helper/Head';
 
 const LoginForm = () => {
@@ -26,7 +24,7 @@ const LoginForm = () => {
     <section className="animeLeft">
       <Head title="Login" />
       <h1 className="title">Login</h1>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <Input label="Usuário" type="text" name="login" {...login} />
         <Input label="Senha" type="password" name="password" {...password} />
         {loading ? (
@@ -36,9 +34,6 @@ const LoginForm = () => {
         )}
         <Error error={error && 'Dados incorretos.'} />
       </form>
-      <Link className={styles.perdeu} to="/login/perdeu">
-        Perdeu a Senha?
-      </Link>
 
     </section>
   );

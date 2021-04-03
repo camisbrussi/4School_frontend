@@ -1,7 +1,6 @@
 .panel {
   display: grid;
   grid-template-columns: 10rem 1fr;
-  min-height: 100vh;
 }
 
 .forms {

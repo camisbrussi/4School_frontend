@@ -17,9 +17,8 @@ const Activities = () => {
     async function getData(){
       
       const { url, options } = ACTIVITY_GET(token);
-      console.log(url, options)
+
       const response = await axios.get(url, options);
-      console.log('ATIVIDADE'+response)
       setActivities(response.data)
     } 
     getData();
