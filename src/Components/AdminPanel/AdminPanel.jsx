@@ -20,6 +20,11 @@ import TeacherCreate from '../Teacher/TeacherCreate';
 import TeacherEdit from '../Teacher/TeacherEdit';
 import TeacherDelete from '../Teacher/TeacherDelete';
 
+import Responsibles from '../Responsible/Responsibles';
+import ResponsibleCreate from '../Responsible/ResponsibleCreate';
+import ResponsibleEdit from '../Responsible/ResponsibleEdit';
+import ResponsibleDelete from '../Responsible/ResponsibleDelete';
+
 import Teams from '../Team/Teams';
 import TeamCreate from '../Team/TeamCreate';
 import TeamEdit from '../Team/TeamEdit';
@@ -51,6 +56,11 @@ const AdminPanel = () => {
                     <Route path="/teachers/createteacher" element={<TeacherCreate/>}/>
                     <Route path="/teachers/delete/:id" element={<TeacherDelete/>}/>
                     <Route path="/teachers/edit/:id" element={<TeacherEdit/>}/>
+
+                    <Route path="/responsibles" element={<Responsibles/>}/>
+                    <Route path="/responsibles/createresponsible" element={<ResponsibleCreate/>}/>
+                    <Route path="/responsibles/delete/:id" element={<ResponsibleDelete/>}/>
+                    <Route path="/responsibles/edit/:id" element={<ResponsibleEdit/>}/>
 
                     <Route path="/teams" element={<Teams/>}/>
                     <Route path="/teams/createteam" element={<TeamCreate/>}/>

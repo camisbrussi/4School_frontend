@@ -31,17 +31,20 @@ const AdminPanelHeaderNav = () => {
           mobileMenu && styles.navMobileActive
         }`}
       >
-        <NavLink to="/conta/users" end activeClassName={styles.active} className={styles.menu}>Usuário
-          
+        <NavLink to="/conta/users" end activeClassName={styles.active} className={styles.menu}>
+          Usuário
         </NavLink>
-        <NavLink to="/conta/activities" end activeClassName={styles.active} className={styles.menu}>Atividade
-          
+        <NavLink to="/conta/activities" end activeClassName={styles.active} className={styles.menu}>
+          Atividade
         </NavLink>
-        <NavLink to="/conta/teachers" end activeClassName={styles.active} className={styles.menu}>Professores
-         
+        <NavLink to="/conta/teachers" end activeClassName={styles.active} className={styles.menu}>
+          Professores
         </NavLink>
-        <NavLink to="/conta/teams" end activeClassName={styles.active} className={styles.menu}>Turmas
-          
+        <NavLink to="/conta/responsibles" end activeClassName={styles.active} className={styles.menu}>
+          Responsáveis
+        </NavLink>
+        <NavLink to="/conta/teams" end activeClassName={styles.active} className={styles.menu}>
+          Turmas
         </NavLink>
       </nav>
     </>
