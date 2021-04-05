@@ -18,7 +18,8 @@ const ResponsibleCreate = () => {
         const {url, body, options} = RESPONSIBLE_POST(data, token);
         const response = await axios.post(url, body, options);
 
-        if (response.statusText === 'OK') navigate("/conta/responsibles");
+        // if (response.statusText === 'OK') navigate("/conta/responsibles");
+        if (response.statusText === 'OK') navigate("/conta/students/createstudent?responsible="+response.data.responsible_id);
     }
 
     return (

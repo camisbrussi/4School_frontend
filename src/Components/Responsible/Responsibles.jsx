@@ -8,6 +8,7 @@ import stylesBtn from '../Forms/Button.module.css';
 
 import {RESPONSIBLE_GET} from '../../API/Api_Responsible';
 import axios from 'axios'
+import {BsPersonPlusFill} from "react-icons/all";
 
 const Responsibles = () => {
 
@@ -40,11 +41,12 @@ const Responsibles = () => {
 
                         <span>{responsible.person.cpf}</span>
                         <div className={styles.buttons}>
-                            <Link
-                                to={`edit/${responsible.id}`}>
-                                <FaEdit
-                                    size={16}
-                                    style={{color: 'blue'}}/>
+                            <Link to={`../students/createstudent?responsible=` + responsible.id} title="Cadastrar estudante">
+                                <BsPersonPlusFill size={16} style={{color: 'green'}}/>
+                            </Link>
+
+                            <Link to={`edit/${responsible.id}`}>
+                                <FaEdit size={16} style={{color: 'blue'}}/>
                             </Link>
                         </div>
                     </div>

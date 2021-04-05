@@ -25,6 +25,11 @@ import ResponsibleCreate from '../Responsible/ResponsibleCreate';
 import ResponsibleEdit from '../Responsible/ResponsibleEdit';
 import ResponsibleDelete from '../Responsible/ResponsibleDelete';
 
+import Students from '../Student/Students';
+import StudentCreate from '../Student/StudentCreate';
+import StudentEdit from '../Student/StudentEdit';
+import StudentDelete from '../Student/StudentDelete';
+
 import Teams from '../Team/Teams';
 import TeamCreate from '../Team/TeamCreate';
 import TeamEdit from '../Team/TeamEdit';
@@ -61,6 +66,11 @@ const AdminPanel = () => {
                     <Route path="/responsibles/createresponsible" element={<ResponsibleCreate/>}/>
                     <Route path="/responsibles/delete/:id" element={<ResponsibleDelete/>}/>
                     <Route path="/responsibles/edit/:id" element={<ResponsibleEdit/>}/>
+
+                    <Route path="/students" element={<Students/>}/>
+                    <Route path="/students/createstudent" element={<StudentCreate/>}/>
+                    <Route path="/students/delete/:id" element={<StudentDelete/>}/>
+                    <Route path="/students/edit/:id" element={<StudentEdit/>}/>
 
                     <Route path="/teams" element={<Teams/>}/>
                     <Route path="/teams/createteam" element={<TeamCreate/>}/>

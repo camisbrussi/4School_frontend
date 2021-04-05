@@ -43,6 +43,9 @@ const AdminPanelHeaderNav = () => {
         <NavLink to="/conta/responsibles" end activeClassName={styles.active} className={styles.menu}>
           Responsáveis
         </NavLink>
+        <NavLink to="/conta/students" end activeClassName={styles.active} className={styles.menu}>
+          Estudantes
+        </NavLink>
         <NavLink to="/conta/teams" end activeClassName={styles.active} className={styles.menu}>
           Turmas
         </NavLink>
