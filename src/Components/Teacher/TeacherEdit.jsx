@@ -24,13 +24,14 @@ const TeacherEdit = () => {
             let cpf = response.data.person.cpf;
             let email = response.data.person.email;
             let birth_date = response.data.person.birth_date;
+            let isActive = response.data.status_id === 1;
             let phones = [];
 
             if (response.data.person.phones.length) {
                 phones = [...response.data.person.phones];
             }
 
-            setDados({name,cpf,email,birth_date,phones})
+            setDados({name,cpf,email,birth_date,phones,isActive})
             setPodeAtualizar(true);
         }
 
@@ -44,7 +45,7 @@ const TeacherEdit = () => {
         if (response.statusText === 'OK') navigate("/conta/teachers");
     }
 
-    return podeAtualziar ? <FormPerson titulo="Editar Professor" handleSubmit={handleSubmit} dados={dados} addPassword={true} /> : null;
+    return podeAtualziar ? <FormPerson titulo="Editar Professor" handleSubmit={handleSubmit} dados={dados} addPassword={true} addCheckAtivo={true} /> : null;
 };
 
 export default TeacherEdit;
