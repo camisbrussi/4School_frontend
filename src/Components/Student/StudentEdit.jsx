@@ -24,13 +24,14 @@ const StudentEdit = () => {
             let cpf = response.data.person.cpf;
             let email = response.data.person.email;
             let birth_date = response.data.person.birth_date;
+            let isActive = response.data.status.id === 1;
             let phones = [];
 
             if (response.data.person.phones.length) {
                 phones = [...response.data.person.phones];
             }
 
-            setDados({name,cpf,email,birth_date,phones})
+            setDados({name,cpf,email,birth_date,phones,isActive})
             setPodeAtualizar(true);
         }
 
@@ -44,7 +45,7 @@ const StudentEdit = () => {
         if (response.statusText === 'OK') navigate("/conta/students");
     }
 
-    return podeAtualziar ? <FormPerson titulo="Editar Estudante" handleSubmit={handleSubmit} dados={dados} addPassword={false} /> : null;
+    return podeAtualziar ? <FormPerson titulo="Editar Estudante" handleSubmit={handleSubmit} dados={dados} addPassword={false} addCheckAtivo={true} /> : null;
 };
 
 export default StudentEdit;
