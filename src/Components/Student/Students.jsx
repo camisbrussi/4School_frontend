@@ -13,13 +13,18 @@ const Students = () => {
 
     const [students, setStudents] = useState([]);
     const token = window.localStorage.getItem('token');
+    const responsible_id = new URL(window.location.href).searchParams.get("responsible");
 
     useEffect(() => {
         async function getData() {
-            const {url, options} = STUDENT_GET(token);
-            //console.log(url, options)
+            let opcoes;
+            if (responsible_id)
+                opcoes = STUDENT_GET(token, responsible_id);
+            else
+                opcoes = STUDENT_GET(token);
+
+            const {url, options} = opcoes;
             const response = await axios.get(url, options);
-            //console.log(response.data)
             setStudents(response.data)
         }
 
@@ -30,33 +35,40 @@ const Students = () => {
         <section className="animeLeft">
             <Head title="Estudantes"/>
             <h1 className="title title-2">Estudantes</h1>
-            {/*<Link className={stylesBtn.button} to="createstudent">Cadastrar</Link>*/}
-            <small><b><i>* O cadastro de novos estudantes deve ser feito através do cadastro de responsáveis</i></b></small>
+            {
+                responsible_id ? (
+                    <Link className={stylesBtn.button} to={`createstudent?responsible=`+responsible_id}>Cadastrar</Link>
+                ) : (
+                    <small><b><i>* O cadastro de novos estudantes deve ser feito através do cadastro de responsáveis</i></b></small>
+                )
+            }
             <div className={styles.students}>
-                {students.map(student => (
-
-                    <div key={String(student.id)} className={styles.list}>
-
-                        <span>{student.person.name}</span>
-                        <span>{student.person.cpf}</span>
-                        <span>{student.responsible.person.name}</span>
-                        <span>{student.status.description}</span>
-                        <div className={styles.buttons}>
-                            <Link
-                                to={`edit/${student.id}`}>
-                                <FaEdit
-                                    size={16}
-                                    style={{color: 'blue'}}/>
-                            </Link>
-                            <Link
-                                to={`delete/${student.id}`}>
-                                <FaWindowClose
-                                    size={16}
-                                    style={{color: 'red'}}/>
-                            </Link>
-                        </div>
-                    </div>
-                ))}
+                {
+                    students && students.length ? (
+                            students.map(student => (
+                                <div key={String(student.id)} className={styles.list}>
+                                    <span>{student.person.name}</span>
+                                    <span>{student.person.cpf}</span>
+                                    <span>{student.responsible.person.name}</span>
+                                    <span>{student.status.description}</span>
+                                    <div className={styles.buttons}>
+                                        <Link
+                                            to={`edit/${student.id}`}>
+                                            <FaEdit
+                                                size={16}
+                                                style={{color: 'blue'}}/>
+                                        </Link>
+                                        <Link
+                                            to={`delete/${student.id}`}>
+                                            <FaWindowClose
+                                                size={16}
+                                                style={{color: 'red'}}/>
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))
+                        ) : ("Nenhum estudante cadastrado")
+                    }
             </div>
         </section>
     );

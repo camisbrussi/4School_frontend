@@ -1,15 +1,20 @@
-// export const API_URL = 'http://177.44.248.32:8083'
-export const API_URL = 'http://localhost:3003'
+export const API_URL = 'http://177.44.248.32:8083'
+// export const API_URL = 'http://localhost:3003'
 
-export function STUDENT_GET(token) {
-    return {
+export function STUDENT_GET(token, responsible_id) {
+    let options = {
         url: API_URL + '/students',
         options: {
             headers: {
                 Authorization: 'Bearer ' + token,
-            },
-        },
+            }
+        }
     };
+
+    if (responsible_id !== undefined)
+        options.url += "/responsible/"+responsible_id;
+
+    return options;
 }
 
 export function STUDENT_POST(body, token) {

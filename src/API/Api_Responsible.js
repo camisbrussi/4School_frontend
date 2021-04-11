@@ -1,5 +1,5 @@
-// export const API_URL = 'http://177.44.248.32:8083'
-export const API_URL = 'http://localhost:3003'
+export const API_URL = 'http://177.44.248.32:8083'
+// export const API_URL = 'http://localhost:3003'
 
 export function RESPONSIBLE_GET(token) {
     return {
