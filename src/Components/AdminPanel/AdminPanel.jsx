@@ -35,6 +35,9 @@ import TeamCreate from '../Team/TeamCreate';
 import TeamEdit from '../Team/TeamEdit';
 import TeamDelete from '../Team/TeamDelete';
 
+import Error from '../Logs/Errors'
+import Info from '../Logs/Infos'
+
 import styles from './AdminPanel.module.css';
 
 const AdminPanel = () => {
@@ -76,6 +79,9 @@ const AdminPanel = () => {
                     <Route path="/teams/createteam" element={<TeamCreate/>}/>
                     <Route path="/teams/delete/:id" element={<TeamDelete/>}/>
                     <Route path="/teams/edit/:id" element={<TeamEdit/>}/>
+
+                    <Route path="/errors" element={<Error/>}/>
+                    <Route path="/infos" element={<Info/>}/>
 
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>

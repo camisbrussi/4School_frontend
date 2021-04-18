@@ -5,7 +5,7 @@ import styles from "./AdminPanelHeader.module.css";
 const AdminPanelHeader = () => {
   return (
     <header className={styles.header}>
-      <h1 className="title">Painel</h1>
+      <h1 className="title">Painel Administrativo</h1>
       <AdminPanelHeaderNav />
     </header>
   );
