@@ -12,7 +12,6 @@ const StudentDelete = () => {
 
     const {loading, error} = useFetch();
 
-    const token = window.localStorage.getItem('token');
     const [student, setStudents] = useState({});
 
     var params = window.location.href.substr(1).split('/');
@@ -21,18 +20,18 @@ const StudentDelete = () => {
     useEffect(() => {
         async function getData() {
 
-            const {url, options} = STUDENT_SHOW(studentId, token);
+            const {url, options} = STUDENT_SHOW(studentId);
             const response = await axios.get(url, options);
             setStudents(response.data);
         }
 
         getData();
-    }, [studentId, token]);
+    }, [studentId]);
 
 
     async function confirm(event) {
         event.preventDefault();
-        const {url, options} = STUDENT_DELETE(student.id, token)
+        const {url, options} = STUDENT_DELETE(student.id)
         const response = await axios.delete(url, options);
 
         if (response.statusText === 'OK') navigate("/conta/students");

@@ -25,7 +25,6 @@ const TeamEdit = () => {
   const [activeTeam, setActiveTeam] = useState(false);
 
 
-  const token = window.localStorage.getItem('token');
 
   var params = window.location.href.substr(1).split("/");
   let id = params[6];
@@ -33,7 +32,7 @@ const TeamEdit = () => {
 
   useEffect(() => {
     async function getData() {
-      const { url, options } = TEAM_SHOW(id, token);
+      const { url, options } = TEAM_SHOW(id);
       const response = await axios.get(url, options);
       setName(response.data.name);
       setIdTeacher(response.data.teacher.id)
@@ -44,16 +43,16 @@ const TeamEdit = () => {
         console.log(response)
     }
     getData();
-  }, [id, idTeacher, token]);
+  }, [id, idTeacher]);
 
   useEffect(() => {
     async function getData() {
-      const { url, options } = TEACHER_GET(token);
+      const { url, options } = TEACHER_GET();
       const response = await axios.get(url, options);
       setTeachers(response.data);
     }
     getData();
-  }, [token, idTeacher]);
+  }, [idTeacher]);
 
   useEffect(() => {   
     teachers.map(teacher => addOption(teacher.id, teacher.person.name, idTeacher===teacher.id))
@@ -83,7 +82,7 @@ const TeamEdit = () => {
       name,
       teacher_id,
       year,
-    }, token);
+    });
     const response = await axios.put(url, body, options);
     if (response.statusText === 'OK') navigate("/conta/teams");
   }

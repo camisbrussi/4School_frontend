@@ -29,7 +29,8 @@ const ActivityCreate = () => {
     if (check === true){
       generate_certificate = 1;
     }
-    const token = window.localStorage.getItem('token');
+   
+    
     const { url, body, options } = ACTIVITY_POST({
       name: name.value,
       description: description.value,
@@ -37,7 +38,7 @@ const ActivityCreate = () => {
       end: end.value,
       generate_certificate: generate_certificate,
       vacancies: vacancies.value,
-    }, token);
+    });
     const response = await axios.post(url, body, options);
     
     if (response.statusText === 'OK') navigate("/conta/activities");

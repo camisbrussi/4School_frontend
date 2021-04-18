@@ -13,9 +13,8 @@ const ResponsibleCreate = () => {
 
     async function handleSubmit(event, data) {
         event.preventDefault();
-        const token = window.localStorage.getItem('token');
 
-        const {url, body, options} = RESPONSIBLE_POST(data, token);
+        const {url, body, options} = RESPONSIBLE_POST(data);
         const response = await axios.post(url, body, options);
 
         // if (response.statusText === 'OK') navigate("/conta/responsibles");

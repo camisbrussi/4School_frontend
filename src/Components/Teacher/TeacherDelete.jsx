@@ -12,7 +12,7 @@ const TeacherDelete = () => {
 
     const {loading, error} = useFetch();
 
-    const token = window.localStorage.getItem('token');
+   
     const [teacher, setTeachers] = useState({});
 
     var params = window.location.href.substr(1).split('/');
@@ -21,18 +21,18 @@ const TeacherDelete = () => {
     useEffect(() => {
         async function getData() {
 
-            const {url, options} = TEACHER_SHOW(teacherId, token);
+            const {url, options} = TEACHER_SHOW(teacherId);
             const response = await axios.get(url, options);
             setTeachers(response.data);
         }
 
         getData();
-    }, [teacherId, token]);
+    }, [teacherId]);
 
 
     async function confirm(event) {
         event.preventDefault();
-        const {url, options} = TEACHER_DELETE(teacher.id, token)
+        const {url, options} = TEACHER_DELETE(teacher.id)
         const response = await axios.delete(url, options);
 
         if (response.statusText === 'OK') navigate("/conta/teachers");

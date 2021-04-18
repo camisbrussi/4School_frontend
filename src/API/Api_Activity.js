@@ -1,20 +1,26 @@
 export const API_URL = 'http://177.44.248.32:8082'
-// export const API_URL = 'http://localhost:3002'
+//export const API_URL = 'http://localhost:3002'
+
+const token = window.localStorage.getItem('token');
+const userLogged = window.localStorage.getItem('user');
+const idUserLogged = window.localStorage.getItem('id');
 
 
-export function ACTIVITY_GET(token) {
+export function ACTIVITY_GET() {
 
   return {
     url: API_URL + '/activities',
     options: {
       headers: {
         Authorization: 'Bearer ' + token,
+        UserLogged: userLogged,
+        idUserLogged: idUserLogged
       },
     },
   };
 }
 
-export function ACTIVITY_POST(body, token) {
+export function ACTIVITY_POST(body) {
   return {
     url: API_URL + '/activities',
     body: JSON.stringify(body),
@@ -22,24 +28,28 @@ export function ACTIVITY_POST(body, token) {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
+        UserLogged: userLogged,
+        idUserLogged: idUserLogged
       },
     },
   };
 }
 
-export function ACTIVITY_SHOW(id, token) {
+export function ACTIVITY_SHOW(id) {
   return {
     url: API_URL + '/activities/' + id,
     options: {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
+        UserLogged: userLogged,
+        idUserLogged: idUserLogged
       },
     },
   };
 }
 
-export function ACTIVITY_PUT(id, body, token) {
+export function ACTIVITY_PUT(id, body) {
   return {
     url: API_URL + '/activities/'+ id,
     body: JSON.stringify(body),
@@ -48,18 +58,22 @@ export function ACTIVITY_PUT(id, body, token) {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
+        UserLogged: userLogged,
+        idUserLogged: idUserLogged
       },
     },
   };
 }
 
-export function ACTIVITY_DELETE(id, token) {
+export function ACTIVITY_DELETE(id) {
   return {
     url: API_URL + '/activities/'+ id,
     options: {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
+        UserLogged: userLogged,
+        idUserLogged: idUserLogged
       },
     },
   };

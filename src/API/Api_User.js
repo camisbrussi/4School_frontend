@@ -1,6 +1,9 @@
 export const API_URL = 'http://177.44.248.32:8081'
-// export const API_URL = 'http://localhost:3001'
+//export const API_URL = 'http://localhost:3001'
 
+const token = window.localStorage.getItem('token');
+const userLogged = window.localStorage.getItem('user');
+const idUserLogged = window.localStorage.getItem('id');
 
 export function TOKEN_POST(body) {
 
@@ -28,18 +31,21 @@ export function TOKEN_VALIDATE_POST(token) {
 }
 
 
-export function USER_GET(token) {
+export function USER_GET() {
   return {
     url: API_URL + '/users',
     options: {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
+        UserLogged: userLogged,
+        idUserLogged: idUserLogged
       },
     },
   };
 }
 
-export function USER_POST(body, token) {
+export function USER_POST(body) {
   return {
     url: API_URL + '/users',
     body: JSON.stringify(body),
@@ -47,23 +53,27 @@ export function USER_POST(body, token) {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
+        UserLogged: userLogged,
+        idUserLogged: idUserLogged
       },
     },
   };
 }
 
-export function USER_SHOW(id, token) {
+export function USER_SHOW(id) {
   return {
     url: API_URL + '/users/'+id,
     options: {
       headers: {
         Authorization: 'Bearer ' + token,
+        UserLogged: userLogged,
+        idUserLogged: idUserLogged
       },
     },
   };
 }
 
-export function USER_PUT(id, body, token) {
+export function USER_PUT(id, body) {
   return {
     url: API_URL + '/users/' +id,
     body: JSON.stringify(body),
@@ -71,47 +81,22 @@ export function USER_PUT(id, body, token) {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
+        UserLogged: userLogged,
+        idUserLogged: idUserLogged
       },
     },
   };
 }
-export function USER_DELETE(id, token) {
+export function USER_DELETE(id) {
   return {
     url: API_URL + '/users/'+ id,
     options: {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
+        UserLogged: userLogged,
+        idUserLogged: idUserLogged
       },
-    },
-  };
-}
-
-
-//FAZER ROTA
-export function PASSWORD_LOST(body) {
-  return {
-    url: API_URL + 'password/lost',
-    options: {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    },
-  };
-}
-
-//FAZER ROTA
-export function PASSWORD_RESET(body) {
-  return {
-    url: API_URL + '/password/reset',
-    options: {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
     },
   };
 }

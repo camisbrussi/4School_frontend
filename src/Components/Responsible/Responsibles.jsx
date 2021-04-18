@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Head from '../Helper/Head';
-import {FaEdit, FaWindowClose} from 'react-icons/fa'
+import {FaEdit} from 'react-icons/fa'
 import {Link} from 'react-router-dom';
 
 import styles from './Responsibles.module.css'
@@ -13,11 +13,11 @@ import {BsFillPersonLinesFill, BsPersonPlusFill} from "react-icons/all";
 const Responsibles = () => {
 
     const [responsibles, setResponsibles] = useState([]);
-    const token = window.localStorage.getItem('token');
+
 
     useEffect(() => {
         async function getData() {
-            const {url, options} = RESPONSIBLE_GET(token);
+            const {url, options} = RESPONSIBLE_GET();
             //console.log(url, options)
             const response = await axios.get(url, options);
             //console.log(response.data)
@@ -25,7 +25,7 @@ const Responsibles = () => {
         }
 
         getData();
-    }, [token]);
+    }, []);
 
     return (
         <section className="animeLeft">

@@ -11,17 +11,18 @@ import axios from 'axios'
 const Teams = () => {
 
   const [teams, setTeams] = useState([]);
-  const token = window.localStorage.getItem('token');
+
+
 
   useEffect(() =>{ 
     async function getData(){
       
-      const { url, options } = TEAM_GET(token);
+      const { url, options } = TEAM_GET();
       const response = await axios.get(url, options);
       setTeams(response.data)
     } 
     getData();
-  },[token]);
+  },[]);
 
   function status(status) {
     if(status === 1){

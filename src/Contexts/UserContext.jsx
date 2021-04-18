@@ -20,6 +20,8 @@ export const UserStorage = ({ children }) => {
       setLoading(false);
       setLogin(false);
       window.localStorage.removeItem('token');
+      window.localStorage.removeItem('user');
+      window.localStorage.removeItem('id');
       navigate('/login');
     },
     [navigate],
@@ -45,8 +47,12 @@ export const UserStorage = ({ children }) => {
 
       if (tokenRes.statusText !== 'OK') throw new Error(`Error: ${tokenRes.statusText}`);
       const { token } = await tokenRes.data;
+      const { id } = await tokenRes.data.user;
+      console.log('ID '+ id)
       setLogin(true);
       window.localStorage.setItem('token', token);
+      window.localStorage.setItem('user', login);
+      window.localStorage.setItem('id', id);
       navigate('/');
       
     } catch (err) {

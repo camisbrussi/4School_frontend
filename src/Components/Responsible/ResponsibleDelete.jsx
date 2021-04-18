@@ -12,7 +12,6 @@ const ResponsibleDelete = () => {
 
     const {loading, error} = useFetch();
 
-    const token = window.localStorage.getItem('token');
     const [responsible, setResponsibles] = useState({});
 
     var params = window.location.href.substr(1).split('/');
@@ -21,18 +20,18 @@ const ResponsibleDelete = () => {
     useEffect(() => {
         async function getData() {
 
-            const {url, options} = RESPONSIBLE_SHOW(responsibleId, token);
+            const {url, options} = RESPONSIBLE_SHOW(responsibleId);
             const response = await axios.get(url, options);
             setResponsibles(response.data);
         }
 
         getData();
-    }, [responsibleId, token]);
+    }, [responsibleId]);
 
 
     async function confirm(event) {
         event.preventDefault();
-        const {url, options} = RESPONSIBLE_DELETE(responsible.id, token)
+        const {url, options} = RESPONSIBLE_DELETE(responsible.id)
         const response = await axios.delete(url, options);
 
         if (response.statusText === 'OK') navigate("/conta/responsibles");

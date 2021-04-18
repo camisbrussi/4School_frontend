@@ -8,7 +8,8 @@ import FormPerson from "../Person/FormPerson";
 
 const StudentEdit = () => {
     const navigate = useNavigate();
-    const token = window.localStorage.getItem('token');
+
+    
     var params = window.location.href.substr(1).split("/");
     let id = params[6];
 
@@ -17,7 +18,7 @@ const StudentEdit = () => {
 
     useEffect(() => {
         async function getData() {
-            const {url, options} = STUDENT_SHOW(id, token);
+            const {url, options} = STUDENT_SHOW(id);
             const response = await axios.get(url, options);
 
             let name = response.data.person.name;
@@ -36,11 +37,11 @@ const StudentEdit = () => {
         }
 
         getData();
-    }, [id, token]);
+    }, [id]);
 
     async function handleSubmit(event, data) {
         event.preventDefault();
-        const {url, body, options} = STUDENT_PUT(id, data, token);
+        const {url, body, options} = STUDENT_PUT(id, data);
         const response = await axios.put(url, body, options);
         if (response.statusText === 'OK') navigate("/conta/students");
     }

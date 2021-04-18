@@ -11,18 +11,17 @@ import axios from 'axios'
 const Activities = () => {
 
   const [activities, setActivities] = useState([]);
-  const token = window.localStorage.getItem('token');
 
   useEffect(() =>{ 
     async function getData(){
       
-      const { url, options } = ACTIVITY_GET(token);
+      const { url, options } = ACTIVITY_GET();
 
       const response = await axios.get(url, options);
       setActivities(response.data)
     } 
     getData();
-  },[ token]);
+  },[]);
 
 
   function status(status) {

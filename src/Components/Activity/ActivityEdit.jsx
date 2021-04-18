@@ -23,7 +23,6 @@ const ActivityEdit = () => {
   const [vacancies, setVacancies] = useState("");
   const [activeActivity, setActiveActivity] = useState(false);
 
-  const token = window.localStorage.getItem("token");
 
   var params = window.location.href.substr(1).split("/");
   let id = params[6];
@@ -31,7 +30,7 @@ const ActivityEdit = () => {
 
   useEffect(() => {
     async function getData() {
-      const { url, options } = ACTIVITY_SHOW(id, token);
+      const { url, options } = ACTIVITY_SHOW(id);
       const response = await axios.get(url, options);
       setName(response.data.name);
       setDescription(response.data.description);
@@ -44,7 +43,7 @@ const ActivityEdit = () => {
       }
     }
     getData();
-  }, [id, token]);
+  }, [id]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -65,7 +64,6 @@ const ActivityEdit = () => {
         generate_certificate,
         vacancies,
       },
-      token
     );
     const response = await axios.put(url, body, options);
    

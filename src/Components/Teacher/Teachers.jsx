@@ -12,11 +12,11 @@ import axios from 'axios'
 const Teachers = () => {
 
     const [teachers, setTeachers] = useState([]);
-    const token = window.localStorage.getItem('token');
+
 
     useEffect(() => {
         async function getData() {
-            const {url, options} = TEACHER_GET(token);
+            const {url, options} = TEACHER_GET();
             //console.log(url, options)
             const response = await axios.get(url, options);
             //console.log(response.data)
@@ -24,7 +24,7 @@ const Teachers = () => {
         }
 
         getData();
-    }, [token]);
+    }, []);
 
     return (
         <section className="animeLeft">

@@ -13,9 +13,8 @@ const TeacherCreate = () => {
 
     async function handleSubmit(event, data) {
         event.preventDefault();
-        const token = window.localStorage.getItem('token');
 
-        const {url, body, options} = TEACHER_POST(data, token);
+        const {url, body, options} = TEACHER_POST(data);
         const response = await axios.post(url, body, options);
 
         if (response.statusText === 'OK') navigate("/conta/teachers");

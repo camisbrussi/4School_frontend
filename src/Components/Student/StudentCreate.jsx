@@ -1,7 +1,7 @@
 import React from 'react';
 
 import useFetch from '../../Hooks/useFetch';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import {STUDENT_POST} from '../../API/Api_Student';
 import axios from "axios";
@@ -13,12 +13,11 @@ const StudentCreate = () => {
 
     async function handleSubmit(event, data) {
         event.preventDefault();
-        const token = window.localStorage.getItem('token');
 
         const responsible_id = new URL(window.location.href).searchParams.get("responsible");
         data.responsible_id = responsible_id;
 
-        const {url, body, options} = STUDENT_POST(data, token);
+        const {url, body, options} = STUDENT_POST(data);
         const response = await axios.post(url, body, options);
 
         if (response.statusText === 'OK') navigate("/conta/students");

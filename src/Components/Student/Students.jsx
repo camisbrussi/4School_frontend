@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Head from '../Helper/Head';
 import {FaEdit, FaWindowClose} from 'react-icons/fa'
-import {Link, useParams} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import styles from './Students.module.css'
 import stylesBtn from '../Forms/Button.module.css';
@@ -12,16 +12,16 @@ import axios from 'axios'
 const Students = () => {
 
     const [students, setStudents] = useState([]);
-    const token = window.localStorage.getItem('token');
+
     const responsible_id = new URL(window.location.href).searchParams.get("responsible");
 
     useEffect(() => {
         async function getData() {
             let opcoes;
             if (responsible_id)
-                opcoes = STUDENT_GET(token, responsible_id);
+                opcoes = STUDENT_GET(responsible_id);
             else
-                opcoes = STUDENT_GET(token);
+                opcoes = STUDENT_GET();
 
             const {url, options} = opcoes;
             const response = await axios.get(url, options);
@@ -29,7 +29,7 @@ const Students = () => {
         }
 
         getData();
-    }, [token]);
+    }, [responsible_id]);
 
     return (
         <section className="animeLeft">

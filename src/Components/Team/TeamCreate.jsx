@@ -22,16 +22,14 @@ const TeamCreate = () => {
 
   const { loading, error } = useFetch();
 
-  const token = window.localStorage.getItem("token");
-
   useEffect(() => {
     async function getData() {
-      const { url, options } = TEACHER_GET(token);
+      const { url, options } = TEACHER_GET();
       const response = await axios.get(url, options);
       setTeachers(response.data);
     }
     getData();
-  }, [token]);
+  }, []);
 
   useEffect(() => {   
     teachers.map(teacher => addOption(teacher.id, teacher.person.name))

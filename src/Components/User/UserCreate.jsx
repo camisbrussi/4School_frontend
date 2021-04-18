@@ -21,7 +21,7 @@ const UserCreate = () => {
   const { loading } = useFetch();
 
   const { error } = React.useContext(UserContext);
-  const token = window.localStorage.getItem('token');
+
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -29,7 +29,7 @@ const UserCreate = () => {
       name: name.value,
       login: login.value,
       password: password.value,
-    }, token);
+    });
     const response = await axios.post(url, body, options);
     if (response.statusText === 'OK') navigate("/conta/users");
   }

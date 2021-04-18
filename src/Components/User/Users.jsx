@@ -11,18 +11,19 @@ import axios from 'axios'
 const Users = () => {
 
   const [users, setUsers] = useState([]);
-  const token = window.localStorage.getItem('token');
+
 
   useEffect(() =>{ 
     async function getData(){
       
-      const { url, options } = USER_GET(token);
+      const { url, options } = USER_GET();
       const response = await axios.get(url, options);
       setUsers(response.data);
     } 
     getData();
-  },[token]);
+  },[]);
 
+  console.log(users)
 
   function status(status) {
     if(status === 1){

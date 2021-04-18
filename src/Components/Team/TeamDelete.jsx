@@ -12,7 +12,6 @@ const TeamDelete = () => {
 
   const { loading, error } = useFetch();
 
-  const token = window.localStorage.getItem('token');
   const [team, setTeam] = useState({});
    
   var params = window.location.href.substr(1).split('/');
@@ -21,17 +20,17 @@ const TeamDelete = () => {
     useEffect(() =>{ 
       async function getData(){
         
-        const { url, options } = TEAM_SHOW(teamId, token);
+        const { url, options } = TEAM_SHOW(teamId);
         const response = await axios.get(url, options);
         setTeam(response.data);
       } 
       getData();
-    },[teamId, token]);
+    },[teamId]);
 
 
   async function confirm(event) {
     event.preventDefault();
-    const { url, options } = TEAM_DELETE(team.id, token)
+    const { url, options } = TEAM_DELETE(team.id)
     const response = await axios.delete(url, options);
 
     if (response.statusText === 'OK') navigate("/conta/teams");
