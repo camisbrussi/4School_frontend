@@ -34,6 +34,7 @@ import Teams from '../Team/Teams';
 import TeamCreate from '../Team/TeamCreate';
 import TeamEdit from '../Team/TeamEdit';
 import TeamDelete from '../Team/TeamDelete';
+import TeamStudentsAdd from "../Team/TeamStudentsAdd";
 
 import Error from '../Logs/Errors'
 import Info from '../Logs/Infos'
@@ -58,7 +59,7 @@ const AdminPanel = () => {
                     <Route path="/activities/createactivity" element={<ActivityCreate/>}/>
                     <Route path="/activities/delete/:id" element={<ActivityDelete/>}/>
                     <Route path="/activities/edit/:id" element={<ActivityEdit/>}/>
-                    <Route path="/activities" element={<Activities/>}/>
+                    {/*<Route path="/activities" element={<Activities/>}/>*/}
 
                     <Route path="/teachers" element={<Teachers/>}/>
                     <Route path="/teachers/createteacher" element={<TeacherCreate/>}/>
@@ -79,6 +80,7 @@ const AdminPanel = () => {
                     <Route path="/teams/createteam" element={<TeamCreate/>}/>
                     <Route path="/teams/delete/:id" element={<TeamDelete/>}/>
                     <Route path="/teams/edit/:id" element={<TeamEdit/>}/>
+                    <Route path="/teams/addstudents" element={<TeamStudentsAdd/>}/>
 
                     <Route path="/errors" element={<Error/>}/>
                     <Route path="/infos" element={<Info/>}/>
