@@ -5,7 +5,7 @@ const token = window.localStorage.getItem('token');
 
 export function ERROR_GET() {
   return {
-    url: API_URL + '/error',
+    url: API_URL + '/errors',
     options: {
       headers: {
         'Content-Type': 'application/json',
@@ -17,7 +17,31 @@ export function ERROR_GET() {
 
 export function INFO_GET() {
   return {
-    url: API_URL + '/info',
+    url: API_URL + '/infos',
+    options: {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    },
+  };
+}
+
+export function ERROR_SHOW(arquive) {
+  return {
+    url: API_URL + '/errors/' + arquive,
+    options: {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    },
+  };
+}
+
+export function INFO_SHOW(arquive) {
+  return {
+    url: API_URL + '/infos/' + arquive,
     options: {
       headers: {
         'Content-Type': 'application/json',

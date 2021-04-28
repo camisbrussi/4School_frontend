@@ -31,6 +31,7 @@ const UserCreate = () => {
       password: password.value,
     });
     const response = await axios.post(url, body, options);
+    console.log("ERRO"+response.data);
     if (response.statusText === 'OK') navigate("/conta/users");
   }
 

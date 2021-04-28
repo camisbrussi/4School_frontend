@@ -18,10 +18,12 @@ const Error = () => {
       
       const { url, options } = ERROR_GET();
       const response = await axios.get(url, options);
+      console.log(response)
       setErrors(response.data);
     } 
     getData();
   },[]);
+  
 
   return (
     <section className="animeLeft">
@@ -35,7 +37,7 @@ const Error = () => {
             <span>{error}</span>
             <div className={styles.buttons}> 
             <Link 
-              to={`/${error}`}
+              to={`${error}`}
               
               >
                 <FaEye 
