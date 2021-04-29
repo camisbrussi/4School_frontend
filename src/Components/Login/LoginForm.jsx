@@ -26,7 +26,7 @@ const LoginForm = () => {
       <h1 className="title">Login</h1>
       <form onSubmit={handleSubmit}>
         <Input label="Usuário" type="text" name="login" {...login} />
-        <Input label="Senha" type="password" name="password" {...password} />
+        <Input label="Senha:" type="password" name="password" {...password} />
         {loading ? (
           <Button disabled>Carregando...</Button>
         ) : (
