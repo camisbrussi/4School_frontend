@@ -60,7 +60,7 @@ const TeamCreate = () => {
     );
     const response = await axios.post(url, body, options);
 
-    if (response.statusText === "OK") navigate("/conta/teams/addstudents?team="+response.data.id);
+    if (response.statusText === "OK") navigate("/conta/teams/addstudents?team="+response.data.id+"&year="+year.value);
   }
 
   return (

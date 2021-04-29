@@ -1,101 +1,99 @@
 import React, {useEffect, useState} from "react";
 import Input from "../Forms/Input";
 import Button from "../Forms/Button";
-import Select from "../Forms/Select";
 import Error from "../Helper/Error";
-import useForm from "../../Hooks/useForm";
 
 import useFetch from "../../Hooks/useFetch";
 import {Link, useNavigate} from "react-router-dom";
 
-import styles from "./Teams.module.css";
-
-import {TEAM_GET_STUDENTS, TEAM_POST, TEAM_POST_STUDENTS} from "../../API/Api_Team";
-import {TEACHER_GET} from "../../API/Api_Teacher";
 import axios from "axios";
-import {STUDENT_FILTER} from "../../API/Api_Student";
 import {RiAddBoxFill} from "react-icons/all";
 import {FaWindowClose} from "react-icons/fa";
+import {ACTIVITY_GET_TEACHERS, ACTIVITY_POST_PARTICIPANT} from "../../API/Api_Activity";
+import {TEACHER_FILTER} from "../../API/Api_Teacher";
 
-const TeamStudentsAdd = () => {
+const ActivityAddTeacher = () => {
     const [nameFiltro, setNameFiltro] = useState("");
     const [cpfFiltro, setCpfFiltro] = useState("");
-    const [anoFiltro, setAnoFiltro] = useState("");
 
-    const [alunosFiltro, setAlunosFiltro] = useState([]);
-    const [alunosTurma, setAlunosTurma] = useState([]);
+    const [professoresFiltro, setProfessoresFiltro] = useState([]);
+    const [professoresAtividade, setProfessoresAtividade] = useState([]);
 
     const [objErros, setObjErros] = useState({});
 
-    const team_id = new URL(window.location.href).searchParams.get("team");
-    const team_name = new URL(window.location.href).searchParams.get("name");
-    const team_year = new URL(window.location.href).searchParams.get("year");
+    const activity_id = new URL(window.location.href).searchParams.get("activity");
+    const activity_name = new URL(window.location.href).searchParams.get("name");
 
     const {loading, error} = useFetch();
     const navigate = useNavigate();
 
-    //- busca os alunos que ja estao vinculados com a turma
+    //- busca os professores que ja estao vinculados com a atividade
     useEffect(() => {
-        async function getStudents() {
-            const { url, options } = TEAM_GET_STUDENTS(new URL(window.location.href).searchParams.get("team"));
+        async function getTeachers() {
+            const { url, options } = ACTIVITY_GET_TEACHERS(activity_id);
             const response = await axios.get(url, options);
 
-            setAlunosTurma(response.data);
+            let professores = response.data;
+            for (let i = 0; i < professores.length; i++) {
+                professores[i].inActivity = true;
+            }
+
+            setProfessoresAtividade(professores);
         }
-        getStudents();
+        getTeachers();
     }, []);
 
-    async function filtraEstudantes() {
+    async function filtraProfessores() {
         const token = window.localStorage.getItem("token");
-        const {url, options} = STUDENT_FILTER(
+        const {url, options} = TEACHER_FILTER(
             {
                 status_id: 1, //-Ativo
                 name: nameFiltro,
-                cpf: cpfFiltro,
-                yearBirth: anoFiltro
+                cpf: cpfFiltro
             },
             token
         );
 
         const response = await axios.get(url, options);
-        setAlunosFiltro(response.data);
+        setProfessoresFiltro(response.data);
     }
 
-    function addAluno(id){
-        if (id <= 0 || !alunosFiltro.length)
+    function addProfessor(id){
+        if (id <= 0 || !professoresFiltro.length)
             return;
 
-        alunosFiltro.map(aluno => {
-            if (aluno.id === id && !isAlunoInTurma(aluno.id)) {
-                let alunos = [...alunosTurma];
-                alunos.push(aluno);
+        professoresFiltro.map(professor => {
+            if (professor.person.id === id && !isTeacherInActivity(professor.person.id)) {
+                let professores = [...professoresAtividade];
+                professor.inActivity = false;
+                professores.push(professor);
 
-                alunos = ordernarAlunosTurma(alunos);
-                setAlunosTurma(alunos);
+                professores = ordernarProfessoresAtividade(professores);
+                setProfessoresAtividade(professores);
             }
         });
     }
 
-    function removeAluno(id) {
-        if (id <= 0 || !alunosTurma.length)
+    function removeProfessor(id) {
+        if (id <= 0 || !professoresAtividade.length)
             return;
 
-        for (let i = 0; i < alunosTurma.length; i++) {
-            if (alunosTurma[i].id === id) {
-                let alunos = [...alunosTurma];
-                alunos.splice(i,1);
-                setAlunosTurma(alunos);
+        for (let i = 0; i < professoresAtividade.length; i++) {
+            if (professoresAtividade[i].person.id === id) {
+                let professores = [...professoresAtividade];
+                professores.splice(i,1);
+                setProfessoresAtividade(professores);
                 break;
             }
         }
     }
 
-    function isAlunoInTurma(id){
-        if (!alunosTurma.length)
+    function isTeacherInActivity(id){
+        if (!professoresAtividade.length)
             return false;
 
-        for (let i = 0; i < alunosTurma.length; i++) {
-            if (alunosTurma[i].id === id)
+        for (let i = 0; i < professoresAtividade.length; i++) {
+            if (professoresAtividade[i].person.id === id)
                 return true;
         }
 
@@ -111,22 +109,23 @@ const TeamStudentsAdd = () => {
         return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
     }
 
-    function ordernarAlunosTurma(alunos) {
-        alunos.sort(function(a,b) {
+    function ordernarProfessoresAtividade(professores) {
+        professores.sort(function(a,b) {
             return a.person.name < b.person.name ? -1 : a.person.name > b.person.name ? 1 : 0;
         });
 
-        return alunos;
+        return professores;
     }
 
     async function handleSubmit(event) {
         event.preventDefault();
 
         const token = window.localStorage.getItem("token");
-        const {url, body, options} = TEAM_POST_STUDENTS(team_id,{students:alunosTurma},token);
+        const {url, body, options} = ACTIVITY_POST_PARTICIPANT(activity_id,{
+            participants:professoresAtividade
+        },token);
 
         const response = await axios.post(url, body, options);
-        //console.log(response);
         if (response.statusText === "OK") {
             if (response.data.erros !== undefined && response.data.erros.length) {
                 let erros = {msg: response.data.success, erros: []};
@@ -135,86 +134,79 @@ const TeamStudentsAdd = () => {
                 }
                 setObjErros(erros);
             } else {
-                navigate("/conta/teams");
+                navigate("/conta/activities/participants/?activity="+activity_id+"&name="+activity_name);
             }
         }
     }
 
     return (
         <section className="animeLeft">
-            <h1 className="title title-2">Gerenciar alunos da turma {team_name} ({team_year})</h1>
+            <h1 className="title title-2">Gerenciar professores da atividade {activity_name}</h1>
 
             <div className="containerFiltro">
-                <h3 className="mb-5">Filtro de Alunos</h3>
+                <h3 className="mb-5">Filtro de Professores</h3>
 
-                <div className="container40">
+                <div className="container60">
                     <Input label="Nome" type="text" onChange={(e) => { setNameFiltro(e.target.value) }}/>
                 </div>
                 <div className="container20">
                     <Input label="CPF" type="text" onChange={(e) => { setCpfFiltro(e.target.value) }}/>
                 </div>
                 <div className="container20">
-                    <Input label="Ano Nascimento" type="text" onChange={(e) => { setAnoFiltro(e.target.value) }}/>
-                </div>
-                <div className="container20">
                     <label>&nbsp;</label>
-                    <Button type="button" onClick={filtraEstudantes}>Buscar</Button>
+                    <Button type="button" onClick={filtraProfessores}>Buscar</Button>
                 </div>
             </div>
 
             <div className="container100 mt-30">
                 <div className="container50 mb-30">
                     <h3 className="mb-5">Estudantes filtrados</h3>
-                    {alunosFiltro.length ? (
+                    {professoresFiltro.length ? (
                         <table>
                             <thead>
                                 <tr>
                                     <th>Nome</th>
                                     <th>CPF</th>
-                                    <th>Nascimento</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                            {alunosFiltro.map(aluno => (
-                                <tr key={aluno.id}>
-                                    <td>{aluno.person.name}</td>
-                                    <td>{formataCPF(aluno.person.cpf)}</td>
-                                    <td>{formataData(aluno.person.birth_date)}</td>
-                                    <td><RiAddBoxFill className="cursor-pointer" onClick={() => {addAluno(aluno.id)}} size={16} style={{color: 'green'}}/></td>
+                            {professoresFiltro.map(professor => (
+                                <tr key={professor.id}>
+                                    <td>{professor.person.name}</td>
+                                    <td>{formataCPF(professor.person.cpf)}</td>
+                                    <td><RiAddBoxFill className="cursor-pointer" onClick={() => {addProfessor(professor.person.id)}} size={16} style={{color: 'green'}}/></td>
                                 </tr>
                             ))}
                             </tbody>
                         </table>)
-                     : ("Nenhum aluno encontrado")}
+                     : ("Nenhum professor encontrado")}
                 </div>
 
                 <div className="container50 mb-30">
-                    <h3 className="mb-5">Estudantes da turma</h3>
-                    {alunosTurma.length ? (
+                    <h3 className="mb-5">Professores na atividade</h3>
+                    {professoresAtividade.length ? (
                             <table>
                                 <thead>
                                 <tr>
                                     <th>Nome</th>
                                     <th>CPF</th>
-                                    <th>Nascimento</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {alunosTurma.map(aluno => (
-                                    <tr key={aluno.id}>
-                                        <td>{aluno.person.name}</td>
-                                        <td>{formataCPF(aluno.person.cpf)}</td>
-                                        <td>{formataData(aluno.person.birth_date)}</td>
+                                {professoresAtividade.map(professor => (
+                                    <tr key={professor.id}>
+                                        <td>{professor.person.name}</td>
+                                        <td>{formataCPF(professor.person.cpf)}</td>
                                         <td>
-                                            <FaWindowClose onClick={() => {removeAluno(aluno.id)}} className="cursor-pointer" size={16} style={{color: 'red'}}/>
+                                            {professor.inActivity ? "" : (<FaWindowClose onClick={() => {removeProfessor(professor.person.id)}} className="cursor-pointer" size={16} style={{color: 'red'}}/>)}
                                         </td>
                                     </tr>
                                 ))}
                                 </tbody>
                             </table>)
-                        : ("Nenhum aluno na turma")}
+                        : ("Nenhum professor na atividade")}
                 </div>
             </div>
 
@@ -235,4 +227,4 @@ const TeamStudentsAdd = () => {
     );
 };
 
-export default TeamStudentsAdd;
+export default ActivityAddTeacher;
