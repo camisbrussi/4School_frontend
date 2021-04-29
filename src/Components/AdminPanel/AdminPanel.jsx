@@ -37,8 +37,9 @@ import TeamDelete from '../Team/TeamDelete';
 import TeamStudentsAdd from "../Team/TeamStudentsAdd";
 
 import Error from '../Logs/Errors'
-
+import ErrorShow from '../Logs/ErrorShow'
 import Info from '../Logs/Infos'
+import InfoShow from '../Logs/InfoShow'
 
 
 import styles from './AdminPanel.module.css';

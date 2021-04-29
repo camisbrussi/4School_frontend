@@ -29,7 +29,7 @@ export function INFO_GET() {
 
 export function ERROR_SHOW(arquive) {
   return {
-    url: API_URL + '/errors/' + arquive,
+    url: API_URL + '/errors/show/' + arquive,
     options: {
       headers: {
         'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export function ERROR_SHOW(arquive) {
 
 export function INFO_SHOW(arquive) {
   return {
-    url: API_URL + '/infos/' + arquive,
+    url: API_URL + '/infos/show/' + arquive,
     options: {
       headers: {
         'Content-Type': 'application/json',
@@ -50,3 +50,28 @@ export function INFO_SHOW(arquive) {
     },
   };
 }
+  export function INFO_FILTER(body) {
+    return {
+      url: API_URL + '/infos/filter',
+      body: JSON.stringify(body),
+      options: {
+        headers: {
+          'Content-Type': 'application/json',
+        },     
+      },
+    };
+  }
+
+  export function ERROR_FILTER(body) {
+
+    return {
+      url: API_URL + '/errors/filter',
+      body: JSON.stringify(body),
+      options: {
+        headers: {
+          'Content-Type': 'application/json',
+        },     
+      },
+    };
+  }
+

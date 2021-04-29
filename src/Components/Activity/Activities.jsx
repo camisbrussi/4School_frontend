@@ -34,6 +34,7 @@ const Activities = () => {
   }
 
   function date(datetime){
+    console.log(datetime);
     var date = new Date(datetime)
 
     return date.toLocaleString('pt-BR')
