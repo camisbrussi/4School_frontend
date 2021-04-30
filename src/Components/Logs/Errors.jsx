@@ -56,7 +56,7 @@ const Error = () => {
     <section className="animeLeft">
       <h1 className="title title-2">Logs de Erro do Sistema</h1>
       <div className={styles.logs}>
-        <h3 className="mb-5">Filtro de Erros</h3>
+        <h3 className="mb-5">Filtro</h3>
         <div className={styles.container40}>
           <Input label="Inicio" type="date" name="start" {...start} />
         </div>
