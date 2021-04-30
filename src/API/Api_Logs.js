@@ -1,5 +1,5 @@
-//export const API_URL = 'http://177.44.248.32:8090'
-export const API_URL = 'http://localhost:3010'
+export const API_URL = 'http://177.44.248.32:8090'
+//export const API_URL = 'http://localhost:3010'
 
 const token = window.localStorage.getItem('token');
 
