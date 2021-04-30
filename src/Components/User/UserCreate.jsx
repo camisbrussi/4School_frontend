@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Input from '../Forms/Input';
 import Button from '../Forms/Button';
 import Error from '../Helper/Error';
@@ -21,6 +21,8 @@ const UserCreate = () => {
   const { loading } = useFetch();
 
   const { error } = React.useContext(UserContext);
+  const [objErros, setObjErros] = useState({});
+
 
 
   async function handleSubmit(event) {
@@ -31,9 +33,19 @@ const UserCreate = () => {
       password: password.value,
     });
     const response = await axios.post(url, body, options);
-    console.log("ERRO"+response.data);
-    if (response.statusText === 'OK') navigate("/conta/users");
+
+    if (response.statusText === "OK") {
+      if (response.data.erros !== undefined && response.data.erros.length) {
+          let erros = {msg: response.data.success, erros: []};
+          for (let i = 0; i < response.data.erros.length; i++) {
+              erros.erros.push(response.data.erros[i]);
+          }
+          setObjErros(erros);
+      } else {
+          navigate("/conta/users");
+      }
   }
+}
 
   return (
     <section className="animeLeft">
@@ -48,7 +60,16 @@ const UserCreate = () => {
         ) : (
           <Button>Cadastrar</Button>
         )}
-        <Error error={error && 'Login já existe.'} />
+        <Error error={error && ""}/>
+                {
+                    Object.keys(objErros).length > 0 ?
+                    (
+                        <>
+                            <b><Error error={objErros.msg}/></b>
+                            {objErros.erros.map((val, key) => (<li key={key}><Error error={val}/></li>))}
+                        </>
+                        ) : ""
+                }
       </form>
     </section>
   );

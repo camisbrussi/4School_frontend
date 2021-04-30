@@ -1,5 +1,5 @@
 export const API_URL = 'http://177.44.248.32:8081'
-// export const API_URL = 'http://localhost:3001'
+//export const API_URL = 'http://localhost:3001'
 
 const token = window.localStorage.getItem('token');
 const userLogged = window.localStorage.getItem('user');

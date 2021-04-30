@@ -16,6 +16,7 @@ const UserEdit = () => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [activeUser, setActiveUser] = useState(false);
+  const [objErros, setObjErros] = useState({});
 
   const navigate = useNavigate();
 
@@ -54,9 +55,19 @@ const UserEdit = () => {
       password,
     });
     const response = await axios.put(url, body, options);
-    
-    if (response.statusText === 'OK') navigate("/conta/users");
+    console.log(response)
+    if (response.statusText === "OK") {
+      if (response.data.erros !== undefined && response.data.erros.length) {
+          let erros = {msg: response.data.success, erros: []};
+          for (let i = 0; i < response.data.erros.length; i++) {
+              erros.erros.push(response.data.erros[i]);
+          }
+          setObjErros(erros);
+      } else {
+          navigate("/conta/users");
+      }
   }
+}
 
   return (
     <section className="animeLeft">
@@ -105,7 +116,16 @@ const UserEdit = () => {
         ) : (
           <Button>Salvar</Button>
         )}
-        <Error error={error && "Login já existe."} />
+        <Error error={error && ""}/>
+                {
+                    Object.keys(objErros).length > 0 ?
+                    (
+                        <>
+                            <b><Error error={objErros.msg}/></b>
+                            {objErros.erros.map((val, key) => (<li key={key}><Error error={val}/></li>))}
+                        </>
+                        ) : ""
+                }        
       </form>
     </section>
   );
