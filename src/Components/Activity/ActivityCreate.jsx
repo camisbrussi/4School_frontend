@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Input from '../Forms/Input';
 import Button from '../Forms/Button';
 import Error from '../Helper/Error';
 import useForm from '../../Hooks/useForm';
+import { Alert } from "react-st-modal";
 
 import useFetch from '../../Hooks/useFetch';
 import { useNavigate } from 'react-router-dom';
@@ -18,19 +19,25 @@ const ActivityCreate = () => {
   const start = useForm();
   const end = useForm();
   let generate_certificate = 0;
-  const vacancies = useForm();
+  const vacancies = useForm(false);
   const navigate = useNavigate();
 
-  const { loading, error } = useFetch();
+  const { loading } = useFetch();
+
+  const [objErros, setObjErros] = useState({});
+
+  useEffect(() => {
+    modalError();
+  }, [objErros, modalError]);
 
   async function handleSubmit(event) {
     event.preventDefault();
     var check = document.getElementsByName("generate_certificate")[0].checked;
+
     if (check === true){
       generate_certificate = 1;
     }
-   
-    
+
     const { url, body, options } = ACTIVITY_POST({
       name: name.value,
       description: description.value,
@@ -40,9 +47,34 @@ const ActivityCreate = () => {
       vacancies: vacancies.value,
     });
     const response = await axios.post(url, body, options);
-    
-    if (response.statusText === 'OK') navigate("/conta/activities");
-   
+
+    if (response.statusText === "OK") {
+      if (response.data.erros !== undefined && response.data.erros.length) {
+        let erros = { msg: response.data.success, erros: [] };
+        for (let i = 0; i < response.data.erros.length; i++) {
+          erros.erros.push(response.data.erros[i]);
+        }
+        setObjErros(erros);
+        modalError();
+      } else {
+        navigate("/conta/activities");
+      }
+    }
+  }
+
+  async function modalError() {
+    let result;
+    if (Object.keys(objErros).length > 0) {
+      result = await Alert(
+        objErros.erros.map((val, key) => (
+          <li key={key}>
+            <Error error={val} />
+          </li>
+        )),
+        objErros.msg
+      );
+      setObjErros("")
+    }
   }
 
   return (
@@ -63,7 +95,6 @@ const ActivityCreate = () => {
         ) : (
           <Button>Cadastrar</Button>
         )}
-        <Error error={error && 'Login já existe.'} />
       </form>
     </section>
   );

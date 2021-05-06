@@ -26,7 +26,7 @@ const Info = () => {
 
   function date(date) {
     date = date.split(".");
-    var date = new Date(date[0]);
+    date = new Date(date[0]);
 
     let options = { year: "numeric", month: "2-digit", day: "2-digit" };
 
