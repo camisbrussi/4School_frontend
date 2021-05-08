@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Input from "../Forms/Input";
 import Button from "../Forms/Button";
 import Error from "../Helper/Error";
+import { Alert } from "react-st-modal";
 
 import useFetch from "../../Hooks/useFetch";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +24,11 @@ const ActivityEdit = () => {
   const [vacancies, setVacancies] = useState("");
   const [activeActivity, setActiveActivity] = useState(false);
 
+  const [objErros, setObjErros] = useState({});
+
+  useEffect(() => {
+    modalError();
+  }, [objErros]);
 
   var params = window.location.href.substr(1).split("/");
   let id = params[6];
@@ -67,7 +73,32 @@ const ActivityEdit = () => {
     );
     const response = await axios.put(url, body, options);
    
-    if (response.statusText === "OK") navigate("/conta/activities");
+    if (response.statusText === "OK") {
+      if (response.data.erros !== undefined && response.data.erros.length) {
+        let erros = { msg: response.data.success, erros: [] };
+        for (let i = 0; i < response.data.erros.length; i++) {
+          erros.erros.push(response.data.erros[i]);
+        }
+        setObjErros(erros);
+        modalError();
+      } else {
+        navigate("/conta/users");
+      }
+    }
+  }
+
+  async function modalError() {
+    if (Object.keys(objErros).length > 0) {
+      await Alert(
+        objErros.erros.map((val, key) => (
+          <li key={key}>
+            <Error error={val} />
+          </li>
+        )),
+        objErros.msg
+      );
+      setObjErros("");
+    }
   }
 
   function date(datetime) {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Input from "../Forms/Input";
 import Button from "../Forms/Button";
 import Error from "../Helper/Error";
+import { Alert } from "react-st-modal";
 
 import { UserContext } from "../../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
@@ -20,11 +21,16 @@ const UserEdit = () => {
 
   const navigate = useNavigate();
 
-  const { error, loading } = React.useContext(UserContext);
+  const { loading } = React.useContext(UserContext);
 
   var params = window.location.href.substr(1).split("/");
   let userId = params[6];
   let status_id = 2;
+
+  useEffect(() => {
+    modalError();
+  }, [objErros]);
+
 
   useEffect(() => {
     async function getData() {
@@ -46,7 +52,6 @@ const UserEdit = () => {
     if (check === true){
       status_id = 1;
     }
-    
 
     const { url, body, options } = USER_PUT(userId, {
       status_id,
@@ -54,6 +59,7 @@ const UserEdit = () => {
       login,
       password,
     });
+
     const response = await axios.put(url, body, options);
     console.log(response)
     if (response.statusText === "OK") {
@@ -63,9 +69,24 @@ const UserEdit = () => {
               erros.erros.push(response.data.erros[i]);
           }
           setObjErros(erros);
+          modalError();
       } else {
           navigate("/conta/users");
       }
+  }
+}
+
+async function modalError() {
+  if (Object.keys(objErros).length > 0) {
+    await Alert(
+      objErros.erros.map((val, key) => (
+        <li key={key}>
+          <Error error={val} />
+        </li>
+      )),
+      objErros.msg
+    );
+    setObjErros("");
   }
 }
 
@@ -115,17 +136,7 @@ const UserEdit = () => {
           <Button disabled>Salvando...</Button>
         ) : (
           <Button>Salvar</Button>
-        )}
-        <Error error={error && ""}/>
-                {
-                    Object.keys(objErros).length > 0 ?
-                    (
-                        <>
-                            <b><Error error={objErros.msg}/></b>
-                            {objErros.erros.map((val, key) => (<li key={key}><Error error={val}/></li>))}
-                        </>
-                        ) : ""
-                }        
+        )}     
       </form>
     </section>
   );

@@ -32,6 +32,7 @@ const UserCreate = () => {
       password: password.value,
     });
     const response = await axios.post(url, body, options);
+    console.log(response);
 
     if (response.statusText === "OK") {
       if (response.data.erros !== undefined && response.data.erros.length) {
@@ -48,9 +49,8 @@ const UserCreate = () => {
   }
 
   async function modalError() {
-    let result;
     if (Object.keys(objErros).length > 0) {
-      result = await Alert(
+      await Alert(
         objErros.erros.map((val, key) => (
           <li key={key}>
             <Error error={val} />
@@ -58,6 +58,7 @@ const UserCreate = () => {
         )),
         objErros.msg
       );
+      setObjErros("");
     }
   }
 

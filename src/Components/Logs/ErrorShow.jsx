@@ -32,14 +32,11 @@ const ErrorShow = () => {
 
     infoFormated = `${date(temp[0])} - ${temp[1]}`
     }
-
     return infoFormated
   }
 
   function formatTitle(arquive){
     var title = arquive.split(".");
-    console.log(arquive)
-   
     return date(title[0]);
   }
 
@@ -53,12 +50,10 @@ const ErrorShow = () => {
     return date.toLocaleString("pt-BR", options);
   }
   
-
-
   return (
     <section className="animeLeft">
  
-      <h1 className="title title-2">{arquive}</h1>
+      <h1 className="title title-2">{formatTitle(arquive)}</h1>
  
       {errors.map(error => (
         

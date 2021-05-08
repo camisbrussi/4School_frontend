@@ -47,7 +47,7 @@ const Activities = () => {
     );
     if (result) {
       const { url, options } = ACTIVITY_DELETE(ActivityId);
-      const response = await axios.delete(url, options);
+      await axios.delete(url, options);
       window.location.reload(false);
     }
   }

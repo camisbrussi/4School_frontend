@@ -54,7 +54,7 @@ function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
             <h1 className="title title-2">{titulo}</h1>
             <form onSubmit={(e) => { handleSubmit(e,{name,cpf,email,birth_date,phones,password,isActive}) }} className={styles.person}>
                 <Input label="Nome" type="text" name="name" value={name} onChange={(e) => {setName(e.target.value)}} />
-                <Input label="CPF" type="text" name="cpf" value={cpf} onChange={(e) => {setCpf(e.target.value)}} />
+                <Input label="CPF" type="text" name="cpf" value={cpf} mask="999.999.999-99" onChange={(e) => {setCpf(e.target.value)}} />
                 <Input label="E-mail" type="email" name="email" value={email} onChange={(e) => {setEmail(e.target.value)}} />
                 <Input label="Data de nascimento" type="date" name="birth_date" value={birth_date} onChange={(e) => {setBirthDate(e.target.value)}} />
 
@@ -71,7 +71,7 @@ function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
 
                 <div style={{width: "100%", float: "left"}}>
                     <div styl style={{width: "50%", float: "left"}}>
-                        <Input label="Número" type="text" name="number" id="number"/>
+                        <Input label="Número" type="text" name="number" id="number" mask="(99) 9 9999-9999" />
                     </div>
                     <div style={{width: "25%", float: "left"}}>
                         <div className={styles.checkbox}>

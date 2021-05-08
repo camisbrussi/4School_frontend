@@ -50,7 +50,7 @@ const Users = () => {
     );
     if (result) {
       const { url, options } = USER_DELETE(UserId);
-      const response = await axios.delete(url, options);
+      await axios.delete(url, options);
       window.location.reload(false);
     }
   }
