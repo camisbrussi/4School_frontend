@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CardPhone from "./CardPhone";
 import styles from "./Person.module.css";
 import Input from "../Forms/Input";
 import Button from "../Forms/Button";
 import Error from "../Helper/Error";
 import useFetch from "../../Hooks/useFetch";
+
+import { Alert } from "react-st-modal";
 
 function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
     const {loading, error} = useFetch();
@@ -17,6 +19,13 @@ function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
     const [phones, setPhones] = useState(dados.phones ?? []);
     const [isActive, setIsActive] = useState(dados.isActive ?? false);
 
+    const [objErros, setObjErros] = useState({});
+
+    useEffect(() => {
+      modalError();
+    }, [objErros]);
+  
+
     function addPhone(e) {
         e.preventDefault();
 
@@ -25,7 +34,7 @@ function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
 
         if (number.length < 10 || number.length > 11) {
             //- Numero invalido
-            console.log("Número de telefone inválido")
+            setObjErros("Número de telefone inválido");
             return;
         }
 
@@ -49,6 +58,16 @@ function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
         return null;
     }
 
+    async function modalError() {
+        if (objErros) {
+          await Alert(
+            objErros,
+            "Erro ao adicionar Número"
+          );
+          setObjErros("");
+        }
+      }
+
     return (
         <section className="animeLeft">
             <h1 className="title title-2">{titulo}</h1>
@@ -71,7 +90,8 @@ function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
 
                 <div style={{width: "100%", float: "left"}}>
                     <div styl style={{width: "50%", float: "left"}}>
-                        <Input label="Número" type="text" name="number" id="number" mask="(99) 9 9999-9999" />
+                        <Input label="Número ( Para salvar o telefone é necessário clicar em Add fone) " type="text" name="number" id="number" mask="(99) 9 9999-9999" />
+                       
                     </div>
                     <div style={{width: "25%", float: "left"}}>
                         <div className={styles.checkbox}>

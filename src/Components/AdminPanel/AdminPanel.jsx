@@ -18,22 +18,18 @@ import ActivityAddTeacher from '../Activity/ActivityAddTeacher';
 import Teachers from '../Teacher/Teachers';
 import TeacherCreate from '../Teacher/TeacherCreate';
 import TeacherEdit from '../Teacher/TeacherEdit';
-import TeacherDelete from '../Teacher/TeacherDelete';
 
 import Responsibles from '../Responsible/Responsibles';
 import ResponsibleCreate from '../Responsible/ResponsibleCreate';
 import ResponsibleEdit from '../Responsible/ResponsibleEdit';
-import ResponsibleDelete from '../Responsible/ResponsibleDelete';
 
 import Students from '../Student/Students';
 import StudentCreate from '../Student/StudentCreate';
 import StudentEdit from '../Student/StudentEdit';
-import StudentDelete from '../Student/StudentDelete';
 
 import Teams from '../Team/Teams';
 import TeamCreate from '../Team/TeamCreate';
 import TeamEdit from '../Team/TeamEdit';
-import TeamDelete from '../Team/TeamDelete';
 import TeamStudentsAdd from "../Team/TeamStudentsAdd";
 
 import Error from '../Logs/Errors'
@@ -65,22 +61,18 @@ const AdminPanel = () => {
 
                     <Route path="/teachers" element={<Teachers/>}/>
                     <Route path="/teachers/createteacher" element={<TeacherCreate/>}/>
-                    <Route path="/teachers/delete/:id" element={<TeacherDelete/>}/>
                     <Route path="/teachers/edit/:id" element={<TeacherEdit/>}/>
 
                     <Route path="/responsibles" element={<Responsibles/>}/>
                     <Route path="/responsibles/createresponsible" element={<ResponsibleCreate/>}/>
-                    <Route path="/responsibles/delete/:id" element={<ResponsibleDelete/>}/>
                     <Route path="/responsibles/edit/:id" element={<ResponsibleEdit/>}/>
 
                     <Route path="/students" element={<Students/>}/>
                     <Route path="/students/createstudent" element={<StudentCreate/>}/>
-                    <Route path="/students/delete/:id" element={<StudentDelete/>}/>
                     <Route path="/students/edit/:id" element={<StudentEdit/>}/>
 
                     <Route path="/teams" element={<Teams/>}/>
                     <Route path="/teams/createteam" element={<TeamCreate/>}/>
-                    <Route path="/teams/delete/:id" element={<TeamDelete/>}/>
                     <Route path="/teams/edit/:id" element={<TeamEdit/>}/>
                     <Route path="/teams/addstudents" element={<TeamStudentsAdd/>}/>
 

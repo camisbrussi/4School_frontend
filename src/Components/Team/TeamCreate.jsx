@@ -7,6 +7,7 @@ import useForm from "../../Hooks/useForm";
 
 import useFetch from "../../Hooks/useFetch";
 import { useNavigate } from "react-router-dom";
+import { Alert } from 'react-st-modal';
 
 import styles from "./TeamCreate.module.css";
 
@@ -21,6 +22,12 @@ const TeamCreate = () => {
   const navigate = useNavigate();
 
   const { loading, error } = useFetch();
+
+  const [objErros, setObjErros] = useState({});
+
+  useEffect(() => {
+    modalError();
+  }, [objErros]);
 
   useEffect(() => {
     async function getData() {
@@ -60,7 +67,32 @@ const TeamCreate = () => {
     );
     const response = await axios.post(url, body, options);
 
+    if (response.statusText === 'OK') {
+      if (response.data.erros !== undefined && response.data.erros.length) {
+        let erros = { msg: response.data.success, erros: [] };
+        for (let i = 0; i < response.data.erros.length; i++) {
+          erros.erros.push(response.data.erros[i]);
+        }
+        setObjErros(erros);
+        modalError();
+      } else {
     if (response.statusText === "OK") navigate("/conta/teams/addstudents?team="+response.data.id+"&year="+year.value);
+      }
+    }
+  }
+
+  async function modalError() {
+    if (Object.keys(objErros).length > 0) {
+      await Alert(
+        objErros.erros.map((val, key) => (
+          <li key={key}>
+            <Error error={val} />
+          </li>
+        )),
+        objErros.msg
+      );
+      setObjErros('');
+    }
   }
 
   return (

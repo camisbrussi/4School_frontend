@@ -25,13 +25,13 @@ const Teachers = () => {
     getData();
   }, []);
 
-  async function modalConfirm(TeacherId, TeacherName) {
+  async function modalConfirm(teacherId, teacherName) {
     const result = await Confirm(
-      "Inativar o professor " + TeacherName +"?",
+      "Inativar o professor " + teacherName +"?",
       "Inativação de professor"
     );
     if (result) {
-      const { url, options } = TEACHER_DELETE(TeacherId);
+      const { url, options } = TEACHER_DELETE(teacherId);
       await axios.delete(url, options);
       window.location.reload(false);
     }

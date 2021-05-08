@@ -63,6 +63,7 @@ const TeacherEdit = () => {
       }
     }
   }
+  
   async function modalError() {
     if (Object.keys(objErros).length > 0) {
       await Alert(
