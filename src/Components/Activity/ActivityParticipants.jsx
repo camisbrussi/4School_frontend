@@ -58,10 +58,11 @@ const ActivityParticipants = () => {
         <section className="animeLeft">
             <Head title="Participantes"/>
             <h1 className="title title-2">Participantes de {activity_name}</h1>
-            <Link className={[stylesBtn.button,"mr-10"].join(" ")} to={`activityaddteacher?activity=${activity_id}&name=${activity_name}`}><FaUserPlus size={16}/> Professor</Link>
-            <Link className={[stylesBtn.button,"mr-10"].join(" ")} to="activityaddteam"><FaUserPlus size={16}/> Turma</Link>
-            <Link className={[stylesBtn.button,"mr-10"].join(" ")} to="activityaddstudent"><FaUserPlus size={16}/> Aluno</Link>
-            <Link className={[stylesBtn.button,"mr-10"].join(" ")} to="activityaddresponsible"><FaUserPlus size={16}/> Respons&aacute;vel</Link>
+            <Link className={stylesBtn.button} to={`activityaddparticipants?activity=${activity_id}&name=${activity_name}`}><FaUserPlus size={16}/> Adicionar Participantes</Link>
+            {/*<Link className={[stylesBtn.button,"mr-10"].join(" ")} to={`activityaddteacher?activity=${activity_id}&name=${activity_name}`}><FaUserPlus size={16}/> Professor</Link>*/}
+            {/*<Link className={[stylesBtn.button,"mr-10"].join(" ")} to="activityaddteam"><FaUserPlus size={16}/> Turma</Link>*/}
+            {/*<Link className={[stylesBtn.button,"mr-10"].join(" ")} to="activityaddstudent"><FaUserPlus size={16}/> Aluno</Link>*/}
+            {/*<Link className={[stylesBtn.button,"mr-10"].join(" ")} to="activityaddresponsible"><FaUserPlus size={16}/> Respons&aacute;vel</Link>*/}
             <div className={styles.activities}>
                 {participants.map(participant => (
 

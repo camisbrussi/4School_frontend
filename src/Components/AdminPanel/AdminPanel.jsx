@@ -14,6 +14,7 @@ import ActivityCreate from '../Activity/ActivityCreate';
 import ActivityEdit from '../Activity/ActivityEdit';
 import ActivityParticipants from '../Activity/ActivityParticipants';
 import ActivityAddTeacher from '../Activity/ActivityAddTeacher';
+import ActivityAddParticipants from '../Activity/ActivityAddParticipants';
 
 import Teachers from '../Teacher/Teachers';
 import TeacherCreate from '../Teacher/TeacherCreate';
@@ -57,7 +58,8 @@ const AdminPanel = () => {
                     <Route path="/activities/createactivity" element={<ActivityCreate/>}/>
                     <Route path="/activities/edit/:id" element={<ActivityEdit/>}/>
                     <Route path="/activities/participants" element={<ActivityParticipants/>}/>
-                    <Route path="/activities/participants/activityaddteacher" element={<ActivityAddTeacher/>}/>
+                    {/*<Route path="/activities/participants/activityaddteacher" element={<ActivityAddTeacher/>}/>*/}
+                    <Route path="/activities/participants/activityaddparticipants" element={<ActivityAddParticipants/>}/>
 
                     <Route path="/teachers" element={<Teachers/>}/>
                     <Route path="/teachers/createteacher" element={<TeacherCreate/>}/>

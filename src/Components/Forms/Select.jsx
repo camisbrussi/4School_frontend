@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Select.module.css';
 
-const Select = ({ label, type, name, value, onChange, error, onBlur, checked }) => {
+const Select = ({ label, type, name, value, onChange, error, onBlur, checked, primeiraOpcao }) => {
   return (
     <div className={styles.wrapper}>
       <label htmlFor={name} className={styles.label}>
@@ -18,7 +18,11 @@ const Select = ({ label, type, name, value, onChange, error, onBlur, checked }) 
         checked={checked}
         autoComplete="off"
       >
-        <option value="0">Selecione</option>
+          {
+              (primeiraOpcao) ?
+                  (<option value={primeiraOpcao.id}>{primeiraOpcao.name}</option>) :
+                  (<option value="0">Selecione</option>)
+          }
       </select>
       {error && <p className={styles.error}>{error}</p>}
     </div>

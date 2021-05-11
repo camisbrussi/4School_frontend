@@ -7,7 +7,6 @@ const idUserLogged = window.localStorage.getItem('id');
 
 
 export function TEAM_GET() {
-
     return {
         url: API_URL + '/teams',
         options: {
@@ -104,6 +103,36 @@ export function TEAM_GET_STUDENTS(team_id) {
                 UserLogged: userLogged,
                 idUserLogged: idUserLogged
             }
+        },
+    };
+}
+
+export function TEAM_FILTER(body) {
+    return {
+        url: API_URL + '/teams/filter/teams',
+        options: {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token,
+                UserLogged: userLogged,
+                idUserLogged: idUserLogged
+            },
+            params: body
+        },
+    };
+}
+
+export function TEAM_FILTER_STUDENTS(id, body) {
+    return {
+        url: API_URL + '/teams/filterstudents/'+id,
+        options: {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token,
+                UserLogged: userLogged,
+                idUserLogged: idUserLogged
+            },
+            params: body
         },
     };
 }
