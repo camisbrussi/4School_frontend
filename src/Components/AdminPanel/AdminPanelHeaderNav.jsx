@@ -55,6 +55,9 @@ const AdminPanelHeaderNav = () => {
         <NavLink to="/conta/infos" end activeClassName={styles.active} className={styles.menu}>
           Auditoria
         </NavLink>
+        <NavLink to="/conta/sendmail" end activeClassName={styles.active} className={styles.menu}>
+          Mensagens e Emails
+        </NavLink>
         
       </nav>
     </>
