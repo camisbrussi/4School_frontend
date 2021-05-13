@@ -36,9 +36,9 @@ const SendMail = () => {
       <div className={styles.sendmail}>
         {sendMail.map((sendmail) => (
           <div key={String(sendmail.id)} className={styles.list}>
-            console.log(sendmail)
             <span>{sendmail.message}</span>
-            <span>Oi</span>
+            <span>{sendmail.email}</span>
+            {/*<span>{sendmail.email_sent}</span>*/}
             <div className={styles.buttons}>
             <Link
                 to={
@@ -46,8 +46,8 @@ const SendMail = () => {
                   sendmail.id +
                   '&name=' +
                   sendmail.name +
-                  '&year=' +
-                  sendmail.year
+                  '&semail_sent=' +
+                  sendmail.email_sent
                 }
                 title="Gerenciar alunos"
               >
@@ -59,6 +59,8 @@ const SendMail = () => {
           </div>
         ))}
       </div>
+
+
     </section>
   );
 };

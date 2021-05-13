@@ -15,6 +15,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
   border: 1px solid transparent;
   transition: 0.1s;
   cursor: pointer;
