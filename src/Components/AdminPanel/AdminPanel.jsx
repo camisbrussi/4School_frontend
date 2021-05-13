@@ -40,8 +40,6 @@ import InfoShow from '../Logs/InfoShow'
 
 import SendMail from '../SendMail/SendMail';
 import SendMailCreate from '../SendMail/SendMailCreate';
-import SendMailEdit from '../SendMail/SendMailEdit';
-import SendMailDelete from '../SendMail/SendMailDelete';
 
 import styles from './AdminPanel.module.css';
 
@@ -89,8 +87,6 @@ const AdminPanel = () => {
 
                     <Route path="/sendMail" element={<SendMail/>}/>
                     <Route path="/sendMail/createsendMail" element={<SendMailCreate/>}/>
-                    <Route path="/sendMail/delete/:id" element={<SendMailDelete/>}/>
-                    <Route path="/sendMail/edit/:id" element={<SendMailEdit/>}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
             </div>
