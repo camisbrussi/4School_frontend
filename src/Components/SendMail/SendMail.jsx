@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Head from "../Helper/Head";
-import { FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 import styles from "./SendMail.module.css";
@@ -8,7 +7,6 @@ import stylesBtn from "../Forms/Button.module.css";
 
 import { SENDMAIL_GET } from "../../API/Api_SendMail";
 import axios from "axios";
-import { BsFillPersonLinesFill, BsPersonPlusFill } from "react-icons/all";
 
 const SendMail = () => {
   const [sendMail, setSendMail] = useState([]);

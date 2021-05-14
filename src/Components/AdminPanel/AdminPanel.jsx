@@ -13,7 +13,6 @@ import Activities from '../Activity/Activities';
 import ActivityCreate from '../Activity/ActivityCreate';
 import ActivityEdit from '../Activity/ActivityEdit';
 import ActivityParticipants from '../Activity/ActivityParticipants';
-import ActivityAddTeacher from '../Activity/ActivityAddTeacher';
 import ActivityAddParticipants from '../Activity/ActivityAddParticipants';
 
 import Teachers from '../Teacher/Teachers';

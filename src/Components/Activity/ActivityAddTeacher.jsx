@@ -4,7 +4,7 @@ import Button from "../Forms/Button";
 import Error from "../Helper/Error";
 
 import useFetch from "../../Hooks/useFetch";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 import axios from "axios";
 import {RiAddBoxFill} from "react-icons/all";
@@ -99,12 +99,7 @@ const ActivityAddTeacher = () => {
 
         return false;
     }
-
-    function formataData(data) {
-        let dados = data.split("-");
-        return dados[2] + "/" + dados[1] + "/" + dados[0];
-    }
-
+    
     function formataCPF(cpf) {
         return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
     }

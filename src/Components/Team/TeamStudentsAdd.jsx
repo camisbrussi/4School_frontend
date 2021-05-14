@@ -1,17 +1,12 @@
 import React, {useEffect, useState} from "react";
 import Input from "../Forms/Input";
 import Button from "../Forms/Button";
-import Select from "../Forms/Select";
 import Error from "../Helper/Error";
-import useForm from "../../Hooks/useForm";
 
 import useFetch from "../../Hooks/useFetch";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
-import styles from "./Teams.module.css";
-
-import {TEAM_GET_STUDENTS, TEAM_POST, TEAM_POST_STUDENTS} from "../../API/Api_Team";
-import {TEACHER_GET} from "../../API/Api_Teacher";
+import {TEAM_GET_STUDENTS, TEAM_POST_STUDENTS} from "../../API/Api_Team";
 import axios from "axios";
 import {STUDENT_FILTER} from "../../API/Api_Student";
 import {RiAddBoxFill} from "react-icons/all";

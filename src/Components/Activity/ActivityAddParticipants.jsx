@@ -4,13 +4,13 @@ import Button from "../Forms/Button";
 import Error from "../Helper/Error";
 
 import useFetch from "../../Hooks/useFetch";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import { Alert } from "react-st-modal";
 
 import axios from "axios";
 import {RiAddBoxFill} from "react-icons/all";
 import {FaWindowClose} from "react-icons/fa";
-import {ACTIVITY_GET_PARTICIPANTS, ACTIVITY_GET_TEACHERS, ACTIVITY_POST_PARTICIPANT} from "../../API/Api_Activity";
-import {TEACHER_FILTER} from "../../API/Api_Teacher";
+import {ACTIVITY_GET_PARTICIPANTS, ACTIVITY_POST_PARTICIPANT} from "../../API/Api_Activity";
 import {TEAM_FILTER, TEAM_FILTER_STUDENTS} from "../../API/Api_Team";
 import Select from "../Forms/Select";
 import {PERSON_FILTER} from "../../API/Api_Person";
@@ -37,6 +37,10 @@ const ActivityAddParticipants = () => {
 
     const {loading, error} = useFetch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        modalError();
+      }, [objErros, modalError]);
 
     //- busca os professores que ja estao vinculados com a atividade
     useEffect(() => {
@@ -160,12 +164,7 @@ const ActivityAddParticipants = () => {
 
         return false;
     }
-
-    function formataData(data) {
-        let dados = data.split("-");
-        return dados[2] + "/" + dados[1] + "/" + dados[0];
-    }
-
+    
     function formataCPF(cpf) {
         return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
     }
@@ -194,11 +193,27 @@ const ActivityAddParticipants = () => {
                     erros.erros.push(response.data.erros[i]);
                 }
                 setObjErros(erros);
+                modalError();
             } else {
                 navigate("/conta/activities/participants/?activity=" + activity_id + "&name=" + activity_name);
             }
         }
     }
+
+    async function modalError() {
+        let result;
+        if (Object.keys(objErros).length > 0) {
+          result = await Alert(
+            objErros.erros.map((val, key) => (
+              <li key={key}>
+                <Error error={val} />
+              </li>
+            )),
+            objErros.msg
+          );
+          setObjErros("");
+        }
+      }
 
     return (
         <section className="animeLeft">
@@ -293,16 +308,6 @@ const ActivityAddParticipants = () => {
 
             <div className="container100 my-30">
                 {loading ? (<Button disabled>Salvando...</Button>) : (<Button onClick={handleSubmit}>Salvar</Button>)}
-                <Error error={error && ""}/>
-                {
-                    Object.keys(objErros).length > 0 ?
-                        (
-                            <>
-                                <b><Error error={objErros.msg}/></b>
-                                {objErros.erros.map((val, key) => (<li key={key}><Error error={val}/></li>))}
-                            </>
-                        ) : ""
-                }
             </div>
         </section>
     );

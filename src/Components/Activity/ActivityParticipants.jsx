@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Head from '../Helper/Head';
-import {FaClipboardList, FaEdit, FaUserPlus, FaWindowClose} from 'react-icons/fa'
+import {FaUserPlus, FaWindowClose} from 'react-icons/fa'
 import {Link} from 'react-router-dom';
 
 import styles from './Activities.module.css'
@@ -8,12 +8,9 @@ import stylesBtn from '../Forms/Button.module.css';
 
 import {
     ACTIVITY_DELETE_SUBSCRIPTION,
-    ACTIVITY_GET,
     ACTIVITY_GET_PARTICIPANTS,
-    ACTIVITY_POST_PARTICIPANT
 } from '../../API/Api_Activity';
 import axios from 'axios'
-import {ImUserPlus} from "react-icons/all";
 
 const ActivityParticipants = () => {
     const activity_id = new URL(window.location.href).searchParams.get("activity");
@@ -29,10 +26,6 @@ const ActivityParticipants = () => {
 
         getData();
     }, []);
-
-    function date(datetime) {
-        return new Date(datetime).toLocaleString('pt-BR')
-    }
 
     async function removerParticipante(id){
         if (!window.confirm("Deseja realmente remover essa inscrição?"))

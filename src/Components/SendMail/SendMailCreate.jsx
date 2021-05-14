@@ -14,7 +14,6 @@ import { SENDMAIL_POST } from "../../API/Api_SendMail";
 import { TEAM_FILTER, TEAM_FILTER_STUDENTS } from "../../API/Api_Team";
 import { PERSON_FILTER } from "../../API/Api_Person";
 import axios from "axios";
-import { BiMessageMinus } from "react-icons/bi";
 
 const SendMailCreate = () => {
   const [idPersons, setIdPerson] = useState([]);
@@ -129,29 +128,6 @@ const SendMailCreate = () => {
       }
     }
   }
-
-  function isPersonInActivity(id) {
-    if (!pessoasAtividade.length) return false;
-
-    for (let i = 0; i < pessoasAtividade.length; i++) {
-      if (pessoasAtividade[i].id === id) return true;
-    }
-
-    return false;
-  }
-
-  function formataCPF(cpf) {
-    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-  }
-
-  function ordernarPessoasAtividade(pessoas) {
-    pessoas.sort(function (a, b) {
-      return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
-    });
-
-    return pessoas;
-  }
-
   useEffect(() => {
     modalError();
   }, [objErros]);
