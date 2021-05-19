@@ -19,11 +19,6 @@ const TeamEdit = () => {
   const navigate = useNavigate();
 
   const [objErros, setObjErros] = useState({});
-
-  useEffect(() => {
-    modalError();
-  }, [objErros]);
-
   const [name, setName] = useState('');
   const [idTeacher, setIdTeacher] = useState(0);
   const [teachers, setTeachers] = useState([]);
@@ -34,6 +29,10 @@ const TeamEdit = () => {
   let id = params[6];
   let status_id = 2;
 
+  useEffect(() => {
+    modalError();
+  }, [objErros]);
+  
   useEffect(() => {
     async function getData() {
       const { url, options } = TEAM_SHOW(id);

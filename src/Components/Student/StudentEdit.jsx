@@ -32,6 +32,12 @@ const StudentEdit = () => {
       let cpf = response.data.person.cpf;
       let email = response.data.person.email;
       let birth_date = response.data.person.birth_date;
+      let address = response.data.person.address.address;
+      let cep = response.data.person.address.cep;
+      let number = response.data.person.address.number;
+      let complement = response.data.person.address.complement;
+      let district = response.data.person.address.district;
+      let idCity = response.data.person.address.city_id;
       let isActive = response.data.status.id === 1;
       let phones = [];
 
@@ -39,7 +45,7 @@ const StudentEdit = () => {
         phones = [...response.data.person.phones];
       }
 
-      setDados({ name, cpf, email, birth_date, phones, isActive });
+      setDados({ name, cpf, email, birth_date, phones, address, number, complement, district, cep, idCity, isActive });
       setPodeAtualizar(true);
     }
 
