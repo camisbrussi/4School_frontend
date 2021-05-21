@@ -61,7 +61,7 @@ const AdminPanel = () => {
                     <Route path="/activities/participants" element={<ActivityParticipants/>}/>
                     {/*<Route path="/activities/participants/activityaddteacher" element={<ActivityAddTeacher/>}/>*/}
                     <Route path="/activities/participants/activityaddparticipants" element={<ActivityAddParticipants/>}/>
-
+                    
                     <Route path="/teachers" element={<Teachers/>}/>
                     <Route path="/teachers/createteacher" element={<TeacherCreate/>}/>
                     <Route path="/teachers/edit/:id" element={<TeacherEdit/>}/>
