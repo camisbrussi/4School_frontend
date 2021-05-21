@@ -23,9 +23,6 @@ const TeacherCreate = () => {
 
     const { url, body, options } = TEACHER_POST(data);
     const response = await axios.post(url, body, options)
-
-    console.log(body);
-
     if (response.statusText === 'OK') {
       if (response.data.erros !== undefined && response.data.erros.length) {
         let erros = { msg: response.data.success, erros: [] };

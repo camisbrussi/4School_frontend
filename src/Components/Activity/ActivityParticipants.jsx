@@ -1,7 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import Head from '../Helper/Head';
-import {FaUserPlus, FaWindowClose} from 'react-icons/fa'
+import {FaUserPlus, FaWindowClose, FaFileExport} from 'react-icons/fa'
 import {Link} from 'react-router-dom';
+import Button from '../Forms/Button'
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { format } from "date-fns";
 
 import styles from './Activities.module.css'
 import stylesBtn from '../Forms/Button.module.css';
@@ -9,6 +13,7 @@ import stylesBtn from '../Forms/Button.module.css';
 import {
     ACTIVITY_DELETE_SUBSCRIPTION,
     ACTIVITY_GET_PARTICIPANTS,
+    ACTIVITY_SHOW
 } from '../../API/Api_Activity';
 import axios from 'axios'
 
@@ -16,6 +21,7 @@ const ActivityParticipants = () => {
     const activity_id = new URL(window.location.href).searchParams.get("activity");
     const activity_name = new URL(window.location.href).searchParams.get("name");
     const [participants, setParticipants] = useState([]);
+    const [event, setEvent] = useState();
 
     useEffect(() => {
         async function getData() {
@@ -23,7 +29,15 @@ const ActivityParticipants = () => {
             const response = await axios.get(url, options);
             setParticipants(response.data)
         }
+        getData();
+    }, []);
 
+    useEffect(() => {
+        async function getData() {
+            const {url, options} = ACTIVITY_SHOW(activity_id);
+            const response = await axios.get(url, options);
+            setEvent(response.data)
+        }
         getData();
     }, []);
 
@@ -47,11 +61,34 @@ const ActivityParticipants = () => {
         }
     }
 
+    function generateReport(){
+        const doc = new jsPDF();
+
+        const tableColumn = ["Nome", "CPF", "Descrição"];
+
+        console.log(event)
+        
+        const tableRows = [];
+        participants.map(participant => {
+          const reportData = [
+            participant.person.name,
+            participant.person.cpf,
+            participant.person.type.description
+          ];
+          tableRows.push(reportData);
+        });
+        doc.autoTable(tableColumn, tableRows, { startY: 20 });
+        const date = format(new Date(event.start), "dd-MM-yyy HH:mm" )
+        doc.text(`Evento: ${event.name}  Data: ${date}`, 14, 15);
+        doc.save(`report_${event.name}.pdf`);
+      };
+
     return (
         <section className="animeLeft">
             <Head title="Participantes"/>
             <h1 className="title title-2">Participantes de {activity_name}</h1>
             <Link className={stylesBtn.button} to={`activityaddparticipants?activity=${activity_id}&name=${activity_name}`}><FaUserPlus size={16}/> Adicionar Participantes</Link>
+            <Button className={stylesBtn.button} onClick={() => generateReport()}><FaFileExport size={16}/>  Relatório  Participantes</Button>
             {/*<Link className={[stylesBtn.button,"mr-10"].join(" ")} to={`activityaddteacher?activity=${activity_id}&name=${activity_name}`}><FaUserPlus size={16}/> Professor</Link>*/}
             {/*<Link className={[stylesBtn.button,"mr-10"].join(" ")} to="activityaddteam"><FaUserPlus size={16}/> Turma</Link>*/}
             {/*<Link className={[stylesBtn.button,"mr-10"].join(" ")} to="activityaddstudent"><FaUserPlus size={16}/> Aluno</Link>*/}
