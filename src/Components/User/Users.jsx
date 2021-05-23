@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FaEdit, FaWindowClose } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
 import { Confirm } from "react-st-modal";
-
 import styles from "./User.module.css";
 import stylesBtn from "../Forms/Button.module.css";
-
 import { USER_GET, USER_DELETE } from "../../API/Api_User";
 import axios from "axios";
+
+import DataTable from "react-data-table-component";
+import Filter from "../Tables/Filter";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -17,16 +17,13 @@ const Users = () => {
     async function getData() {
       const { url, options } = USER_GET();
       const response = await axios.get(url, options);
-      setUsers(response.data);
-    }
-    getData();
-  }, []);
+      let usuarios = response.data;
 
-  useEffect(() => {
-    async function getData() {
-      const { url, options } = USER_GET();
-      const response = await axios.get(url, options);
-      setUsers(response.data);
+      for (let i = 0; i < usuarios.length; i++) {
+        usuarios[i].status_description = status(usuarios[i].status_id);
+      }
+
+      setUsers(usuarios);
     }
     getData();
   }, []);
@@ -55,6 +52,58 @@ const Users = () => {
     }
   }
 
+  const [filterText, setFilterText] = useState('');
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const filteredItems = users.filter(item => (
+      (item.name && item.name.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.login && item.login.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.status_description && item.status_description.toLowerCase().includes(filterText.toLowerCase()))
+  ));
+
+  const subHeaderComponentMemo = React.useMemo(() => {
+    const handleClear = () => {
+      if (filterText) {
+        setResetPaginationToggle(!resetPaginationToggle);
+        setFilterText('');
+      }
+    };
+
+    return <Filter onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />;
+  }, [filterText, resetPaginationToggle]);
+
+  const columns = [
+    {name:"Nome", selector:'name', sortable:true},
+    {name:"Usuário", selector:'login', sortable:true},
+    {name:"Status", selector:'status_description', sortable:true}
+  ];
+
+  const mergedColumns = columns.map(col => {
+    return col;
+  });
+
+  const createColumns = useCallback(() => {
+    return [
+      ...mergedColumns,
+      {
+        name: '',
+        allowOverflow: true,
+        maxWidth: '30px',
+        cell: row => {
+            return (
+                <>
+                  <Link to={`edit/${row.id}`}>
+                    <FaEdit size={16} style={{ color: "blue" }} />
+                  </Link>
+                  <button onClick={ () => {modalConfirm(row.id, row.name ) } }>
+                    <FaWindowClose size={16} style={{ color: "red" }} />
+                  </button>
+                </>
+            );
+        },
+      },
+    ];
+  }, [mergedColumns]);
+
   return (
     <section className="animeLeft">
       <h1 className="title title-2">Usuários</h1>
@@ -62,21 +111,15 @@ const Users = () => {
         Cadastrar
       </Link>
       <div className={styles.users}>
-        {users.map((user) => (
-          <div key={String(user.id)} className={styles.list}>
-            <span>{user.name}</span>
-            <span>{user.login}</span>
-            <span>{status(user.status_id)}</span>
-            <div className={styles.buttons}>
-              <Link to={`edit/${user.id}`}>
-                <FaEdit size={16} style={{ color: "blue" }} />
-              </Link>
-              <button onClick={ () => {modalConfirm(user.id, user.name ) } }>
-                <FaWindowClose size={16} style={{ color: "red" }} />
-              </button>
-            </div>
-          </div>
-        ))}
+        <DataTable
+            title="Usuários cadastrados"
+            columns={createColumns()}
+            data={filteredItems}
+            pagination
+            subHeader
+            subHeaderComponent={subHeaderComponentMemo}
+            persistTableHead
+        />
       </div>
     </section>
   );
