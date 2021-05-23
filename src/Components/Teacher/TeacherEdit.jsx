@@ -28,8 +28,6 @@ const TeacherEdit = () => {
       const { url, options } = TEACHER_SHOW(id);
       const response = await axios.get(url, options);
 
-      console.log(response)
-
       let name = response.data.person.name;
       let cpf = response.data.person.cpf;
       let email = response.data.person.email;

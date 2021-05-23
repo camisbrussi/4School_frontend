@@ -39,14 +39,11 @@ const Error = () => {
   }
 
   async function filtraLogs(){
-  
-    const token = window.localStorage.getItem("token");
         const {url, body, options} = ERROR_FILTER(
             {
               start :start.value,
               end: end.value
             },
-            token
         );
         const response = await axios.post(url, body, options);
         setErrors(response.data);

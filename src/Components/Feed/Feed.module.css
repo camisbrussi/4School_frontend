@@ -1,0 +1,55 @@
+.activities {
+  margin-top: 2rem;
+}
+
+.list {
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  margin: 10px 0 20px 0;
+}
+
+.items span {
+  width: 100%;
+}
+
+.show {
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.buttons {
+  width: 40%;
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+}
+
+.container100 {
+  width: 100%;
+  float: left;
+  padding: 0 5px;
+}
+
+.container40 {
+  width: 40%;
+  float: left;
+  padding: 0 5px;
+}
+
+.container20 {
+  width: 20%;
+  float: left;
+  padding: 0 5px;
+}
+
+@media (max-width: 767px) {
+  .container20 .container40 {
+    width: 100%;
+  }
+}
