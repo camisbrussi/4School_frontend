@@ -154,7 +154,7 @@ function FormPerson({
       <form
         onSubmit={(e) => {
         var select = document.getElementById('city');
-	    var city_id = select.options[select.selectedIndex].value;
+	      var city_id = select.options[select.selectedIndex].value;
           handleSubmit(e, {
             name,
             cpf,
@@ -355,7 +355,6 @@ function FormPerson({
         ) : (
           <Button>Salvar</Button>
         )}
-        <Error error={error && 'Pessoa já existe.'} />
       </form>
     </section>
   );

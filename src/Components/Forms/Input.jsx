@@ -3,7 +3,7 @@ import styles from './Input.module.css';
 
 import InputMask from "react-input-mask";
 
-const Input = ({ label, type, name, value, onChange, error, onBlur, checked, onClick, mask,  }) => {
+const Input = ({ label, type, name, value, onChange, error, onBlur, checked, onClick, mask, disabled, onKeyUp  }) => {
   return (
     <div className={styles.wrapper}>
       <label htmlFor={name} className={styles.label}>
@@ -21,6 +21,8 @@ const Input = ({ label, type, name, value, onChange, error, onBlur, checked, onC
         checked={checked}
         autoComplete="off"
         mask = {mask}
+        disabled = {disabled}
+        onKeyUp = {onKeyUp}
       />
       {error && <p className={styles.error}>{error}</p>}
     </div>
