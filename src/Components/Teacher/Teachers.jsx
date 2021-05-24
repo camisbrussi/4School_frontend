@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Head from '../Helper/Head';
 import { FaEdit, FaWindowClose } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Confirm } from "react-st-modal";
-
 import styles from './Teachers.module.css';
 import stylesBtn from '../Forms/Button.module.css';
-
 import { TEACHER_DELETE, TEACHER_GET } from '../../API/Api_Teacher';
 import axios from 'axios';
+
+import DataTable from "react-data-table-component";
+import Filter from "../Tables/Filter";
+import {formata_cpf} from "../Helper/Functions";
 
 const Teachers = () => {
   const [teachers, setTeachers] = useState([]);
@@ -16,10 +18,14 @@ const Teachers = () => {
   useEffect(() => {
     async function getData() {
       const { url, options } = TEACHER_GET();
-      //console.log(url, options)
       const response = await axios.get(url, options);
-      //console.log(response.data)
-      setTeachers(response.data);
+      let professores = response.data;
+
+      for (let i = 0; i < professores.length; i++) {
+        professores[i].person.cpf = formata_cpf(professores[i].person.cpf);
+      }
+
+      setTeachers(professores);
     }
 
     getData();
@@ -37,10 +43,53 @@ const Teachers = () => {
     }
   }
 
-  function formataCpf(cpf){
-    cpf = cpf.replace(/[^\d]/g, "");
-    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-  }
+  const [filterText, setFilterText] = useState('');
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const filteredItems = teachers.filter(item => (
+      (item.person.name && item.person.name.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.person.cpf && item.person.cpf.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.status.description && item.status.description.toLowerCase().includes(filterText.toLowerCase()))
+  ));
+
+  const subHeaderComponentMemo = React.useMemo(() => {
+    const handleClear = () => {
+      if (filterText) {
+        setResetPaginationToggle(!resetPaginationToggle);
+        setFilterText('');
+      }
+    };
+
+    return <Filter onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />;
+  }, [filterText, resetPaginationToggle]);
+
+  const columns = [
+    {name:"Nome", selector:'person.name', sortable:true},
+    {name:"CPF", selector:'person.cpf', sortable:true},
+    {name:"Status", selector:'status.description', sortable:true}
+  ];
+
+  const createColumns = useCallback(() => {
+    return [
+      ...columns,
+      {
+        name: '',
+        allowOverflow: true,
+        maxWidth: '50px',
+        cell: teacher => {
+          return (
+              <>
+                <Link to={`edit/${teacher.id}`}>
+                  <FaEdit size={16} style={{ color: 'blue' }} title="Editar" />
+                </Link>
+                <button onClick={() => { modalConfirm(teacher.id, teacher.person.name); }} className="cursor-pointer" title="Remover" >
+                  <FaWindowClose size={16} style={{ color: 'red' }} />
+                </button>
+              </>
+          );
+        },
+      },
+    ];
+  }, [columns]);
 
   return (
     <section className="animeLeft">
@@ -50,26 +99,15 @@ const Teachers = () => {
         Cadastrar
       </Link>
       <div className={styles.teachers}>
-        {teachers.map((teacher) => (
-          <div key={String(teacher.id)} className={styles.list}>
-            <span>{teacher.person.name}</span>
-
-            <span>{formataCpf(teacher.person.cpf)}</span>
-            <span>{teacher.status.description}</span>
-            <div className={styles.buttons}>
-              <Link to={`edit/${teacher.id}`}>
-                <FaEdit size={16} style={{ color: 'blue' }} />
-              </Link>
-              <button
-                onClick={() => {
-                  modalConfirm(teacher.id, teacher.person.name);
-                }}
-              >
-                <FaWindowClose size={16} style={{ color: 'red' }} />
-              </button>
-            </div>
-          </div>
-        ))}
+        <DataTable
+            title="Professores cadastrados"
+            columns={createColumns()}
+            data={filteredItems}
+            pagination
+            subHeader
+            subHeaderComponent={subHeaderComponentMemo}
+            persistTableHead
+        />
       </div>
     </section>
   );

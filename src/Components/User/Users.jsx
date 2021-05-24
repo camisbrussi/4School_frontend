@@ -9,6 +9,7 @@ import axios from "axios";
 
 import DataTable from "react-data-table-component";
 import Filter from "../Tables/Filter";
+import {status_usuario} from "../Helper/Functions";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -20,25 +21,13 @@ const Users = () => {
       let usuarios = response.data;
 
       for (let i = 0; i < usuarios.length; i++) {
-        usuarios[i].status_description = status(usuarios[i].status_id);
+        usuarios[i].status_description = status_usuario(usuarios[i].status_id);
       }
 
       setUsers(usuarios);
     }
     getData();
   }, []);
-
-  function status(status) {
-    if (status === 1) {
-      return "Ativo";
-    }
-    if (status === 2) {
-      return "Inativo";
-    }
-    if (status === 3) {
-      return "Bloqueado";
-    }
-  }
 
   async function modalConfirm(UserId, UserName) {
     const result = await Confirm(
@@ -77,13 +66,9 @@ const Users = () => {
     {name:"Status", selector:'status_description', sortable:true}
   ];
 
-  const mergedColumns = columns.map(col => {
-    return col;
-  });
-
   const createColumns = useCallback(() => {
     return [
-      ...mergedColumns,
+      ...columns,
       {
         name: '',
         allowOverflow: true,
@@ -92,9 +77,9 @@ const Users = () => {
             return (
                 <>
                   <Link to={`edit/${row.id}`}>
-                    <FaEdit size={16} style={{ color: "blue" }} />
+                    <FaEdit size={16} style={{ color: "blue" }} title="Editar" />
                   </Link>
-                  <button onClick={ () => {modalConfirm(row.id, row.name ) } }>
+                  <button onClick={() => {modalConfirm(row.id, row.name )}} className="cursor-pointer" title="Remover">
                     <FaWindowClose size={16} style={{ color: "red" }} />
                   </button>
                 </>
@@ -102,7 +87,7 @@ const Users = () => {
         },
       },
     ];
-  }, [mergedColumns]);
+  }, [columns]);
 
   return (
     <section className="animeLeft">
