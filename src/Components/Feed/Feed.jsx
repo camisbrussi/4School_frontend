@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { FaEye, FaCheck, FaFileInvoice } from 'react-icons/fa';
+import { FaEye, FaCheck, FaFileInvoice, FaWindowClose } from 'react-icons/fa';
 import Error from '../Helper/Error';
 import Input from '../Forms/Input';
 import { Link } from 'react-router-dom';
 import Button from '../Forms/Button';
-import { Alert } from 'react-st-modal';
+import { Alert, Confirm } from 'react-st-modal';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -61,37 +61,60 @@ const Feed = () => {
     return date.toLocaleString('pt-BR');
   }
 
-  async function verifyVacancies(id, id_activity, tickets) {
-    const { url, options } = VACANCIES_AVAILABLE(id_activity);
-    const response = await axios.get(url, options);
+  async function verifyVacancies(id, id_activity, tickets, dateStart) {
+    if (new Date(dateStart) > new Date() && tickets == 0) {
+      if (tickets == 0) {
+        const { url, options } = VACANCIES_AVAILABLE(id_activity);
+        const response = await axios.get(url, options);
 
-    modalConfirm(id, response.data, tickets);
-  }
-
-  async function modalConfirm(id, vacanciesAvailable, tickets) {
-    const data = await CustomDialog(
-      <ModalDialog vacanciesAvailable={vacanciesAvailable} tickets={tickets} />,
-      {
-        title: 'Quantos lugares deseja reservar?',
-        showCloseIcon: true,
+        modalConfirm(id, response.data, tickets);
       }
-    );
-    if (data) {
-      const { url, body, options } = CONFIRM_SUBSCRIPTION(id, {number_tickets: data});
-      const response = await axios.put(url, body, options);
 
-      if (response.statusText === 'OK') {
-        if (response.data.erros !== undefined && response.data.erros.length) {
-          let erros = { msg: response.data.success, erros: [] };
-          for (let i = 0; i < response.data.erros.length; i++) {
-            erros.erros.push(response.data.erros[i]);
+      async function modalConfirm(id, vacanciesAvailable, tickets) {
+        const data = await CustomDialog(
+          <ModalDialog
+            vacanciesAvailable={vacanciesAvailable}
+            tickets={tickets}
+          />,
+          {
+            title: 'Quantos lugares deseja reservar?',
+            showCloseIcon: true,
           }
-          setObjErros(erros);
-          modalError();
-        } else {
-          window.location.reload(false);
+        );
+        if (data) {
+          const { url, body, options } = CONFIRM_SUBSCRIPTION(id, {
+            number_tickets: data,
+          });
+          const response = await axios.put(url, body, options);
+
+          if (response.statusText === 'OK') {
+            if (
+              response.data.erros !== undefined &&
+              response.data.erros.length
+            ) {
+              let erros = { msg: response.data.success, erros: [] };
+              for (let i = 0; i < response.data.erros.length; i++) {
+                erros.erros.push(response.data.erros[i]);
+              }
+              setObjErros(erros);
+              modalError();
+            } else {
+              window.location.reload(false);
+            }
+          }
         }
       }
+    } else if (new Date(dateStart) < new Date()) {
+      await Alert(
+        'Prazo para confirmação já está excedido',
+        'Confirmar participação'
+      );
+    }
+    else if (new Date(dateStart) > new Date() && tickets > 0) {
+      await Alert(
+        'Para alterar sua inscrição é necessário cancelar e se inscrever novamente',
+        'Confirmar participação'
+      );
     }
   }
 
@@ -106,6 +129,33 @@ const Feed = () => {
         objErros.msg
       );
       setObjErros('');
+    }
+  }
+
+  async function modalCancelSubscription(SubscriptionId, dateStart, tickets) {
+    if (new Date(dateStart) > new Date() && tickets > 0) {
+      const result = await Confirm(
+        'Deseja Cancelar sua Inscrição?',
+        'Cancelamento de Inscrição'
+      );
+      console.log(result);
+      if (result) {
+        const { url, body, options } = CONFIRM_SUBSCRIPTION(SubscriptionId, {
+          number_tickets: 0,
+        });
+        await axios.put(url, body, options);
+        window.location.reload(false);
+      }
+    } else if (new Date(dateStart) < new Date() && tickets > 0) {
+      await Alert(
+        'Prazo do cancelamento já está excedido',
+        'Cancelamento de Inscrição'
+      );
+    } else if (tickets == 0) {
+      await Alert(
+        'Você não está confirmado nessa atividde',
+        'Cancelamento de Inscrição'
+      );
     }
   }
 
@@ -142,7 +192,6 @@ const Feed = () => {
         </div>
         <div className={styles.container100}>
           <p className={styles.list}>
-            <span>Legenda:</span>
             <span>
               <FaEye size={16} style={{ color: 'black' }} /> Visualizar
             </span>
@@ -152,6 +201,10 @@ const Feed = () => {
             <span>
               <FaCheck size={16} style={{ color: 'green' }} /> Presença
               Confirmada
+            </span>
+            <span>
+              <FaWindowClose size={16} style={{ color: 'red' }} /> Excluir
+              Inscrição
             </span>
             <span>
               <FaFileInvoice size={16} style={{ color: 'blue' }} /> Certificado
@@ -171,7 +224,12 @@ const Feed = () => {
                 </Link>
                 <button
                   onClick={() => {
-                    verifyVacancies(a.id, a.activity.id, a.number_tickets);
+                    verifyVacancies(
+                      a.id,
+                      a.activity.id,
+                      a.number_tickets,
+                      a.activity.start
+                    );
                   }}
                 >
                   {a.number_tickets > 0 ? (
@@ -180,9 +238,32 @@ const Feed = () => {
                     <FaCheck size={16} style={{ color: 'gray' }} />
                   )}
                 </button>
-                <Link to={`${a}`}>
-                  <FaFileInvoice size={16} style={{ color: 'blue' }} />
-                </Link>
+
+                <button
+                  onClick={() => {
+                    modalCancelSubscription(
+                      a.id,
+                      a.activity.start,
+                      a.number_tickets
+                    );
+                  }}
+                >
+                  {a.number_tickets > 0 ||
+                  new Date(a.activitystart) > new Date() ? (
+                    <FaWindowClose size={16} style={{ color: 'red' }} />
+                  ) : (
+                    <FaWindowClose size={16} style={{ color: 'gray' }} />
+                  )}
+                </button>
+
+                <button to={`${a}`}>
+                  {a.number_participation > 0 &&
+                  a.activity.generate_certificate ? (
+                    <FaFileInvoice size={16} style={{ color: 'blue' }} />
+                  ) : (
+                    <FaFileInvoice size={16} style={{ color: 'gray' }} />
+                  )}
+                </button>
               </div>
             </div>
           ))}
