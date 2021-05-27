@@ -19,6 +19,37 @@ export function SENDMAIL_GET() {
     };
 }
 
+export function PARTICIPANT_GET_ACTIVITIES_FILTER(body) {
+    return {
+      url: API_URL + '/sendmail' + idUserLogged,
+      options: {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+          UserLogged: userLogged,
+          idUserLogged: idUserLogged,
+        },
+        params: body,
+      },
+    };
+  }
+
+export function ACTIVITY_FILTER(body) {
+    return {
+        url: API_URL + '/sendmail',
+        //body: JSON.stringify(body),
+        options: {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token,
+                UserLogged: userLogged,
+                idUserLogged: idUserLogged
+            },
+            params: body
+        },
+    };
+  }
+
 export function SENDMAIL_POST(body) {
     return {
         url: API_URL + '/sendmail',

@@ -21,9 +21,9 @@ const ActivityAddParticipants = () => {
     const [teamFiltro, setTeamFiltro] = useState(0);
 
     const types = [
-        {id: 3, description: "Aluno"},
+        {id: 2, description: "Aluno"},
         {id: 1, description: "Professor"},
-        {id: 2, description: "Responsável"}
+        {id: 3, description: "Responsável"}
     ];
     const [teams, setTeams] = useState([]);
 

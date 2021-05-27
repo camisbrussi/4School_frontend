@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Head from "../Helper/Head";
-import { FaClipboardList, FaEdit, FaWindowClose } from "react-icons/fa";
+import { FaClipboardList, FaEdit, FaWindowClose, FaEnvelope } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Confirm } from "react-st-modal";
 import styles from "./Activities.module.css";
@@ -78,10 +78,14 @@ const Activities = () => {
       {
         name: '',
         allowOverflow: true,
-        maxWidth: '50px',
+        maxWidth: '40px',
+        width: '150px',
         cell: row => {
           return (
               <>
+              <Link to={`/conta/sendMail/createsendMail?activity=${row.id}&name=${row.name}`} >
+                  <FaEnvelope className="mx-5" size={16} style={{ color: "black" }} title="Participantes da atividade" />
+                </Link>
                 <Link to={`participants?activity=${row.id}&name=${row.name}`} >
                   <FaClipboardList className="mx-5" size={16} style={{ color: "green" }} title="Participantes" />
                 </Link>
@@ -107,6 +111,7 @@ const Activities = () => {
       </Link>
       <div className={styles.activities}>
         <DataTable
+          
             title="Atividades cadastradas"
             columns={createColumns()}
             data={filteredItems}
