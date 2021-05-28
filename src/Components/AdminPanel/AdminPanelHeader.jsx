@@ -6,11 +6,6 @@ const userType = window.localStorage.getItem("type"); //- 0-Admin, 1-Professor, 
 const AdminPanelHeader = () => {
   return (
     <header className={styles.header}>
-      {userType === 0 ? (
-        <h1 className="title">Painel Administrativo</h1>
-      ) : (
-        <h1 className="title">Mural</h1>
-      )}
       <AdminPanelHeaderNav />
     </header>
   );

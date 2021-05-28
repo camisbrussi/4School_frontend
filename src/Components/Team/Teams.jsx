@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import Head from '../Helper/Head';
-import { FaEdit, FaWindowClose } from 'react-icons/fa';
+import { FaEdit, FaWindowClose, FaUsers } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Confirm } from 'react-st-modal';
 import styles from './Teams.module.css';
@@ -73,21 +73,38 @@ const Teams = () => {
 
   const createColumns = useCallback(() => {
     return [
+      {
+        name: '',
+        allowOverflow: true,
+        maxWidth: '5px',
+        cell: (row) => {
+          return (
+            <>
+              {row.status_id == 2 ? (
+                <FaUsers size={16} style={{ color: 'grey' }} />
+              ) : (
+                <FaUsers size={16} style={{ color: 'blue' }} />
+              )}
+            </>
+          );
+        },
+      },
       ...columns,
       {
         name: '',
         allowOverflow: true,
-        maxWidth: '50px',
+        maxWidth: '100px',
+        width: '100px',
         cell: team => {
           return (
               <>
                 <Link to={`addstudents?team=`+team.id +'&name='+team.name+'&year='+team.year} title="Gerenciar alunos">
-                  <IoIosPeople size={16} style={{ color: 'green' }} className="mx-5" />
+                  <IoIosPeople size={16} style={{ color: 'green' }} className="mx-5 link" />
                 </Link>
                 <Link to={`edit/${team.id}`}>
-                  <FaEdit size={16} style={{ color: 'blue' }} title="Editar" />
+                  <FaEdit size={16} style={{ color: 'black' }} title="Editar"className="link" />
                 </Link>
-                <button onClick={() => { modalConfirm(team.id, team.name); }} className="cursor-pointer" title="Remover">
+                <button onClick={() => { modalConfirm(team.id, team.name); }} className="cursor-pointer" title="Remover" className="link">
                   <FaWindowClose size={16} style={{ color: 'red' }} />
                 </button>
               </>
@@ -99,11 +116,38 @@ const Teams = () => {
 
   return (
     <section className="animeLeft">
+       <header className={styles.header}>
       <Head title="Team" />
       <h1 className="title title-2">Turmas</h1>
       <Link className={stylesBtn.button} to="createteam">
         Cadastrar
-      </Link>
+      </Link></header>
+
+      <div className={styles.container100}>
+        <p className={styles.list}>
+          <span>Status:</span>
+          <span>
+            <FaUsers size={16} style={{ color: 'gray' }} /> Inativa
+          </span>
+          <span>
+            <FaUsers size={16} style={{ color: 'blue' }} /> Ativa
+          </span>
+        </p>
+      </div>
+      <div className={styles.container100}>
+        <p className={styles.list}>
+          <span>Menu:</span>
+          <span>
+            <IoIosPeople size={16} style={{ color: 'green' }} /> Gerenciar Alunos
+          </span>
+          <span>
+            <FaEdit size={16} style={{ color: 'black' }} /> Excluir
+          </span>
+          <span>
+            <FaWindowClose size={16} style={{ color: 'red' }} /> Excluir
+          </span>
+        </p>
+      </div>
       <div className={styles.teams}>
         <DataTable
             title="Turmas cadastradas"

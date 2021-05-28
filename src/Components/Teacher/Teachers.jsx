@@ -1,16 +1,16 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Head from '../Helper/Head';
-import { FaEdit, FaWindowClose } from 'react-icons/fa';
+import { FaEdit, FaWindowClose, FaChalkboardTeacher } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { Confirm } from "react-st-modal";
+import { Confirm } from 'react-st-modal';
 import styles from './Teachers.module.css';
 import stylesBtn from '../Forms/Button.module.css';
 import { TEACHER_DELETE, TEACHER_GET } from '../../API/Api_Teacher';
 import axios from 'axios';
 
-import DataTable from "react-data-table-component";
-import Filter from "../Tables/Filter";
-import {formata_cpf} from "../Helper/Functions";
+import DataTable from 'react-data-table-component';
+import Filter from '../Tables/Filter';
+import { formata_cpf } from '../Helper/Functions';
 
 const Teachers = () => {
   const [teachers, setTeachers] = useState([]);
@@ -33,8 +33,8 @@ const Teachers = () => {
 
   async function modalConfirm(teacherId, teacherName) {
     const result = await Confirm(
-      "Inativar o professor " + teacherName +"?",
-      "Inativação de professor"
+      'Inativar o professor ' + teacherName + '?',
+      'Inativação de professor'
     );
     if (result) {
       const { url, options } = TEACHER_DELETE(teacherId);
@@ -45,11 +45,17 @@ const Teachers = () => {
 
   const [filterText, setFilterText] = useState('');
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-  const filteredItems = teachers.filter(item => (
-      (item.person.name && item.person.name.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.person.cpf && item.person.cpf.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.status.description && item.status.description.toLowerCase().includes(filterText.toLowerCase()))
-  ));
+  const filteredItems = teachers.filter(
+    (item) =>
+      (item.person.name &&
+        item.person.name.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.person.cpf &&
+        item.person.cpf.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.status.description &&
+        item.status.description
+          .toLowerCase()
+          .includes(filterText.toLowerCase()))
+  );
 
   const subHeaderComponentMemo = React.useMemo(() => {
     const handleClear = () => {
@@ -59,32 +65,65 @@ const Teachers = () => {
       }
     };
 
-    return <Filter onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />;
+    return (
+      <Filter
+        onFilter={(e) => setFilterText(e.target.value)}
+        onClear={handleClear}
+        filterText={filterText}
+      />
+    );
   }, [filterText, resetPaginationToggle]);
 
   const columns = [
-    {name:"Nome", selector:'person.name', sortable:true},
-    {name:"CPF", selector:'person.cpf', sortable:true},
-    {name:"Status", selector:'status.description', sortable:true}
+    { name: 'Nome', selector: 'person.name', sortable: true },
+    { name: 'CPF', selector: 'person.cpf', sortable: true },
   ];
 
   const createColumns = useCallback(() => {
     return [
+      {
+        name: '',
+        allowOverflow: true,
+        maxWidth: '5px',
+        cell: (row) => {
+          return (
+            <>
+              {row.status.id == 2 ? (
+                <FaChalkboardTeacher size={16} style={{ color: 'grey' }} />
+              ) : (
+                <FaChalkboardTeacher size={16} style={{ color: 'blue' }} />
+              )}
+            </>
+          );
+        },
+      },
       ...columns,
       {
         name: '',
         allowOverflow: true,
-        maxWidth: '50px',
-        cell: teacher => {
+        maxWidth: '100px',
+        width: '100px',
+        cell: (teacher) => {
           return (
-              <>
-                <Link to={`edit/${teacher.id}`}>
-                  <FaEdit size={16} style={{ color: 'blue' }} title="Editar" />
-                </Link>
-                <button onClick={() => { modalConfirm(teacher.id, teacher.person.name); }} className="cursor-pointer" title="Remover" >
-                  <FaWindowClose size={16} style={{ color: 'red' }} />
-                </button>
-              </>
+            <>
+              <Link to={`edit/${teacher.id}`}>
+                <FaEdit
+                  size={16}
+                  style={{ color: 'black' }}
+                  title="Editar"
+                  className="link"
+                />
+              </Link>
+              <button
+                onClick={() => {
+                  modalConfirm(teacher.id, teacher.person.name);
+                }}
+                className="cursor-pointer"
+                title="Remover"
+              >
+                <FaWindowClose size={16} style={{ color: 'red' }} />
+              </button>
+            </>
           );
         },
       },
@@ -93,20 +132,44 @@ const Teachers = () => {
 
   return (
     <section className="animeLeft">
-      <Head title="Professores" />
-      <h1 className="title title-2">Professores</h1>
-      <Link className={stylesBtn.button} to="createteacher">
-        Cadastrar
-      </Link>
+      <header className={styles.header}>
+        <Head title="Professores" />
+        <h1 className="title title-2">Professores</h1>
+        <Link className={stylesBtn.button} to="createteacher">
+          Cadastrar
+        </Link>
+      </header>
+      <div className={styles.container100}>
+        <p className={styles.list}>
+          <span>Status:</span>
+          <span>
+            <FaChalkboardTeacher size={16} style={{ color: 'gray' }} /> Inativo
+          </span>
+          <span>
+            <FaChalkboardTeacher size={16} style={{ color: 'blue' }} /> Ativo
+          </span>
+        </p>
+      </div>
+      <div className={styles.container100}>
+        <p className={styles.list}>
+          <span>Menu:</span>
+          <span>
+            <FaEdit size={16} style={{ color: 'black' }} /> Editar
+          </span>
+          <span>
+            <FaWindowClose size={16} style={{ color: 'red' }} /> Excluir
+          </span>
+        </p>
+      </div>
       <div className={styles.teachers}>
         <DataTable
-            title="Professores cadastrados"
-            columns={createColumns()}
-            data={filteredItems}
-            pagination
-            subHeader
-            subHeaderComponent={subHeaderComponentMemo}
-            persistTableHead
+          title="Professores cadastrados"
+          columns={createColumns()}
+          data={filteredItems}
+          pagination
+          subHeader
+          subHeaderComponent={subHeaderComponentMemo}
+          persistTableHead
         />
       </div>
     </section>

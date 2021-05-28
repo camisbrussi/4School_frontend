@@ -2,17 +2,27 @@
   margin: 2rem;
 }
 
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+  position: relative;
+}
+
 .list {
   display: flex;
-  align-items: left;
-  justify-content: space-between;
+  flex-direction: row;
+  align-items: rigth;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
-  margin-top: 10px;
+  margin: 10px 0 20px 0;
 }
 
 .list span {
-  width: 100%;
+  margin: 5px;
+  text-align: center;
 }
 
 .buttons {

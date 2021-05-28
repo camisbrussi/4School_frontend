@@ -3,10 +3,6 @@
   grid-template-columns: 10rem 1fr;
 }
 
-.forms {
-  margin-top: 20vh;
-}
-
 @media (max-width: 40rem) {
   .panel {
     grid-template-columns: 0rem 1fr;
