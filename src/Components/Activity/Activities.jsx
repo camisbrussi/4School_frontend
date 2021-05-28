@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Head from "../Helper/Head";
-import { FaClipboardList, FaEdit, FaWindowClose } from "react-icons/fa";
+import { FaClipboardList, FaEdit, FaWindowClose, FaCalendarCheck } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Confirm } from "react-st-modal";
 import styles from "./Activities.module.css";
@@ -69,24 +69,40 @@ const Activities = () => {
     {name:"Nome", selector:'name', sortable:true},
     {name:"Início", selector:'start', sortable:true},
     {name:"Fim", selector:'end', sortable:true},
-    {name:"Status", selector:'status_description', sortable:true}
   ];
 
   const createColumns = useCallback(() => {
     return [
+      {
+        name: '',
+        allowOverflow: true,
+        maxWidth: '5px',
+        cell: (row) => {
+          return (
+            <>
+              {row.status_id == 2 ? (
+                <FaCalendarCheck size={16} style={{ color: 'grey' }}/>
+              ) : (
+                <FaCalendarCheck size={16} style={{ color: 'blue' }}/>
+              )}
+            </>
+          );
+        },
+      },
       ...columns,
       {
         name: '',
         allowOverflow: true,
-        maxWidth: '50px',
+        maxWidth: '100px',
+        width: '100px',
         cell: row => {
           return (
               <>
-                <Link to={`participants?activity=${row.id}&name=${row.name}`} >
+                <Link to={`participants?activity=${row.id}&name=${row.name}`} className="link">
                   <FaClipboardList className="mx-5" size={16} style={{ color: "green" }} title="Participantes" />
                 </Link>
-                <Link to={`edit/${row.id}`}>
-                  <FaEdit size={16} style={{ color: "blue" }} title="Editar" />
+                <Link to={`edit/${row.id}`} className="link"> 
+                  <FaEdit size={16} style={{ color: "black" }} title="Editar" />
                 </Link>
                 <button onClick={() => { modalConfirm(row.id, row.name); }} className="cursor-pointer" title="Remover" >
                   <FaWindowClose size={16} style={{ color: "red" }} />
@@ -100,13 +116,41 @@ const Activities = () => {
 
   return (
     <section className="animeLeft">
+      <header className={styles.header}>
       <Head title="Atividades" />
       <h1 className="title title-2">Atividades</h1>
       <Link className={stylesBtn.button} to="createactivity">
         Cadastrar
       </Link>
+      </header>
+      <div className={styles.container100}>
+        <p className={styles.list}>
+          <span>Status:</span>
+          <span>
+            <FaCalendarCheck size={16} style={{ color: 'gray' }} /> Inativa
+          </span>
+          <span>
+            <FaCalendarCheck size={16} style={{ color: 'blue' }} /> Ativa
+          </span>
+        </p>
+      </div>
+      <div className={styles.container100}>
+        <p className={styles.list}>
+          <span>Menu:</span>
+          <span>
+            <FaClipboardList size={16} style={{ color: 'green' }} /> Adicionar Participantes
+          </span>
+          <span>
+            <FaEdit size={16} style={{ color: 'black' }} /> Editar
+          </span>
+          <span>
+            <FaWindowClose size={16} style={{ color: 'red' }} /> Excluir
+          </span>
+        </p>
+        </div>
       <div className={styles.activities}>
         <DataTable
+          
             title="Atividades cadastradas"
             columns={createColumns()}
             data={filteredItems}
@@ -115,7 +159,22 @@ const Activities = () => {
             subHeaderComponent={subHeaderComponentMemo}
             persistTableHead
         />
+        <div className={styles.container100}>
+          <p className={styles.list}>
+            <span>
+              <FaClipboardList size={16} style={{ color: 'green' }} /> Visualizar
+            </span>
+            <span>
+              <FaEdit size={16} style={{ color: 'black' }} /> Confirmar Presença
+            </span>
+            <span>
+              <FaWindowClose size={16} style={{ color: 'red' }} /> Excluir
+              Inscrição
+            </span>
+          </p>
+        </div>
       </div>
+      
     </section>
   );
 };

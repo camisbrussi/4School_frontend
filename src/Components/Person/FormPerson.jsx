@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import CardPhone from './CardPhone';
 import styles from './Person.module.css';
 import Input from '../Forms/Input';
+import InputMask from  '../Forms/InputMask';
 import Button from '../Forms/Button';
 import Select from '../Forms/Select';
-import Error from '../Helper/Error';
 import useFetch from '../../Hooks/useFetch';
 
 import { Alert } from 'react-st-modal';
 import { CITY_GET } from '../../API/Api_Address';
 import axios from 'axios';
+
 
 function FormPerson({
   titulo,
@@ -182,7 +183,7 @@ function FormPerson({
             setName(e.target.value);
           }}
         />
-        <Input
+        <InputMask
           label="CPF"
           type="text"
           name="cpf"
@@ -210,7 +211,7 @@ function FormPerson({
             setBirthDate(e.target.value);
           }}
         />
-        <Input
+        <InputMask
           label="CEP"
           type="text"
           name="cep"
@@ -304,7 +305,7 @@ function FormPerson({
 
         <div style={{ width: '100%', float: 'left' }}>
           <div styl style={{ width: '50%', float: 'left' }}>
-            <Input
+            <InputMask
               label="Número ( Para salvar o telefone é necessário clicar em Add fone) "
               type="text"
               name="number"

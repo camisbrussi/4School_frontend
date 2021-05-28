@@ -22,11 +22,8 @@ import styles from './Feed.module.css';
 
 const Feed = () => {
   const [activities, setActivities] = useState([]);
-  const [startFilter, setStartFilter] = useState('');
-  const [endFilter, setEndFilter] = useState('');
-
-  const navigate = useNavigate();
-
+  const [startFilter, setStartFilter] = useState(new Date);
+  const [endFilter, setEndFilter] = useState(new Date().getDate + 30 ); //30dias
   const [objErros, setObjErros] = useState({});
 
   useEffect(() => {
@@ -57,7 +54,6 @@ const Feed = () => {
 
   function date(datetime) {
     var date = new Date(datetime);
-
     return date.toLocaleString('pt-BR');
   }
 
