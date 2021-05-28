@@ -146,6 +146,7 @@ export function PARTICIPANT_GET_ACTIVITIES() {
   };
 }
 
+
 export function PARTICIPANT_GET_ACTIVITIES_FILTER(body) {
   return {
     url: API_URL + '/activities/filter/subscription' + idUserLogged,

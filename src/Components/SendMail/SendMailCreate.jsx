@@ -13,6 +13,9 @@ import { FaWindowClose } from "react-icons/fa";
 import { SENDMAIL_POST } from "../../API/Api_SendMail";
 import { TEAM_FILTER, TEAM_FILTER_STUDENTS } from "../../API/Api_Team";
 import { PERSON_FILTER } from "../../API/Api_Person";
+
+
+import {ACTIVITY_GET_PARTICIPANTS} from "../../API/Api_Activity";
 import axios from "axios";
 
 const SendMailCreate = () => {
@@ -26,11 +29,12 @@ const SendMailCreate = () => {
   const [nameFiltro, setNameFiltro] = useState("");
   const [typeFiltro, setTypeFiltro] = useState(0);
   const [teamFiltro, setTeamFiltro] = useState(0);
+  const [atividadeFiltro, setAtividadeFiltro] = useState("");
 
   const types = [
-    { id: 3, description: "Aluno" },
+    { id: 2, description: "Aluno" },
     { id: 1, description: "Professor" },
-    { id: 2, description: "Responsável" },
+    { id: 3, description: "Responsável" },
   ];
 
   const [teams, setTeams] = useState([]);
@@ -101,6 +105,28 @@ const SendMailCreate = () => {
     setPessoasFiltro(dados);
   }
 
+  const activity_id = new URL(window.location.href).searchParams.get("activity");
+  //const activity_name = new URL(window.location.href).searchParams.get("activity");
+
+  useEffect(() => {
+      async function getData() {
+
+          const {url, options} = ACTIVITY_GET_PARTICIPANTS(activity_id);
+          const response = await axios.get(url, options);
+          
+          const inscricoes = response.data
+          const pessoas = []
+          for (let i = 0; i < inscricoes.length; i++){
+            pessoas.push(inscricoes[i].person)
+          }
+          setIdPerson(pessoas)
+      }
+      getData();
+  }, []);
+
+
+
+
   function addPessoa(id) {
     if (id <= 0 || !pessoasFiltro.length) return;
 
@@ -115,6 +141,7 @@ const SendMailCreate = () => {
       }
     });
   }
+
 
   function removePessoa(id) {
     if (id <= 0 || !pessoasAtividade.length) return;
@@ -154,6 +181,7 @@ const SendMailCreate = () => {
         modalError();
       } else {
         navigate("/conta/sendmail");
+        //navigate("/conta/sendmail/createsendMail/?activity=" + activity_id + "&name=" + activity_name);
       }
     }
   }
@@ -171,7 +199,7 @@ const SendMailCreate = () => {
       setObjErros("");
     }
   }
-  
+
   return (
     <section className="animeLeft">
       <h1 className="title title-2">Criar Mensagem</h1>
@@ -179,9 +207,6 @@ const SendMailCreate = () => {
         <Input label="Mensagem" type="text" {...message} />
       </div>
 
-      <br></br>
-      <br></br>
-      <br></br>
       <br></br>
       <br></br>
       <br></br>
@@ -223,6 +248,8 @@ const SendMailCreate = () => {
             }}
           />
         </div>
+
+        
 
         <div className="container20">
           <label>&nbsp;</label>
@@ -287,7 +314,7 @@ const SendMailCreate = () => {
                   <tr key={pessoa.id}>
                     <td>{pessoa.name}</td>
                     {/*<td>{formataCPF(pessoa.cpf)}</td>*/}
-                    {/*<td>{formataCPF(pessoa.type.description)}</td>*/}
+                    <td>{pessoa.type.description}</td>
                     <td>
                       <FaWindowClose
                         onClick={() => {
@@ -306,6 +333,7 @@ const SendMailCreate = () => {
             "Nenhum participante adicionado"
           )}
         </div>
+      
       </div>
 
       <div className="container100 my-30">

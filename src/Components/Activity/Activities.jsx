@@ -150,6 +150,7 @@ const Activities = () => {
         </div>
       <div className={styles.activities}>
         <DataTable
+          
             title="Atividades cadastradas"
             columns={createColumns()}
             data={filteredItems}
