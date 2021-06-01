@@ -1,5 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { FaEye, FaCheck, FaFileInvoice, FaWindowClose } from 'react-icons/fa';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  FaEye,
+  FaCheck,
+  FaFileInvoice,
+  FaWindowClose,
+  FaCalendarCheck,
+  FaEnvelope,
+  FaClipboardList, FaEdit
+} from 'react-icons/fa';
 import Error from '../Helper/Error';
 import Input from '../Forms/Input';
 import { Link } from 'react-router-dom';
@@ -19,6 +27,9 @@ import { CustomDialog } from 'react-st-modal';
 import ModalDialog from '../Activity/ModalConfirm';
 
 import styles from './Feed.module.css';
+import {formata_data_hora, formata_data_hora_para_datetime} from "../Helper/Functions";
+import Filter from "../Tables/Filter";
+import DataTable from "react-data-table-component";
 
 const Feed = () => {
   const [activities, setActivities] = useState([]);
@@ -43,7 +54,14 @@ const Feed = () => {
       console.log("USER:"+user);
       const { url, options } = PARTICIPANT_GET_ACTIVITIES(user);
       const response = await axios.get(url, options);
-      setActivities(response.data);
+      let atividades = response.data;
+
+      for (let i = 0; i < atividades.length; i++) {
+        atividades[i].activity.start = formata_data_hora(atividades[i].activity.start);
+        atividades[i].activity.end = formata_data_hora(atividades[i].activity.end);
+      }
+
+      setActivities(atividades);
     }
     
     if (user) { getData(); }
@@ -59,6 +77,11 @@ const Feed = () => {
     const response = await axios.get(url, options);
     let dados = {};
     dados = response.data;
+
+    for (let i = 0; i < dados.length; i++) {
+      dados[i].activity.start = formata_data_hora(dados[i].activity.start);
+      dados[i].activity.end = formata_data_hora(dados[i].activity.end);
+    }
 
     setActivities(dados);
   }
@@ -165,6 +188,73 @@ const Feed = () => {
     }
   }
 
+  const [filterText, setFilterText] = useState('');
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+  const filteredItems = activities.filter(item => (
+      (item.activity.name && item.activity.name.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.activity.start && item.activity.start.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.activity.end && item.activity.end.toLowerCase().includes(filterText.toLowerCase()))
+  ));
+
+  const subHeaderComponentMemo = React.useMemo(() => {
+    const handleClear = () => {
+      if (filterText) {
+        setResetPaginationToggle(!resetPaginationToggle);
+        setFilterText('');
+      }
+    };
+
+    return <Filter onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />;
+  }, [filterText, resetPaginationToggle]);
+
+  const columns = [
+    {name:"Atividade", selector:'activity.name', sortable:true},
+    {name:"Início", selector:'activity.start', sortable:true},
+    {name:"Fim", selector:'activity.end', sortable:true},
+  ];
+
+  const createColumns = useCallback(() => {
+    return [
+      ...columns,
+      {
+        name: '',
+        allowOverflow: true,
+        maxWidth: '40px',
+        width: '150px',
+        cell: row => {
+          return (
+              <>
+                <Link to={`activities/view/${row.activity.id}`}>
+                  <FaEye size={16} style={{ color: 'black' }} />
+                </Link>
+                <button onClick={() => {verifyVacancies(row.id, row.activity.id, row.number_tickets, formata_data_hora_para_datetime(row.activity.start))}}>
+                  {row.number_tickets > 0 ? (
+                      <FaCheck size={16} style={{ color: 'green' }} />
+                  ) : (
+                      <FaCheck size={16} style={{ color: 'gray' }} />
+                  )}
+                </button>
+                <button onClick={() => {modalCancelSubscription(row.id, formata_data_hora_para_datetime(row.activity.start), row.number_tickets)}}>
+                  {row.number_tickets > 0 || new Date(formata_data_hora_para_datetime(row.activity.start)) > new Date() ? (
+                      <FaWindowClose size={16} style={{ color: 'red' }} />
+                  ) : (
+                      <FaWindowClose size={16} style={{ color: 'gray' }} />
+                  )}
+                </button>
+                <button to={`${row}`}>
+                  {row.number_participation > 0 && row.activity.generate_certificate ? (
+                      <FaFileInvoice size={16} style={{ color: 'blue' }} />
+                  ) : (
+                      <FaFileInvoice size={16} style={{ color: 'gray' }} />
+                  )}
+                </button>
+              </>
+          );
+        },
+      },
+    ];
+  }, [columns]);
+
   return (
     <section className="animeLeft">
       <h1 className="title title-2">Atividades</h1>
@@ -219,60 +309,15 @@ const Feed = () => {
           </p>
         </div>
         <div className={[styles.container100, 'mt-30'].join(' ')}>
-          {activities.map((a) => (
-            <div key={String(a)} className={`${styles.list} ${styles.items}`}>
-              <span>{a.activity.name}</span>
-              <span>{date(a.activity.start)}</span>
-              <span>{date(a.activity.end)}</span>
-              <div className={styles.buttons}>
-                <Link to={`activities/view/${a.activity.id}`}>
-                  <FaEye size={16} style={{ color: 'black' }} />
-                </Link>
-                <button
-                  onClick={() => {
-                    verifyVacancies(
-                      a.id,
-                      a.activity.id,
-                      a.number_tickets,
-                      a.activity.start
-                    );
-                  }}
-                >
-                  {a.number_tickets > 0 ? (
-                    <FaCheck size={16} style={{ color: 'green' }} />
-                  ) : (
-                    <FaCheck size={16} style={{ color: 'gray' }} />
-                  )}
-                </button>
-
-                <button
-                  onClick={() => {
-                    modalCancelSubscription(
-                      a.id,
-                      a.activity.start,
-                      a.number_tickets
-                    );
-                  }}
-                >
-                  {a.number_tickets > 0 ||
-                  new Date(a.activitystart) > new Date() ? (
-                    <FaWindowClose size={16} style={{ color: 'red' }} />
-                  ) : (
-                    <FaWindowClose size={16} style={{ color: 'gray' }} />
-                  )}
-                </button>
-
-                <button to={`${a}`}>
-                  {a.number_participation > 0 &&
-                  a.activity.generate_certificate ? (
-                    <FaFileInvoice size={16} style={{ color: 'blue' }} />
-                  ) : (
-                    <FaFileInvoice size={16} style={{ color: 'gray' }} />
-                  )}
-                </button>
-              </div>
-            </div>
-          ))}
+            <DataTable
+                title="Suas atividades"
+                columns={createColumns()}
+                data={filteredItems}
+                pagination
+                subHeader
+                subHeaderComponent={subHeaderComponentMemo}
+                persistTableHead
+            />
         </div>
       </div>
     </section>
