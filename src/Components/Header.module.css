@@ -1,7 +1,11 @@
+* {
+  box-sizing: border-box;
+}
+
 .header {
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
   position: fixed;
-  width: 100%;
+  width: 86%;
   z-index: 100;
   background: white;
   top: 0px;
@@ -19,17 +23,6 @@
 }
 
 .login {
+  margin-left: 40rem;
   color: var(--color-first);
-  display: flex;
-  align-items: center;
-}
-
-.login::after {
-  content: "";
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  margin-left: 0.5rem;
-  position: relative;
-  top: -1px;
 }

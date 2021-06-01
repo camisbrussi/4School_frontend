@@ -5,20 +5,19 @@ const token = window.localStorage.getItem('token');
 const userLogged = window.localStorage.getItem('user');
 const idUserLogged = window.localStorage.getItem('id');
 
-export function ACTIVITY_GET() {
+export function ACTIVITY_GET(userLogged) {
   return {
     url: API_URL + '/activities',
     options: {
       headers: {
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
-export function ACTIVITY_POST(body) {
+export function ACTIVITY_POST(body, userLogged) {
   return {
     url: API_URL + '/activities',
     body: JSON.stringify(body),
@@ -27,13 +26,12 @@ export function ACTIVITY_POST(body) {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
-export function ACTIVITY_SHOW(id) {
+export function ACTIVITY_SHOW(id, userLogged) {
   return {
     url: API_URL + '/activities/' + id,
     options: {
@@ -41,13 +39,12 @@ export function ACTIVITY_SHOW(id) {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
-export function ACTIVITY_PUT(id, body) {
+export function ACTIVITY_PUT(id, body, userLogged) {
   return {
     url: API_URL + '/activities/' + id,
     body: JSON.stringify(body),
@@ -57,13 +54,12 @@ export function ACTIVITY_PUT(id, body) {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
-export function ACTIVITY_DELETE(id) {
+export function ACTIVITY_DELETE(id, userLogged) {
   return {
     url: API_URL + '/activities/' + id,
     options: {
@@ -71,39 +67,36 @@ export function ACTIVITY_DELETE(id) {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
-export function ACTIVITY_GET_PARTICIPANTS(id) {
+export function ACTIVITY_GET_PARTICIPANTS(id, userLogged) {
   return {
     url: API_URL + '/activities/participants/' + id,
     options: {
       headers: {
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
-export function ACTIVITY_GET_TEACHERS(id) {
+export function ACTIVITY_GET_TEACHERS(id, userLogged) {
   return {
     url: API_URL + '/activities/participants/teachers/' + id,
     options: {
       headers: {
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
-export function ACTIVITY_POST_PARTICIPANT(activity_id, body) {
+export function ACTIVITY_POST_PARTICIPANT(activity_id, body, userLogged) {
   return {
     url: API_URL + '/activities/addparticipants/' + activity_id,
     body: JSON.stringify(body),
@@ -112,13 +105,12 @@ export function ACTIVITY_POST_PARTICIPANT(activity_id, body) {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
-export function ACTIVITY_DELETE_SUBSCRIPTION(id) {
+export function ACTIVITY_DELETE_SUBSCRIPTION(id, userLogged) {
   return {
     url: API_URL + '/activities/subscription/' + id,
     options: {
@@ -126,43 +118,40 @@ export function ACTIVITY_DELETE_SUBSCRIPTION(id) {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
-export function PARTICIPANT_GET_ACTIVITIES() {
+export function PARTICIPANT_GET_ACTIVITIES(userLogged) {
   return {
-    url: API_URL + '/activities/subscriptions/' + idUserLogged,
+    url: API_URL + '/activities/subscriptions/' + userLogged.id,
     options: {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
 
-export function PARTICIPANT_GET_ACTIVITIES_FILTER(body) {
+export function PARTICIPANT_GET_ACTIVITIES_FILTER(body, userLogged) {
   return {
-    url: API_URL + '/activities/filter/subscription' + idUserLogged,
+    url: API_URL + '/activities/filter/subscription' + userLogged.id,
     options: {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
       params: body,
     },
   };
 }
 
-export function VACANCIES_AVAILABLE(id) {
+export function VACANCIES_AVAILABLE(id, userLogged) {
   return {
     url: API_URL + '/activities/vacanciesavailable/' + id,
     options: {
@@ -170,13 +159,12 @@ export function VACANCIES_AVAILABLE(id) {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
-export function CONFIRM_SUBSCRIPTION(id, body) {
+export function CONFIRM_SUBSCRIPTION(id, body, userLogged) {
   return {
     url: API_URL + '/activities/confirmsubscription/' + id,
     body: JSON.stringify(body),
@@ -186,7 +174,6 @@ export function CONFIRM_SUBSCRIPTION(id, body) {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
         UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };

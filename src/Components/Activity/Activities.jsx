@@ -98,9 +98,6 @@ const Activities = () => {
         cell: row => {
           return (
               <>
-                <Link to={`/conta/sendMail/createsendMail?activity=${row.id}&name=${row.name}`} >
-                  <FaEnvelope className="mx-5" size={16} style={{ color: "black" }} title="Participantes da atividade" />
-                </Link>
                 <Link to={`participants?activity=${row.id}&name=${row.name}`} className="link">
                   <FaClipboardList className="mx-5" size={16} style={{ color: "green" }} title="Participantes" />
                 </Link>
@@ -108,6 +105,9 @@ const Activities = () => {
                   <FaEdit size={16} style={{ color: "black" }} title="Editar" />
                 </Link>
                 <button onClick={() => { modalConfirm(row.id, row.name); }} className="cursor-pointer" title="Remover" >
+                <Link to={`/conta/sendMail/createsendMail?activity=${row.id}&name=${row.name}`} >
+                  <FaEnvelope className="mx-5" size={16} style={{ color: "black" }} title="Participantes da atividade" />
+                </Link>
                   <FaWindowClose size={16} style={{ color: "red" }} />
                 </button>
               </>

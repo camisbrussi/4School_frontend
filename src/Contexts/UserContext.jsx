@@ -1,5 +1,5 @@
 import React from 'react';
-import {TOKEN_POST, TOKEN_VALIDATE_POST, USER_GET, USER_SHOW} from '../API/Api_User';
+import {TOKEN_POST, USER_GET, USER_SHOW, USER_LOGGED} from '../API/Api_User';
 import {useNavigate} from 'react-router-dom';
 
 import axios from 'axios'
@@ -8,9 +8,11 @@ export const UserContext = React.createContext();
 
 export const UserStorage = ({children}) => {
     const [data, setData] = React.useState(null);
+    const [userLogged, setUserLogged] = React.useState(null);
     const [login, setLogin] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState(null);
+    const [token, setToken] = React.useState(null);
     const navigate = useNavigate();
 
     const userLogout = React.useCallback(
@@ -20,22 +22,25 @@ export const UserStorage = ({children}) => {
             setLoading(false);
             setLogin(false);
             window.localStorage.removeItem('token');
-            window.localStorage.removeItem('user');
-            window.localStorage.removeItem('id');
             navigate('/login');
         },
         [navigate],
     );
 
     async function getUser() {
-        const token = window.localStorage.getItem('token');
+        setToken(window.localStorage.getItem('token'));
         const {url, options} = USER_GET(token);
         const response = await axios.get(url, options);
         setData(response.data);
         setLogin(true);
     }
 
-
+    async function getUserLogged() {
+        const {url, options} = USER_LOGGED(token);
+        const response = await axios.get(url, options);
+        setUserLogged(response.data);
+    }
+    
     async function userLogin(login, password, type) {
         try {
             setError(null);
@@ -49,14 +54,11 @@ export const UserStorage = ({children}) => {
             const {id} = await tokenRes.data.user;
             const userType = await tokenRes.data.user.type;
             setLogin(true);
+            setToken(token);
             window.localStorage.setItem('token', token);
-            window.localStorage.setItem('user', login);
-            window.localStorage.setItem('id', id);
-            window.localStorage.setItem('type', userType);
             navigate('/');
 
         } catch (err) {
-            console.log(err)
             setError(err.message);
             setLogin(false);
         } finally {
@@ -77,9 +79,6 @@ export const UserStorage = ({children}) => {
         } finally {
             setLoading(false);
         }
-
-
-        console.log(data)
     }
 
     React.useEffect(() => {
@@ -89,7 +88,7 @@ export const UserStorage = ({children}) => {
                 try {
                     setError(null);
                     setLoading(true);
-                    const {url, options} = TOKEN_VALIDATE_POST(token);
+                    const {url, options} = USER_LOGGED(token);
                     const response = await fetch(url, options);
                     if (!response.ok) throw new Error('Token inválido');
                     await getUser(token);
@@ -108,7 +107,7 @@ export const UserStorage = ({children}) => {
 
     return (
         <UserContext.Provider
-            value={{userLogin, userLogout, data, error, loading, login, userShow, getUser}}
+            value={{userLogin, userLogout, data, error, loading, login, userShow, getUser, getUserLogged, userLogged}}
         >
             {children}
         </UserContext.Provider>

@@ -5,7 +5,7 @@ import Input from '../Forms/Input';
 import { Link } from 'react-router-dom';
 import Button from '../Forms/Button';
 import { Alert, Confirm } from 'react-st-modal';
-import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../Contexts/UserContext';
 
 import {
   PARTICIPANT_GET_ACTIVITIES,
@@ -26,24 +26,35 @@ const Feed = () => {
   const [endFilter, setEndFilter] = useState(new Date().getDate + 30 ); //30dias
   const [objErros, setObjErros] = useState({});
 
+  const [user, setUser] = useState([]);
+  const { userLogged } = React.useContext(UserContext);
+  
+  useEffect(() => {
+    setUser(userLogged);
+  }, [userLogged]);
+
   useEffect(() => {
     modalError();
   }, [objErros]);
 
   useEffect(() => {
+
     async function getData() {
-      const { url, options } = PARTICIPANT_GET_ACTIVITIES();
+      console.log("USER:"+user);
+      const { url, options } = PARTICIPANT_GET_ACTIVITIES(user);
       const response = await axios.get(url, options);
       setActivities(response.data);
     }
-    getData();
-  }, []);
+    
+    if (user) { getData(); }
+    
+  }, [user]);
 
   async function filterActivity() {
     let getParamentes = PARTICIPANT_GET_ACTIVITIES_FILTER({
       start: startFilter,
       end: endFilter,
-    });
+    }, userLogged);
     let { url, options } = getParamentes;
     const response = await axios.get(url, options);
     let dados = {};
@@ -60,7 +71,7 @@ const Feed = () => {
   async function verifyVacancies(id, id_activity, tickets, dateStart) {
     if (new Date(dateStart) > new Date() && tickets == 0) {
       if (tickets == 0) {
-        const { url, options } = VACANCIES_AVAILABLE(id_activity);
+        const { url, options } = VACANCIES_AVAILABLE(id_activity, user);
         const response = await axios.get(url, options);
 
         modalConfirm(id, response.data, tickets);
@@ -80,7 +91,7 @@ const Feed = () => {
         if (data) {
           const { url, body, options } = CONFIRM_SUBSCRIPTION(id, {
             number_tickets: data,
-          });
+          }, userLogged);
           const response = await axios.put(url, body, options);
 
           if (response.statusText === 'OK') {
@@ -134,11 +145,10 @@ const Feed = () => {
         'Deseja Cancelar sua Inscrição?',
         'Cancelamento de Inscrição'
       );
-      console.log(result);
       if (result) {
         const { url, body, options } = CONFIRM_SUBSCRIPTION(SubscriptionId, {
           number_tickets: 0,
-        });
+        }, userLogged);
         await axios.put(url, body, options);
         window.location.reload(false);
       }

@@ -110,8 +110,6 @@ function FormPerson({
         setDistrict('...');
         const conteudo = await axios.get('https://viacep.com.br/ws/' + cep + '/json/');
 
-        console.log(conteudo)
-
           if (conteudo) {
 
             setAddress(conteudo.data.logradouro);

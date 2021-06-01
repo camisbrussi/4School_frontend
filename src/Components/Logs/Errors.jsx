@@ -20,7 +20,6 @@ const Error = () => {
     async function getData() {
       const { url, options } = ERROR_GET();
       const response = await axios.get(url, options);
-      console.log(response);
       setErrors(response.data);
     }
     getData();

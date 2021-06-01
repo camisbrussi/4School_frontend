@@ -160,7 +160,6 @@ const SendMailCreate = () => {
   }, [objErros]);
 
   async function handleSubmit(event) {
-    console.log(idPersons);
     event.preventDefault();
     const { url, body, options } = SENDMAIL_POST({
       message: message.value,
@@ -168,12 +167,10 @@ const SendMailCreate = () => {
     });
 
     const response = await axios.post(url, body, options);
-    console.log(response);
 
     if (response.statusText === "OK") {
       if (response.data.erros !== undefined && response.data.erros.length) {
         let erros = { msg: response.data.success, erros: [] };
-        console.log(erros);
         for (let i = 0; i < response.data.erros.length; i++) {
           erros.erros.push(response.data.erros[i]);
         }

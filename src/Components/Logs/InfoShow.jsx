@@ -17,7 +17,6 @@ const InfoShow = () => {
       
       const { url, options } = INFO_SHOW(arquive);
       const response = await axios.get(url, options);
-      console.log(response.data)
       setInfos(response.data);
     } 
     getData();
@@ -38,7 +37,6 @@ const InfoShow = () => {
 
   function formatTitle(arquive){
     var title = arquive.split(".");
-    console.log(arquive)
    
     return date(title[0]);
   }

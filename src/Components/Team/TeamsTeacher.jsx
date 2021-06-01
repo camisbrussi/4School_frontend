@@ -1,11 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import Head from '../Helper/Head';
-import { FaEdit, FaWindowClose, FaUsers } from 'react-icons/fa';
+import { FaUsers, FaEnvelope } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { Confirm } from 'react-st-modal';
 import styles from './Teams.module.css';
-import stylesBtn from '../Forms/Button.module.css';
-import { TEAM_GET, TEAM_DELETE } from '../../API/Api_Team';
+import { TEAMS_GET_TEACHER } from '../../API/Api_Team';
 import axios from 'axios';
 import { IoIosPeople } from 'react-icons/all';
 
@@ -13,42 +11,27 @@ import DataTable from "react-data-table-component";
 import Filter from "../Tables/Filter";
 import {status_turma} from "../Helper/Functions";
 
-const Teams = () => {
+const TeamsTeacher = () => {
   const [teams, setTeams] = useState([]);
 
   useEffect(() => {
     async function getData() {
-      const { url, options } = TEAM_GET();
+      const { url, options } = TEAMS_GET_TEACHER();
       const response = await axios.get(url, options);
       let turmas = response.data;
 
       for (let i = 0; i < turmas.length; i++) {
         turmas[i].status_description = status_turma(turmas[i].status_id);
       }
-
       setTeams(turmas);
     }
-
     getData();
   }, []);
-
-  async function modalConfirm(teamId, teamName) {
-    const result = await Confirm(
-      'Inativar o turma ' + teamName + '?',
-      'Inativação de turmas'
-    );
-    if (result) {
-      const { url, options } = TEAM_DELETE(teamId);
-      await axios.delete(url, options);
-      window.location.reload(false);
-    }
-  }
 
   const [filterText, setFilterText] = useState('');
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const filteredItems = teams.filter(item => (
       (item.name && item.name.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.teacher.person.name && item.teacher.person.name.toLowerCase().includes(filterText.toLowerCase())) ||
       (item.year && item.year.toString().toLowerCase().includes(filterText.toLowerCase())) ||
       (item.status_description && item.status_description.toLowerCase().includes(filterText.toLowerCase()))
   ));
@@ -66,7 +49,6 @@ const Teams = () => {
 
   const columns = [
     {name:"Nome", selector:'name', sortable:true},
-    {name:"Professor", selector:'teacher.person.name', sortable:true},
     {name:"Ano", selector:'year', sortable:true},
   ];
 
@@ -97,15 +79,12 @@ const Teams = () => {
         cell: team => {
           return (
               <>
-                <Link to={`addstudents?team=`+team.id +'&name='+team.name+'&year='+team.year} title="Gerenciar alunos">
+              <Link to={`/teams/participants?team=${team.id}&name=${team.name}&year=${team.year}`} title="Gerenciar alunos">
                   <IoIosPeople size={16} style={{ color: 'green' }} className="mx-5 link" />
                 </Link>
                 <Link to={`edit/${team.id}`}>
-                  <FaEdit size={16} style={{ color: 'black' }} title="Editar"className="link" />
+                  <FaEnvelope size={16} style={{ color: 'black' }} title="Editar"className="link" />
                 </Link>
-                <button onClick={() => { modalConfirm(team.id, team.name); }} className="cursor-pointer" title="Remover" className="link">
-                  <FaWindowClose size={16} style={{ color: 'red' }} />
-                </button>
               </>
           );
         },
@@ -118,9 +97,7 @@ const Teams = () => {
        <header className={styles.header}>
       <Head title="Team" />
       <h1 className="title title-2">Turmas</h1>
-      <Link className={stylesBtn.button} to="createteam">
-        Cadastrar
-      </Link></header>
+      </header>
 
       <div className={styles.container100}>
         <p className={styles.list}>
@@ -137,13 +114,10 @@ const Teams = () => {
         <p className={styles.list}>
           <span>Menu:</span>
           <span>
-            <IoIosPeople size={16} style={{ color: 'green' }} /> Gerenciar Alunos
+            <IoIosPeople size={16} style={{ color: 'green' }} /> Visualizar Alunos
           </span>
           <span>
-            <FaEdit size={16} style={{ color: 'black' }} /> Excluir
-          </span>
-          <span>
-            <FaWindowClose size={16} style={{ color: 'red' }} /> Excluir
+            <FaEnvelope size={16} style={{ color: 'black' }} /> Enviar Email para os responsáveis
           </span>
         </p>
       </div>
@@ -162,4 +136,4 @@ const Teams = () => {
   );
 };
 
-export default Teams;
+export default TeamsTeacher;

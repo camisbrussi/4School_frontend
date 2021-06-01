@@ -32,7 +32,6 @@ const UserCreate = () => {
       password: password.value,
     });
     const response = await axios.post(url, body, options);
-    console.log(response);
 
     if (response.statusText === "OK") {
       if (response.data.erros !== undefined && response.data.erros.length) {

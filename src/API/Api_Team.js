@@ -107,6 +107,20 @@ export function TEAM_GET_STUDENTS(team_id) {
     };
 }
 
+export function TEAMS_GET_TEACHER() {
+    return {
+        url: API_URL + '/teams/teacher/' + idUserLogged,
+        options: {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token,
+                UserLogged: userLogged,
+                idUserLogged: idUserLogged
+            }
+        },
+    };
+}
+
 export function TEAM_FILTER(body) {
     return {
         url: API_URL + '/teams/filter/teams',

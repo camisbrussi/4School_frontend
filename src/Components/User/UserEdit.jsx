@@ -61,7 +61,6 @@ const UserEdit = () => {
     });
 
     const response = await axios.put(url, body, options);
-    console.log(response)
     if (response.statusText === "OK") {
       if (response.data.erros !== undefined && response.data.erros.length) {
           let erros = {msg: response.data.success, erros: []};

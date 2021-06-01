@@ -4,6 +4,7 @@ import {Routes, Route} from 'react-router-dom';
 import Feed from '../Feed/Feed';
 import NotFound from '../NotFound';
 import Head from '../Helper/Head';
+import Header from '../Header';
 
 import Users from '../User/Users';
 import UserCreate from '../User/UserCreate'
@@ -32,6 +33,8 @@ import Teams from '../Team/Teams';
 import TeamCreate from '../Team/TeamCreate';
 import TeamEdit from '../Team/TeamEdit';
 import TeamStudentsAdd from "../Team/TeamStudentsAdd";
+import TeamsTeacher from '../Team/TeamsTeacher'
+import TeamParticipants from '../Team/TeamParticipants';
 
 import Error from '../Logs/Errors'
 import ErrorShow from '../Logs/ErrorShow'
@@ -45,10 +48,12 @@ import styles from './AdminPanel.module.css';
 
 const AdminPanel = () => {
     return (
+        <>
+       
         <section className={`${styles.panel} container`}>
             <Head title="Painel Administrador"/>
             <AdminPanelHeader/>
-
+            <Header />
             <div className={styles.forms}>
                 <Routes>
                     <Route path="/" element={<Feed/>}/>
@@ -79,7 +84,9 @@ const AdminPanel = () => {
                     <Route path="/teams" element={<Teams/>}/>
                     <Route path="/teams/createteam" element={<TeamCreate/>}/>
                     <Route path="/teams/edit/:id" element={<TeamEdit/>}/>
-                    <Route path="/teams/addstudents" element={<TeamStudentsAdd/>}/>
+                    <Route path="/teams/participants" element={<TeamParticipants/>}/>
+                    <Route path="/teams/participants/addstudents" element={<TeamStudentsAdd/>}/>
+                    <Route path="/teams/teacher" element={<TeamsTeacher/>}/>
 
                     <Route path="/errors" element={<Error/>}/>
                     <Route path="/errors/:arquivo" element={<ErrorShow/>}/>
@@ -92,6 +99,7 @@ const AdminPanel = () => {
                 </Routes>
             </div>
         </section>
+        </>
     );
 };
 

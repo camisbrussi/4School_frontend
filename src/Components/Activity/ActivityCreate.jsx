@@ -22,8 +22,6 @@ const ActivityCreate = () => {
 
   async function handleSubmit(event, data) {
     event.preventDefault();
-    console.log(data)
-
     const { url, body, options } = ACTIVITY_POST(data);
     const response = await axios.post(url, body, options);
 

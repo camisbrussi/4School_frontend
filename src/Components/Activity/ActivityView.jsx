@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Error from "../Helper/Error";
-import { Alert } from "react-st-modal";
-
 import { useNavigate } from "react-router-dom";
-
 import axios from "axios";
 import { ACTIVITY_SHOW } from "../../API/Api_Activity";
 import FormActivity from "./FormActivity";
@@ -40,7 +36,6 @@ const ActivityView = () => {
       navigate("/");
   }
 
-  
   return podeVisualizar ?(
     <FormActivity 
       titulo="Dados da Atividades"
