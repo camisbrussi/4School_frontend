@@ -1,24 +1,18 @@
-// export const API_URL = 'http://177.44.248.32:8083'
-export const API_URL = 'http://localhost:3003'
+export const API_URL = 'http://177.44.248.32:8083'
+//export const API_URL = 'http://localhost:3003'
 
-const token = window.localStorage.getItem('token');
-const userLogged = window.localStorage.getItem('user');
-const idUserLogged = window.localStorage.getItem('id');
-
-export function TEACHER_GET() {
+export function TEACHER_GET(token) {
     return {
         url: API_URL + '/teachers',
         options: {
             headers: {
                 Authorization: 'Bearer ' + token,
-                UserLogged: userLogged,
-                idUserLogged: idUserLogged
             },
         },
     };
 }
 
-export function TEACHER_POST(body) {
+export function TEACHER_POST(body, userLogged, token) {
     return {
         url: API_URL + '/teachers',
         body: JSON.stringify(body),
@@ -26,28 +20,25 @@ export function TEACHER_POST(body) {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token,
-                UserLogged: userLogged,
-                idUserLogged: idUserLogged
+                UserLogged: JSON.stringify(userLogged),
             },
         },
     };
 }
 
-export function TEACHER_SHOW(id) {
+export function TEACHER_SHOW(id, token) {
     return {
         url: API_URL + '/teachers/' + id,
         options: {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token,
-                UserLogged: userLogged,
-                idUserLogged: idUserLogged
             },
         },
     };
 }
 
-export function TEACHER_PUT(id, body) {
+export function TEACHER_PUT(id, body, userLogged, token) {
     return {
         url: API_URL + '/teachers/'+ id,
         body: JSON.stringify(body),
@@ -56,28 +47,26 @@ export function TEACHER_PUT(id, body) {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token,
-                UserLogged: userLogged,
-                idUserLogged: idUserLogged
+                UserLogged: JSON.stringify(userLogged),
             },
         },
     };
 }
 
-export function TEACHER_DELETE(id) {
+export function TEACHER_DELETE(id, userLogged, token) {
     return {
         url: API_URL + '/teachers/'+ id,
         options: {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token,
-                UserLogged: userLogged,
-                idUserLogged: idUserLogged
+                UserLogged: JSON.stringify(userLogged),
             },
         },
     };
 }
 
-export function TEACHER_FILTER(body) {
+export function TEACHER_FILTER(body, token) {
     return {
         url: API_URL + '/teachers/filter/teachers',
         //body: JSON.stringify(body),
@@ -85,8 +74,6 @@ export function TEACHER_FILTER(body) {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token,
-                UserLogged: userLogged,
-                idUserLogged: idUserLogged
             },
             params: body
         },

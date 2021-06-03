@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Input from "../Forms/Input";
 import Button from "../Forms/Button";
 import Error from "../Helper/Error";
-
+import { UserContext } from '../../Contexts/UserContext';
 import useFetch from "../../Hooks/useFetch";
 import {useNavigate} from "react-router-dom";
 
@@ -21,6 +21,7 @@ const TeamStudentsAdd = () => {
     const [alunosTurma, setAlunosTurma] = useState([]);
 
     const [objErros, setObjErros] = useState({});
+    const { userLogged, token } = React.useContext(UserContext);
 
     const team_id = new URL(window.location.href).searchParams.get("team");
     const team_name = new URL(window.location.href).searchParams.get("name");
@@ -32,13 +33,14 @@ const TeamStudentsAdd = () => {
     //- busca os alunos que ja estao vinculados com a turma
     useEffect(() => {
         async function getStudents() {
-            const { url, options } = TEAM_GET_STUDENTS(new URL(window.location.href).searchParams.get("team"));
+            const { url, options } = TEAM_GET_STUDENTS(new URL(window.location.href).searchParams.get("team"), token);
             const response = await axios.get(url, options);
 
             setAlunosTurma(response.data);
         }
-        getStudents();
-    }, []);
+        if(Object.keys(token).length > 0) getStudents();
+        
+    }, [token]);
 
     async function filtraEstudantes() {
         const token = window.localStorage.getItem("token");
@@ -118,7 +120,7 @@ const TeamStudentsAdd = () => {
         event.preventDefault();
 
         const token = window.localStorage.getItem("token");
-        const {url, body, options} = TEAM_POST_STUDENTS(team_id,{students:alunosTurma},token);
+        const {url, body, options} = TEAM_POST_STUDENTS(team_id,{students:alunosTurma}, userLogged, token);
 
         const response = await axios.post(url, body, options);
         //console.log(response);

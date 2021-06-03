@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import Head from '../Helper/Head';
 import { FaEdit, FaWindowClose, FaUsers } from 'react-icons/fa';
+import { UserContext } from '../../Contexts/UserContext';
 import { Link } from 'react-router-dom';
 import { Confirm } from 'react-st-modal';
 import styles from './Teams.module.css';
@@ -15,10 +16,11 @@ import {status_turma} from "../Helper/Functions";
 
 const Teams = () => {
   const [teams, setTeams] = useState([]);
+  const { userLogged, token } = React.useContext(UserContext);
 
   useEffect(() => {
     async function getData() {
-      const { url, options } = TEAM_GET();
+      const { url, options } = TEAM_GET(token);
       const response = await axios.get(url, options);
       let turmas = response.data;
 
@@ -29,8 +31,8 @@ const Teams = () => {
       setTeams(turmas);
     }
 
-    getData();
-  }, []);
+    if(Object.keys(token).length > 0) getData()
+  }, [token]);
 
   async function modalConfirm(teamId, teamName) {
     const result = await Confirm(
@@ -38,7 +40,7 @@ const Teams = () => {
       'Inativação de turmas'
     );
     if (result) {
-      const { url, options } = TEAM_DELETE(teamId);
+      const { url, options } = TEAM_DELETE(teamId, userLogged, token);
       await axios.delete(url, options);
       window.location.reload(false);
     }
@@ -60,7 +62,6 @@ const Teams = () => {
         setFilterText('');
       }
     };
-
     return <Filter onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />;
   }, [filterText, resetPaginationToggle]);
 
@@ -79,7 +80,7 @@ const Teams = () => {
         cell: (row) => {
           return (
             <>
-              {row.status_id == 2 ? (
+              {row.status_id === 2 ? (
                 <FaUsers size={16} style={{ color: 'grey' }} />
               ) : (
                 <FaUsers size={16} style={{ color: 'blue' }} />
@@ -97,13 +98,13 @@ const Teams = () => {
         cell: team => {
           return (
               <>
-                <Link to={`addstudents?team=`+team.id +'&name='+team.name+'&year='+team.year} title="Gerenciar alunos">
+                <Link to={`participants?team=`+team.id +'&name='+team.name+'&year='+team.year} title="Gerenciar alunos">
                   <IoIosPeople size={16} style={{ color: 'green' }} className="mx-5 link" />
                 </Link>
                 <Link to={`edit/${team.id}`}>
                   <FaEdit size={16} style={{ color: 'black' }} title="Editar"className="link" />
                 </Link>
-                <button onClick={() => { modalConfirm(team.id, team.name); }} className="cursor-pointer" title="Remover" className="link">
+                <button onClick={() => { modalConfirm(team.id, team.name); }} className="cursor-pointer link" title="Remover">
                   <FaWindowClose size={16} style={{ color: 'red' }} />
                 </button>
               </>

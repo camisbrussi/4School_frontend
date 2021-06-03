@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from "styled-components"
-import Button from "../Forms/Button";
+//import Button from "../Forms/Button";
 
+/*
 const ClearButton = styled(Button)`
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
@@ -13,7 +14,7 @@ const ClearButton = styled(Button)`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+`;*/
 
 const TextField = styled.input`
   height: 32px;

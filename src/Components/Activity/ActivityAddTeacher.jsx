@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import Input from "../Forms/Input";
 import Button from "../Forms/Button";
 import Error from "../Helper/Error";
+import { UserContext } from '../../Contexts/UserContext';
 
 import useFetch from "../../Hooks/useFetch";
 import {useNavigate} from "react-router-dom";
@@ -21,6 +22,8 @@ const ActivityAddTeacher = () => {
 
     const [objErros, setObjErros] = useState({});
 
+    const { userLogged, token } = React.useContext(UserContext);
+
     const activity_id = new URL(window.location.href).searchParams.get("activity");
     const activity_name = new URL(window.location.href).searchParams.get("name");
 
@@ -30,7 +33,7 @@ const ActivityAddTeacher = () => {
     //- busca os professores que ja estao vinculados com a atividade
     useEffect(() => {
         async function getTeachers() {
-            const { url, options } = ACTIVITY_GET_TEACHERS(activity_id);
+            const { url, options } = ACTIVITY_GET_TEACHERS(activity_id, token);
             const response = await axios.get(url, options);
 
             let professores = response.data;
@@ -44,7 +47,6 @@ const ActivityAddTeacher = () => {
     }, []);
 
     async function filtraProfessores() {
-        const token = window.localStorage.getItem("token");
         const {url, options} = TEACHER_FILTER(
             {
                 status_id: 1, //-Ativo
@@ -100,10 +102,6 @@ const ActivityAddTeacher = () => {
         return false;
     }
     
-    function formataCPF(cpf) {
-        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-    }
-
     function ordernarProfessoresAtividade(professores) {
         professores.sort(function(a,b) {
             return a.person.name < b.person.name ? -1 : a.person.name > b.person.name ? 1 : 0;
@@ -169,7 +167,7 @@ const ActivityAddTeacher = () => {
                             {professoresFiltro.map(professor => (
                                 <tr key={professor.id}>
                                     <td>{professor.person.name}</td>
-                                    <td>{formataCPF(professor.person.cpf)}</td>
+                                    <td>{formata_cpf(professor.person.cpf)}</td>
                                     <td><RiAddBoxFill className="cursor-pointer" onClick={() => {addProfessor(professor.person.id)}} size={16} style={{color: 'green'}}/></td>
                                 </tr>
                             ))}

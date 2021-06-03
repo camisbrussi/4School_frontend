@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Select.module.css';
 
-const Select = ({ label, type, name, value, onChange, error, onBlur, checked, primeiraOpcao }) => {
+const Select = ({ label, type, name, value, onChange, error, onBlur, checked, primeiraOpcao, onClick }) => {
   return (
     <div className={styles.wrapper}>
       <label htmlFor={name} className={styles.label}>
@@ -17,6 +17,7 @@ const Select = ({ label, type, name, value, onChange, error, onBlur, checked, pr
         onBlur={onBlur}
         checked={checked}
         autoComplete="off"
+        onClick={onclick}
       >
           {
               (primeiraOpcao) ?

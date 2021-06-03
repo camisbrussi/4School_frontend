@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Head from '../Helper/Head';
 import { FaEdit, FaWindowClose, FaChalkboardTeacher } from 'react-icons/fa';
+import { UserContext } from '../../Contexts/UserContext';
 import { Link } from 'react-router-dom';
 import { Confirm } from 'react-st-modal';
 import styles from './Teachers.module.css';
@@ -15,9 +16,11 @@ import { formata_cpf } from '../Helper/Functions';
 const Teachers = () => {
   const [teachers, setTeachers] = useState([]);
 
+  const { userLogged, token } = React.useContext(UserContext);
+
   useEffect(() => {
     async function getData() {
-      const { url, options } = TEACHER_GET();
+      const { url, options } = TEACHER_GET(token);
       const response = await axios.get(url, options);
       let professores = response.data;
 
@@ -28,8 +31,8 @@ const Teachers = () => {
       setTeachers(professores);
     }
 
-    getData();
-  }, []);
+    if(Object.keys(token).length > 0) getData()
+  }, [token]);
 
   async function modalConfirm(teacherId, teacherName) {
     const result = await Confirm(
@@ -37,7 +40,7 @@ const Teachers = () => {
       'Inativação de professor'
     );
     if (result) {
-      const { url, options } = TEACHER_DELETE(teacherId);
+      const { url, options } = TEACHER_DELETE(teacherId, userLogged, token);
       await axios.delete(url, options);
       window.location.reload(false);
     }
@@ -88,7 +91,7 @@ const Teachers = () => {
         cell: (row) => {
           return (
             <>
-              {row.status.id == 2 ? (
+              {row.status.id === 2 ? (
                 <FaChalkboardTeacher size={16} style={{ color: 'grey' }} />
               ) : (
                 <FaChalkboardTeacher size={16} style={{ color: 'blue' }} />

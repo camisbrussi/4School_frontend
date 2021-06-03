@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Head from '../Helper/Head';
 import { FaEdit, FaUserTie } from 'react-icons/fa';
+import { UserContext } from '../../Contexts/UserContext';
 import { Link } from 'react-router-dom';
 import styles from './Responsibles.module.css';
 import stylesBtn from '../Forms/Button.module.css';
@@ -14,10 +15,11 @@ import { formata_cpf } from '../Helper/Functions';
 
 const Responsibles = () => {
   const [responsibles, setResponsibles] = useState([]);
+  const { token } = React.useContext(UserContext);
 
   useEffect(() => {
     async function getData() {
-      const { url, options } = RESPONSIBLE_GET();
+      const { url, options } = RESPONSIBLE_GET(token);
       const response = await axios.get(url, options);
       let responsaveis = response.data;
 
@@ -28,8 +30,8 @@ const Responsibles = () => {
       setResponsibles(responsaveis);
     }
 
-    getData();
-  }, []);
+    if(Object.keys(token).length > 0) getData()
+  }, [token]);
 
   const [filterText, setFilterText] = useState('');
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -103,11 +105,10 @@ const Responsibles = () => {
               </Link>
               <Link to={`edit/${responsible.id}`}>
                 <FaEdit
-                  className="mx-5"
+                  className="mx-5 link"
                   size={16}
                   style={{ color: 'black' }}
                   title="Editar"
-                  className="link"
                 />
               </Link>
             </>

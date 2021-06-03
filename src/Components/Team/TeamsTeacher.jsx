@@ -61,7 +61,7 @@ const TeamsTeacher = () => {
         cell: (row) => {
           return (
             <>
-              {row.status_id == 2 ? (
+              {row.status_id === 2 ? (
                 <FaUsers size={16} style={{ color: 'grey' }} />
               ) : (
                 <FaUsers size={16} style={{ color: 'blue' }} />

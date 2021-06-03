@@ -1,36 +1,30 @@
 import React, { useState, useEffect } from "react";
-import Input from "../Forms/Input";
-import Button from "../Forms/Button";
-import Error from "../Helper/Error";
-import useForm from "../../Hooks/useForm";
-import { Alert } from "react-st-modal";
-
+import Error from '../Helper/Error';
+import { Alert } from 'react-st-modal';
+import { UserContext } from '../../Contexts/UserContext';
 import useFetch from "../../Hooks/useFetch";
 import { useNavigate } from "react-router-dom";
+
+import FormUser from './FormUser'
 
 import { USER_POST } from "../../API/Api_User";
 import axios from "axios";
 
 const UserCreate = () => {
-  const name = useForm();
-  const login = useForm();
-  const password = useForm();
   const navigate = useNavigate();
 
   const { loading } = useFetch();
   const [objErros, setObjErros] = useState({});
 
+  const { userLogged, token } = React.useContext(UserContext);
+
   useEffect(() => {
     modalError();
   }, [objErros]);
 
-  async function handleSubmit(event) {
+  async function handleSubmit(event, data) {
     event.preventDefault();
-    const { url, body, options } = USER_POST({
-      name: name.value,
-      login: login.value,
-      password: password.value,
-    });
+    const { url, body, options } = USER_POST(data, userLogged, token );
     const response = await axios.post(url, body, options);
 
     if (response.statusText === "OK") {
@@ -46,7 +40,7 @@ const UserCreate = () => {
       }
     }
   }
-
+  
   async function modalError() {
     if (Object.keys(objErros).length > 0) {
       await Alert(
@@ -57,24 +51,16 @@ const UserCreate = () => {
         )),
         objErros.msg
       );
-      setObjErros("");
+      setObjErros('');
     }
   }
-
   return (
-    <section className="animeLeft">
-      <h1 className="title title-2">Criar Usuário</h1>
-      <form onSubmit={handleSubmit}>
-        <Input label="Usuário" type="text" name="name" {...name} />
-        <Input label="Login" type="login" name="login" {...login} />
-        <Input label="Senha" type="password" name="password" {...password} />
-        {loading ? (
-          <Button disabled>Cadastrando...</Button>
-        ) : (
-          <Button>Cadastrar</Button>
-        )}
-      </form>
-    </section>
+    <FormUser
+      titulo="Cadastro de Usuários"
+      handleSubmit={handleSubmit}
+      loading={loading}
+      dados={{}}
+       />
   );
 };
 

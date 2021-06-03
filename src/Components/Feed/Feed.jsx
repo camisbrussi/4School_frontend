@@ -4,9 +4,6 @@ import {
   FaCheck,
   FaFileInvoice,
   FaWindowClose,
-  FaCalendarCheck,
-  FaEnvelope,
-  FaClipboardList, FaEdit
 } from 'react-icons/fa';
 import Error from '../Helper/Error';
 import Input from '../Forms/Input';
@@ -37,22 +34,12 @@ const Feed = () => {
   const [endFilter, setEndFilter] = useState(new Date().getDate + 30 ); //30dias
   const [objErros, setObjErros] = useState({});
 
-  const [user, setUser] = useState([]);
-  const { userLogged } = React.useContext(UserContext);
+  const { userLogged, token } = React.useContext(UserContext);
   
-  useEffect(() => {
-    setUser(userLogged);
-  }, [userLogged]);
-
-  useEffect(() => {
-    modalError();
-  }, [objErros]);
-
   useEffect(() => {
 
     async function getData() {
-      console.log("USER:"+user);
-      const { url, options } = PARTICIPANT_GET_ACTIVITIES(user);
+      const { url, options } = PARTICIPANT_GET_ACTIVITIES(userLogged, token);
       const response = await axios.get(url, options);
       let atividades = response.data;
 
@@ -63,16 +50,15 @@ const Feed = () => {
 
       setActivities(atividades);
     }
+     if(Object.keys(userLogged).length > 0) getData()
     
-    if (user) { getData(); }
-    
-  }, [user]);
+  }, [userLogged, token]);
 
   async function filterActivity() {
     let getParamentes = PARTICIPANT_GET_ACTIVITIES_FILTER({
       start: startFilter,
       end: endFilter,
-    }, userLogged);
+    }, userLogged, token);
     let { url, options } = getParamentes;
     const response = await axios.get(url, options);
     let dados = {};
@@ -86,15 +72,10 @@ const Feed = () => {
     setActivities(dados);
   }
 
-  function date(datetime) {
-    var date = new Date(datetime);
-    return date.toLocaleString('pt-BR');
-  }
-
   async function verifyVacancies(id, id_activity, tickets, dateStart) {
-    if (new Date(dateStart) > new Date() && tickets == 0) {
-      if (tickets == 0) {
-        const { url, options } = VACANCIES_AVAILABLE(id_activity, user);
+    if (new Date(dateStart) > new Date() && tickets === 0) {
+      if (tickets === 0) {
+        const { url, options } = VACANCIES_AVAILABLE(id_activity, token);
         const response = await axios.get(url, options);
 
         modalConfirm(id, response.data, tickets);
@@ -114,8 +95,8 @@ const Feed = () => {
         if (data) {
           const { url, body, options } = CONFIRM_SUBSCRIPTION(id, {
             number_tickets: data,
-          }, userLogged);
-          const response = await axios.put(url, body, options);
+          }, userLogged, token);
+          const response = await axios.put(url, body, options, userLogged);
 
           if (response.statusText === 'OK') {
             if (
@@ -171,7 +152,7 @@ const Feed = () => {
       if (result) {
         const { url, body, options } = CONFIRM_SUBSCRIPTION(SubscriptionId, {
           number_tickets: 0,
-        }, userLogged);
+        }, userLogged, token);
         await axios.put(url, body, options);
         window.location.reload(false);
       }
@@ -180,7 +161,7 @@ const Feed = () => {
         'Prazo do cancelamento já está excedido',
         'Cancelamento de Inscrição'
       );
-    } else if (tickets == 0) {
+    } else if (tickets === 0) {
       await Alert(
         'Você não está confirmado nessa atividde',
         'Cancelamento de Inscrição'
@@ -288,6 +269,7 @@ const Feed = () => {
         </div>
         <div className={styles.container100}>
           <p className={styles.list}>
+          <span>Menu:</span>
             <span>
               <FaEye size={16} style={{ color: 'black' }} /> Visualizar
             </span>

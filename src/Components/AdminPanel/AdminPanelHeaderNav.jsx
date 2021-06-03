@@ -105,7 +105,7 @@ const AdminPanelHeaderNav = () => {
                   Auditoria
                 </NavLink>
               </>
-            ) : user.type_id == 1 ? (
+            ) : user.type_id === 1 ? (
               <>
                 <NavLink
                   to="/teams/teacher"

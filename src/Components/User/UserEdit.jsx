@@ -1,31 +1,23 @@
 import React, { useEffect, useState } from "react";
-import Input from "../Forms/Input";
-import Button from "../Forms/Button";
-import Error from "../Helper/Error";
 import { Alert } from "react-st-modal";
-
+import Error from '../Helper/Error';
 import { UserContext } from "../../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
-
-import styles from "./UserEdit.module.css";
-
 import { USER_PUT, USER_SHOW } from "../../API/Api_User";
 import axios from "axios"
+import FormUser from "./FormUser";
 
 const UserEdit = () => {
-  const [name, setName] = useState('');
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
-  const [activeUser, setActiveUser] = useState(false);
-  const [objErros, setObjErros] = useState({});
-
   const navigate = useNavigate();
-
-  const { loading } = React.useContext(UserContext);
+  const [dados, setDados] = useState('');
+  const [podeAtualizar, setPodeAtualizar] = useState(false);
 
   var params = window.location.href.substr(1).split("/");
-  let userId = params[6];
-  let status_id = 2;
+  let id = params[6];
+
+  const [objErros, setObjErros] = useState({});
+
+  const { userLogged, token } = React.useContext(UserContext);
 
   useEffect(() => {
     modalError();
@@ -34,33 +26,25 @@ const UserEdit = () => {
 
   useEffect(() => {
     async function getData() {
-      const { url, options } = USER_SHOW(userId);
+      const { url, options } = USER_SHOW(id, token);
       const response = await axios.get(url, options);
-      setName(response.data.name);
-      setLogin(response.data.login);
-      if(response.data.status_id === 1){
-      setActiveUser(response.data.status_id)
-      }
+
+      let name = response.data.name;
+      let login = response.data.login;
+      let password = response.data.password;
+      let isActive = response.data.status_id === 1;
+
+      setDados({name, login, password, isActive});
+      setPodeAtualizar(true);
     }
     getData();
-  }, [userId]);
+  }, [id, token]);
 
-  async function handleSubmit(event) {
+  async function handleSubmit(event, data) {
     event.preventDefault();
-    
-    var check = document.getElementsByName("active_user")[0].checked;
-    if (check === true){
-      status_id = 1;
-    }
-
-    const { url, body, options } = USER_PUT(userId, {
-      status_id,
-      name,
-      login,
-      password,
-    });
-
+    const { url, body, options } = USER_PUT(id, data, userLogged, token);
     const response = await axios.put(url, body, options);
+
     if (response.statusText === "OK") {
       if (response.data.erros !== undefined && response.data.erros.length) {
           let erros = {msg: response.data.success, erros: []};
@@ -72,73 +56,30 @@ const UserEdit = () => {
       } else {
           navigate("/conta/users");
       }
+    }
   }
-}
 
 async function modalError() {
-  if (Object.keys(objErros).length > 0) {
-    await Alert(
-      objErros.erros.map((val, key) => (
-        <li key={key}>
-          <Error error={val} />
-        </li>
-      )),
-      objErros.msg
-    );
-    setObjErros("");
+    if (Object.keys(objErros).length > 0) {
+      await Alert(
+        objErros.erros.map((val, key) => (
+          <li key={key}>
+            <Error error={val} />
+          </li>
+        )),
+        objErros.msg
+      );
+      setObjErros("");
+    }
   }
-}
 
-  return (
-    <section className="animeLeft">
-      <h1 className="title title-2">Editar Usuário</h1>
-      <form onSubmit={handleSubmit}>
-        <Input
-          label="Usuário"
-          type="text"
-          name="name"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-        />
-        <Input
-          label="Login"
-          type="login"
-          name="login"
-          value={login}
-          onChange={(e) => {
-            setLogin(e.target.value);
-          }}
-        />
-        <Input
-          label="Senha"
-          type="password"
-          name="password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-        />
-        <div className={styles.checkbox}>
-          <Input
-            label="Usuário Ativo"
-            type="checkbox"
-            name="active_user"
-            checked={activeUser}
-            onChange={(e) => {
-              setActiveUser(e.target.checked);
-            }}
-          />
-        </div>
-        {loading ? (
-          <Button disabled>Salvando...</Button>
-        ) : (
-          <Button>Salvar</Button>
-        )}     
-      </form>
-    </section>
-  );
+  return podeAtualizar ?(
+      <FormUser 
+        titulo="Editar Usuário"
+        handleSubmit={handleSubmit}
+        dados={dados}
+      />
+    ) : null;
 };
 
 export default UserEdit;

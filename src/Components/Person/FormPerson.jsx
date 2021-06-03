@@ -6,7 +6,7 @@ import InputMask from  '../Forms/InputMask';
 import Button from '../Forms/Button';
 import Select from '../Forms/Select';
 import useFetch from '../../Hooks/useFetch';
-
+import { UserContext } from '../../Contexts/UserContext';
 import { Alert } from 'react-st-modal';
 import { CITY_GET } from '../../API/Api_Address';
 import axios from 'axios';
@@ -19,7 +19,7 @@ function FormPerson({
   addPassword,
   addCheckAtivo,
 }) {
-  const { loading, error } = useFetch();
+  const { loading } = useFetch();
 
   const [name, setName] = useState(dados.name ?? '');
   const [cpf, setCpf] = useState(dados.cpf ?? '');
@@ -32,24 +32,24 @@ function FormPerson({
   const [number, setNumber] = useState(dados.number ?? '');
   const [complement, setComplement] = useState(dados.complement ?? '');
   const [district, setDistrict] = useState(dados.district ?? '');
-  const [idCity, setIdCity] = useState(dados.idCity ?? 0)
+  const [idCity] = useState(dados.idCity ?? 0)
   const [cities, setCities] = useState(dados.city ?? []);
   const [isActive, setIsActive] = useState(dados.isActive ?? false);
 
   const [objErros, setObjErros] = useState({});
-
+  const { token } = React.useContext(UserContext);
   useEffect(() => {
     modalError();
   }, [objErros]);
 
   useEffect(() => {
     async function getData() {
-      const { url, options } = CITY_GET();
+      const { url, options } = CITY_GET(token);
       const response = await axios.get(url, options);
       setCities(response.data);
     }
     getData();
-  }, [idCity]);
+  }, [idCity, token]);
 
   useEffect(() => {
     var select = document.getElementById('city');
@@ -61,7 +61,7 @@ function FormPerson({
     }
     select.value = idCity;
 
-  }, [cities]);
+  }, [cities, idCity]);
 
   function addPhone(e) {
     e.preventDefault();
@@ -102,7 +102,7 @@ function FormPerson({
   async function searchCep(value) {
 
     var cep = value.replace(/\D/g, '');
-    if (cep != '') {
+    if (cep !== '') {
       var validacep = /^[0-9]{8}$/;
       if (validacep.test(cep)) {
         
@@ -117,7 +117,7 @@ function FormPerson({
             var c = document.getElementById('city'), i=0;
             for (; i < c.options.length; i++)
             {	
-                if (c.options[i].text == conteudo.data.localidade)
+                if (c.options[i].text === conteudo.data.localidade)
                 {
                     c.options[i].selected = true;
                     break;
@@ -172,6 +172,7 @@ function FormPerson({
         }}
         className={styles.person}
       >
+         <div className="container100">
         <Input
           label="Nome"
           type="text"
@@ -219,7 +220,7 @@ function FormPerson({
             setCep(e.target.value);
           }}
           onBlur={ () => {searchCep(cep)} }
-        />
+        /></div>
 
         <div className="container60">
           <Input
@@ -273,6 +274,7 @@ function FormPerson({
         </div>
 
         {addPassword ? (
+          <div className="container100">
           <Input
             label="Senha"
             type="password"
@@ -280,11 +282,11 @@ function FormPerson({
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-          />
+          /></div>
         ) : (
           ''
         )}
-
+        <div className="container100">
         {addCheckAtivo ? (
           <div className={styles.checkbox}>
             <Input
@@ -302,7 +304,7 @@ function FormPerson({
         )}
 
         <div style={{ width: '100%', float: 'left' }}>
-          <div styl style={{ width: '50%', float: 'left' }}>
+          <div styl style={{ width: '50%', float: 'left' }} className="container50">
             <InputMask
               label="Número ( Para salvar o telefone é necessário clicar em Add fone) "
               type="text"
@@ -347,6 +349,7 @@ function FormPerson({
               />
             );
           })}
+        </div>
         </div>
 
         {loading ? (

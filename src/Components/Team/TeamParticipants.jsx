@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import Head from '../Helper/Head';
 import {FaUserPlus, FaFileExport, FaEnvelope} from 'react-icons/fa'
 import {Link} from 'react-router-dom';
+import { UserContext } from '../../Contexts/UserContext';
 import Button from '../Forms/Button'
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -20,10 +21,11 @@ const TeamParticipants = () => {
     const team_year = new URL(window.location.href).searchParams.get("year");
     const [participants, setParticipants] = useState([]);
     const [team, setTeam] = useState();
+    const { token } = React.useContext(UserContext);
     
     useEffect(() => {
         async function getData() {
-            const {url, options} = TEAM_GET_STUDENTS(team_id);
+            const {url, options} = TEAM_GET_STUDENTS(team_id, token);
             const response = await axios.get(url, options);
             let students = response.data;
 
@@ -33,16 +35,16 @@ const TeamParticipants = () => {
             setParticipants(students);
         }
         getData();
-    }, []);
+    }, [token, team_id]);
 
     useEffect(() => {
         async function getData() {
-            const {url, options} = TEAM_SHOW(team_id);
+            const {url, options} = TEAM_SHOW(team_id, token);
             const response = await axios.get(url, options);
             setTeam(response.data)
         }
         getData();
-    }, []);
+    }, [token, team_id]);
 
     async function sendEmail(id){
   }
@@ -51,13 +53,14 @@ const TeamParticipants = () => {
         const doc = new jsPDF();
         const tableColumn = ["Nome", "CPF", "Data Nascimento"];
         const tableRows = [];
+
+        console.log(participants);
         
         participants.map(participant => {
           const reportData = [
             participant.person.name,
             participant.person.cpf,
-            formata_data(participant.person.birth_date)
-
+            participant.person.birth_date
           ];
           tableRows.push(reportData);
         });
@@ -115,9 +118,12 @@ const TeamParticipants = () => {
         <section className="animeLeft">
             <Head title="Participantes"/>
             <h1 className="title title-2">Participantes de {team_name}</h1>
+            <div className={styles.buttons}>
             <Link className={stylesBtn.button} to={`addstudents?team=${team_id}&name=${team_name}&year=${team_year}`}><FaUserPlus size={16}/> Adicionar Alunos</Link>
             <Button className={stylesBtn.button} onClick={() => generateReport()}><FaFileExport size={16}/>  Relatório alunos</Button>
-            <div className={styles.activities}>
+            </div>
+            <div className={styles.teams}>
+            
                 <DataTable
                     title="Participantes da turma"
                     columns={createColumns()}

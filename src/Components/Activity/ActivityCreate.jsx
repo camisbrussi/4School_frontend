@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Error from '../Helper/Error';
 import { Alert } from "react-st-modal";
-
+import { UserContext } from '../../Contexts/UserContext';
 import useFetch from '../../Hooks/useFetch';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,13 +16,15 @@ const ActivityCreate = () => {
 
   const [objErros, setObjErros] = useState({});
 
+  const { userLogged, token } = React.useContext(UserContext);
+
   useEffect(() => {
     modalError();
-  }, [objErros, modalError]);
+  }, [objErros]);
 
   async function handleSubmit(event, data) {
     event.preventDefault();
-    const { url, body, options } = ACTIVITY_POST(data);
+    const { url, body, options } = ACTIVITY_POST(data, userLogged, token);
     const response = await axios.post(url, body, options);
 
     if (response.statusText === "OK") {
@@ -40,9 +42,8 @@ const ActivityCreate = () => {
   }
 
   async function modalError() {
-    let result;
     if (Object.keys(objErros).length > 0) {
-      result = await Alert(
+      await Alert(
         objErros.erros.map((val, key) => (
           <li key={key}>
             <Error error={val} />

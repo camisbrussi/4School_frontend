@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Error from "../Helper/Error";
 import { Alert } from "react-st-modal";
-
+import { UserContext } from '../../Contexts/UserContext';
 import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
@@ -14,8 +14,10 @@ const ActivityEdit = () => {
   var params = window.location.href.substr(1).split("/");
   let id = params[6];
 
+  const { userLogged, token } = React.useContext(UserContext);
+
   const [dados, setDados] = useState({});
-  const [podeAtualziar, setPodeAtualizar] = useState(false);
+  const [podeAtualizar, setPodeAtualizar] = useState(false);
 
   const [objErros, setObjErros] = useState({});
 
@@ -26,7 +28,7 @@ const ActivityEdit = () => {
 
   useEffect(() => {
     async function getData() {
-      const { url, options } = ACTIVITY_SHOW(id);
+      const { url, options } = ACTIVITY_SHOW(id, token);
       const response = await axios.get(url, options);
       let name = response.data.name;
       let description = response.data.description;
@@ -40,12 +42,12 @@ const ActivityEdit = () => {
       setPodeAtualizar(true);
     }
     getData();
-  }, [id]);
+  }, [id, token]);
 
   async function handleSubmit(event, data) {
     event.preventDefault();
 
-    const { url, body, options } = ACTIVITY_PUT( id, data );
+    const { url, body, options } = ACTIVITY_PUT( id, data, userLogged, token );
     const response = await axios.put(url, body, options);
    
     if (response.statusText === "OK") {
@@ -57,7 +59,7 @@ const ActivityEdit = () => {
         setObjErros(erros);
         modalError();
       } else {
-        navigate("/conta/users");
+        navigate("/conta/activities");
       }
     }
   }
@@ -76,7 +78,7 @@ const ActivityEdit = () => {
     }
   }
   
-  return podeAtualziar ?(
+  return podeAtualizar ?(
     <FormActivity 
       titulo="Editar Atividades"
       handleSubmit={handleSubmit}

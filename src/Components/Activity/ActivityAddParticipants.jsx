@@ -4,6 +4,7 @@ import Button from "../Forms/Button";
 import Error from "../Helper/Error";
 
 import useFetch from "../../Hooks/useFetch";
+import { UserContext } from '../../Contexts/UserContext';
 import {useNavigate} from "react-router-dom";
 import { Alert } from "react-st-modal";
 
@@ -20,6 +21,8 @@ const ActivityAddParticipants = () => {
     const [typeFiltro, setTypeFiltro] = useState(0);
     const [teamFiltro, setTeamFiltro] = useState(0);
 
+    const { userLogged, token } = React.useContext(UserContext);
+
     const types = [
         {id: 2, description: "Aluno"},
         {id: 1, description: "Professor"},
@@ -35,7 +38,7 @@ const ActivityAddParticipants = () => {
     const activity_id = new URL(window.location.href).searchParams.get("activity");
     const activity_name = new URL(window.location.href).searchParams.get("name");
 
-    const {loading, error} = useFetch();
+    const {loading} = useFetch();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -45,7 +48,6 @@ const ActivityAddParticipants = () => {
     //- busca os professores que ja estao vinculados com a atividade
     useEffect(() => {
         async function getTeams() {
-            const token = window.localStorage.getItem("token");
             const {url, options} = TEAM_FILTER(
                 {status_id: 1},
                 token
@@ -56,7 +58,7 @@ const ActivityAddParticipants = () => {
         }
 
         async function getParticipants() {
-            const {url, options} = ACTIVITY_GET_PARTICIPANTS(activity_id);
+            const {url, options} = ACTIVITY_GET_PARTICIPANTS(activity_id, token);
             const response = await axios.get(url, options);
 
             let participantes = [];
@@ -77,7 +79,7 @@ const ActivityAddParticipants = () => {
 
         getTeams();
         getParticipants();
-    }, []);
+    }, [activity_id, token, types]);
 
     useEffect(() => {
         let select = document.getElementById("team");
@@ -88,7 +90,6 @@ const ActivityAddParticipants = () => {
     }, [teams]);
 
     async function filtraPessoas() {
-        const token = window.localStorage.getItem("token");
         let getParamentes = PERSON_FILTER(
             {
                 name: nameFiltro,
@@ -179,11 +180,9 @@ const ActivityAddParticipants = () => {
 
     async function handleSubmit(event) {
         event.preventDefault();
-
-        const token = window.localStorage.getItem("token");
         const {url, body, options} = ACTIVITY_POST_PARTICIPANT(activity_id, {
             participants: pessoasAtividade
-        }, token);
+        }, userLogged, token);
 
         const response = await axios.post(url, body, options);
         if (response.statusText === "OK") {
@@ -201,9 +200,8 @@ const ActivityAddParticipants = () => {
     }
 
     async function modalError() {
-        let result;
         if (Object.keys(objErros).length > 0) {
-          result = await Alert(
+          await Alert(
             objErros.erros.map((val, key) => (
               <li key={key}>
                 <Error error={val} />

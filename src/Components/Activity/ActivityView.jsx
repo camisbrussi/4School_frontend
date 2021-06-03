@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ACTIVITY_SHOW } from "../../API/Api_Activity";
 import FormActivity from "./FormActivity";
+import { UserContext } from '../../Contexts/UserContext';
+
 
 const ActivityView = () => {
   const navigate = useNavigate();
@@ -13,9 +15,12 @@ const ActivityView = () => {
   const [dados, setDados] = useState({});
   const [podeVisualizar, setPodeVisualizar] = useState(false);
 
+  const {token } = React.useContext(UserContext);
+  
+
   useEffect(() => {
     async function getData() {
-      const { url, options } = ACTIVITY_SHOW(id);
+      const { url, options } = ACTIVITY_SHOW(id, token);
       const response = await axios.get(url, options);
       let name = response.data.name;
       let description = response.data.description;
@@ -29,7 +34,7 @@ const ActivityView = () => {
       setPodeVisualizar(true);
     }
     getData();
-  }, [id]);
+  }, [id, token]);
 
   async function comeBack(event) {
     event.preventDefault();

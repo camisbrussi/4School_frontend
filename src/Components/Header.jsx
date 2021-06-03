@@ -26,7 +26,7 @@ const Header = () => {
         </Link>
         { user ?  
           ( <div className={styles.login}>
-            <p>{user.login}</p>
+            <p>{user.login ? user.login : user.name}</p>
             <p>{type_user(user.type_id)}</p>
             </div>
           ) : ""}

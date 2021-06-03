@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Input from '../Forms/Input';
 import Button from '../Forms/Button';
-import Error from '../Helper/Error';
-import { Alert } from 'react-st-modal';
-
 import useFetch from '../../Hooks/useFetch';
-
 import styles from './FormActivity.module.css';
 
 const FormActivity = ({ titulo, handleSubmit, dados, addCheckAtivo, disabled }) => {
@@ -20,26 +16,6 @@ const FormActivity = ({ titulo, handleSubmit, dados, addCheckAtivo, disabled }) 
   );
   const [vacancies, setVacancies] = useState(dados.vacancies ?? '');
   const [isActive, setIsActive] = useState(dados.isActive ?? false);
-
-  const [objErros, setObjErros] = useState({});
-
-  useEffect(() => {
-    modalError();
-  }, [objErros, modalError]);
-
-  async function modalError() {
-    if (Object.keys(objErros).length > 0) {
-      await Alert(
-        objErros.erros.map((val, key) => (
-          <li key={key}>
-            <Error error={val} />
-          </li>
-        )),
-        objErros.msg
-      );
-      setObjErros('');
-    }
-  }
 
   function date(datetime) {
     if (datetime) var date = datetime.replace(/Z/, "");

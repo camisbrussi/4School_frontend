@@ -1,5 +1,6 @@
 .teams {
   margin: 2rem;
+  width: 100%;
 }
 
 .header {
@@ -23,4 +24,17 @@
 .list span {
   margin: 5px;
   text-align: center;
+}
+
+.buttons {
+  width: 10%;
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+}
+
+button {
+  border: 0 none;
+  outline: 0;
+  background-color: white;
 }

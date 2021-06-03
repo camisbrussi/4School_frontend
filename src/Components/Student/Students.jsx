@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Head from '../Helper/Head';
 import { FaEdit, FaWindowClose, FaUserGraduate } from 'react-icons/fa';
+import { UserContext } from '../../Contexts/UserContext';
 import { Link } from 'react-router-dom';
 import { Confirm } from 'react-st-modal';
 import styles from './Students.module.css';
@@ -17,12 +18,13 @@ const Students = () => {
   const responsible_id = new URL(window.location.href).searchParams.get(
     'responsible'
   );
+  const { userLogged, token } = React.useContext(UserContext);
 
   useEffect(() => {
     async function getData() {
       let opcoes;
-      if (responsible_id) opcoes = STUDENT_GET(responsible_id);
-      else opcoes = STUDENT_GET();
+      if (responsible_id) opcoes = STUDENT_GET(responsible_id, token);
+      else opcoes = STUDENT_GET(null, token);
 
       const { url, options } = opcoes;
       const response = await axios.get(url, options);
@@ -35,8 +37,8 @@ const Students = () => {
       setStudents(estudantes);
     }
 
-    getData();
-  }, [responsible_id]);
+    if(Object.keys(token).length > 0) getData()
+  }, [responsible_id, token]);
 
   async function modalConfirm(studentId, studentName) {
     const result = await Confirm(
@@ -44,7 +46,7 @@ const Students = () => {
       'Inativação de estudante'
     );
     if (result) {
-      const { url, options } = STUDENT_DELETE(studentId);
+      const { url, options } = STUDENT_DELETE(studentId, userLogged, token);
       await axios.delete(url, options);
       window.location.reload(false);
     }
@@ -104,7 +106,7 @@ const Students = () => {
         cell: (row) => {
           return (
             <>
-              {row.status.id == 2 ? (
+              {row.status.id === 2 ? (
                 <FaUserGraduate size={16} style={{ color: 'grey' }} />
               ) : (
                 <FaUserGraduate size={16} style={{ color: 'blue' }} />

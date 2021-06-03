@@ -1,33 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import Input from '../Forms/Input';
-import Button from '../Forms/Button';
 import Error from '../Helper/Error';
-
-import useFetch from '../../Hooks/useFetch';
+import FormTeam  from './FormTeam'
+import { UserContext } from "../../Contexts/UserContext";
 import { useNavigate } from 'react-router-dom';
-import styles from './TeamCreate.module.css';
 import { Alert } from 'react-st-modal';
 
 import axios from 'axios';
 import { TEAM_PUT, TEAM_SHOW } from '../../API/Api_Team';
-import { TEACHER_GET } from '../../API/Api_Teacher';
-import Select from '../Forms/Select';
 
 const TeamEdit = () => {
-  const { loading, error } = useFetch();
-
   const navigate = useNavigate();
-
   const [objErros, setObjErros] = useState({});
-  const [name, setName] = useState('');
-  const [idTeacher, setIdTeacher] = useState(0);
-  const [teachers, setTeachers] = useState([]);
-  const [year, setYear] = useState('');
-  const [activeTeam, setActiveTeam] = useState(false);
+  const [dados, setDados] = useState({});
+  const [podeAtualziar, setPodeAtualizar] = useState(false);
+  const { userLogged, token } = React.useContext(UserContext);
 
   var params = window.location.href.substr(1).split('/');
   let id = params[6];
-  let status_id = 2;
 
   useEffect(() => {
     modalError();
@@ -35,57 +24,25 @@ const TeamEdit = () => {
   
   useEffect(() => {
     async function getData() {
-      const { url, options } = TEAM_SHOW(id);
+      const { url, options } = TEAM_SHOW(id, token);
       const response = await axios.get(url, options);
-      setName(response.data.name);
-      setIdTeacher(response.data.teacher.id);
-      setYear(response.data.year);
-      if (response.data.status_id === 1) {
-        setActiveTeam(response.data.status_id);
-      }
+
+      let name = response.data.name;
+      let teacherId = response.data.teacher.id;
+      let year = response.data.year;
+
+      console.log(response.data.teacher.id);
+
+      setDados({name, teacherId, year});
+      setPodeAtualizar(true);
     }
     getData();
-  }, [id, idTeacher]);
+  }, [id, token]);
 
-  useEffect(() => {
-    async function getData() {
-      const { url, options } = TEACHER_GET();
-      const response = await axios.get(url, options);
-      setTeachers(response.data);
-    }
-    getData();
-  }, [idTeacher]);
-
-  useEffect(() => {
-    teachers.map((teacher) =>
-      addOption(teacher.id, teacher.person.name, idTeacher === teacher.id)
-    );
-
-    function addOption(id, name, selected) {
-      var option = new Option(name, id, selected, selected);
-
-      var select = document.getElementById('teacher');
-      select.add(option);
-    }
-  }, [teachers, idTeacher]);
-
-  async function handleSubmit(event) {
+  async function handleSubmit(event, data) {
     event.preventDefault();
 
-    var check = document.getElementsByName('active_team')[0].checked;
-    if (check === true) {
-      status_id = 1;
-    }
-
-    var select = document.getElementById('teacher');
-    var teacher_id = select.options[select.selectedIndex].value;
-
-    const { url, body, options } = TEAM_PUT(id, {
-      status_id,
-      name,
-      teacher_id,
-      year,
-    });
+    const { url, body, options } = TEAM_PUT(id, data, userLogged, token);
     const response = await axios.put(url, body, options);
     if (response.statusText === 'OK') {
       if (response.data.erros !== undefined && response.data.erros.length) {
@@ -96,7 +53,7 @@ const TeamEdit = () => {
         setObjErros(erros);
         modalError();
       } else {
-        if (response.statusText === 'OK') navigate('/conta/teams');
+        navigate('/conta/teams');
       }
     }
   }
@@ -115,50 +72,14 @@ const TeamEdit = () => {
     }
   }
 
-  return (
-    <section className="animeLeft">
-      <h1 className="title title-2">Editar Classe</h1>
-      <form onSubmit={handleSubmit} className={styles.team}>
-        <Input
-          label="Nome"
-          type="text"
-          name="name"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-        />
-        <Select label="Professor" name="teacher" />
-        <Input
-          label="Ano"
-          type="number"
-          name="year"
-          value={year}
-          onChange={(e) => {
-            setYear(e.target.value);
-          }}
-        />
-        <div className={styles.checkbox}>
-          <Input
-            label="Turma Ativa"
-            type="checkbox"
-            name="active_team"
-            checked={activeTeam}
-            onChange={(e) => {
-              setActiveTeam(e.target.checked);
-            }}
-          />
-        </div>
-
-        {loading ? (
-          <Button disabled>Salvando...</Button>
-        ) : (
-          <Button>Salvar</Button>
-        )}
-        <Error error={error && ''} />
-      </form>
-    </section>
-  );
+  return podeAtualziar ?(
+    <FormTeam 
+      titulo="Editar Turma"
+      handleSubmit={handleSubmit}
+      dados={dados}
+      addCheckAtivo={true}
+    />
+  ) : null;
 };
 
 export default TeamEdit;

@@ -2,6 +2,7 @@ import React, { useState, useEffect }  from 'react';
 
 import useFetch from '../../Hooks/useFetch';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../Contexts/UserContext';
 import Error from "../Helper/Error";
 import { TEACHER_POST } from '../../API/Api_Teacher';
 import axios from 'axios';
@@ -14,6 +15,8 @@ const TeacherCreate = () => {
 
   const [objErros, setObjErros] = useState({});
 
+  const { userLogged, token } = React.useContext(UserContext);
+
   useEffect(() => {
     modalError();
   }, [objErros]);
@@ -21,7 +24,7 @@ const TeacherCreate = () => {
   async function handleSubmit(event, data) {
     event.preventDefault();
 
-    const { url, body, options } = TEACHER_POST(data);
+    const { url, body, options } = TEACHER_POST(data, userLogged, token);
     const response = await axios.post(url, body, options)
     if (response.statusText === 'OK') {
       if (response.data.erros !== undefined && response.data.erros.length) {

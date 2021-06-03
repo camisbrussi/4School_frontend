@@ -1,29 +1,23 @@
-// export const API_URL = 'http://177.44.248.32:8083'
-export const API_URL = 'http://localhost:3003'
+export const API_URL = 'http://177.44.248.32:8083'
+//export const API_URL = 'http://localhost:3003'
 
-const token = window.localStorage.getItem('token');
-const userLogged = window.localStorage.getItem('user');
-const idUserLogged = window.localStorage.getItem('id');
-
-export function STUDENT_GET(responsible_id) {
+export function STUDENT_GET(responsible_id, token) {
     let options = {
         url: API_URL + '/students',
         options: {
             headers: {
                 Authorization: 'Bearer ' + token,
-                UserLogged: userLogged,
-                idUserLogged: idUserLogged
             }
         }
     };
 
-    if (responsible_id !== undefined)
+    if (responsible_id !== null)
         options.url += "/responsible/"+responsible_id;
 
     return options;
 }
 
-export function STUDENT_FILTER(body) {
+export function STUDENT_FILTER(body, token) {
     return {
         url: API_URL + '/students/filter/students',
         //body: JSON.stringify(body),
@@ -31,15 +25,13 @@ export function STUDENT_FILTER(body) {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token,
-                UserLogged: userLogged,
-                idUserLogged: idUserLogged
             },
             params: body
         },
     };
 }
 
-export function STUDENT_POST(body) {
+export function STUDENT_POST(body, userLogged, token) {
     return {
         url: API_URL + '/students',
         body: JSON.stringify(body),
@@ -47,28 +39,25 @@ export function STUDENT_POST(body) {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token,
-                UserLogged: userLogged,
-                idUserLogged: idUserLogged
+                UserLogged: JSON.stringify(userLogged),
             },
         },
     };
 }
 
-export function STUDENT_SHOW(id) {
+export function STUDENT_SHOW(id, token) {
     return {
         url: API_URL + '/students/' + id,
         options: {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token,
-                UserLogged: userLogged,
-                idUserLogged: idUserLogged
             },
         },
     };
 }
 
-export function STUDENT_PUT(id, body) {
+export function STUDENT_PUT(id, body, userLogged, token) {
     return {
         url: API_URL + '/students/'+ id,
         body: JSON.stringify(body),
@@ -77,22 +66,20 @@ export function STUDENT_PUT(id, body) {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token,
-                UserLogged: userLogged,
-                idUserLogged: idUserLogged
+                UserLogged: JSON.stringify(userLogged),
             },
         },
     };
 }
 
-export function STUDENT_DELETE(id) {
+export function STUDENT_DELETE(id, userLogged, token) {
     return {
         url: API_URL + '/students/'+ id,
         options: {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token,
-                UserLogged: userLogged,
-                idUserLogged: idUserLogged
+                UserLogged: JSON.stringify(userLogged),
             },
         },
     };

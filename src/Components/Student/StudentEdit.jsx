@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
-
+import { UserContext } from '../../Contexts/UserContext';
 import axios from 'axios';
 import { STUDENT_PUT, STUDENT_SHOW } from '../../API/Api_Student';
 import FormPerson from '../Person/FormPerson';
@@ -19,13 +19,15 @@ const StudentEdit = () => {
 
   const [objErros, setObjErros] = useState({});
 
+  const { userLogged, token } = React.useContext(UserContext);
+
   useEffect(() => {
     modalError();
   }, [objErros]);
 
   useEffect(() => {
     async function getData() {
-      const { url, options } = STUDENT_SHOW(id);
+      const { url, options } = STUDENT_SHOW(id, token);
       const response = await axios.get(url, options);
 
       let name = response.data.person.name;
@@ -50,11 +52,11 @@ const StudentEdit = () => {
     }
 
     getData();
-  }, [id]);
+  }, [id, token]);
 
   async function handleSubmit(event, data) {
     event.preventDefault();
-    const { url, body, options } = STUDENT_PUT(id, data);
+    const { url, body, options } = STUDENT_PUT(id, data, userLogged, token);
     const response = await axios.put(url, body, options);
 
     if (response.statusText === 'OK') {

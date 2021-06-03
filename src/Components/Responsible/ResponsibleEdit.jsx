@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 
 import {useNavigate} from "react-router-dom";
-
+import { UserContext } from '../../Contexts/UserContext';
 import axios from "axios"
 import {RESPONSIBLE_PUT, RESPONSIBLE_SHOW} from "../../API/Api_Responsible";
 import FormPerson from "../Person/FormPerson";
@@ -14,6 +14,7 @@ const ResponsibleEdit = () => {
     var params = window.location.href.substr(1).split("/");
     let id = params[6];
 
+    const { userLogged, token } = React.useContext(UserContext);
     const [dados,setDados] = useState({});
     const [podeAtualziar, setPodeAtualizar] = useState(false);
 
@@ -25,7 +26,7 @@ const ResponsibleEdit = () => {
 
     useEffect(() => {
         async function getData() {
-            const {url, options} = RESPONSIBLE_SHOW(id);
+            const {url, options} = RESPONSIBLE_SHOW(id, token);
             const response = await axios.get(url, options);
 
             let name = response.data.person.name;
@@ -49,7 +50,7 @@ const ResponsibleEdit = () => {
         }
 
         getData();
-    }, [id]);
+    }, [id, token]);
 
     async function modalError() {
         if (Object.keys(objErros).length > 0) {
@@ -67,7 +68,7 @@ const ResponsibleEdit = () => {
 
     async function handleSubmit(event, data) {
         event.preventDefault();
-        const {url, body, options} = RESPONSIBLE_PUT(id, data);
+        const {url, body, options} = RESPONSIBLE_PUT(id, data,userLogged, token);
         const response = await axios.put(url, body, options);
         if (response.statusText === 'OK') {
             if (response.data.erros !== undefined && response.data.erros.length) {

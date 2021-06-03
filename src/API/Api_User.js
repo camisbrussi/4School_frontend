@@ -1,7 +1,6 @@
-// export const API_URL = 'http://177.44.248.32:8081'
-export const API_URL = 'http://localhost:3001';
+export const API_URL = 'http://177.44.248.32:8081'
+//export const API_URL = 'http://localhost:3001';
 
-const token = window.localStorage.getItem('token');
 
 export function TOKEN_POST(body) {
   return {
@@ -15,21 +14,19 @@ export function TOKEN_POST(body) {
   };
 }
 
-export function USER_GET(userLogged, idUserLogged) {
+export function USER_GET(token) {
   return {
     url: API_URL + '/users',
     options: {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
-        UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
-export function USER_POST(body, userLogged, idUserLogged) {
+export function USER_POST(body, userLogged, token) {
   return {
     url: API_URL + '/users',
     body: JSON.stringify(body),
@@ -37,27 +34,24 @@ export function USER_POST(body, userLogged, idUserLogged) {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
-        UserLogged: userLogged,
-        idUserLogged: idUserLogged,
+        UserLogged: JSON.stringify(userLogged),
       },
     },
   };
 }
 
-export function USER_SHOW(id, userLogged, idUserLogged) {
+export function USER_SHOW(id, token) {
   return {
     url: API_URL + '/users/' + id,
     options: {
       headers: {
         Authorization: 'Bearer ' + token,
-        UserLogged: userLogged,
-        idUserLogged: idUserLogged,
       },
     },
   };
 }
 
-export function USER_PUT(id, body, userLogged, idUserLogged) {
+export function USER_PUT(id, body, userLogged, token) {
   return {
     url: API_URL + '/users/' + id,
     body: JSON.stringify(body),
@@ -65,22 +59,20 @@ export function USER_PUT(id, body, userLogged, idUserLogged) {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
-        UserLogged: userLogged,
-        idUserLogged: idUserLogged,
+        UserLogged: JSON.stringify(userLogged),
       },
     },
   };
 }
 
-export function USER_DELETE(id, userLogged, idUserLogged) {
+export function USER_DELETE(id, userLogged, token) {
   return {
     url: API_URL + '/users/' + id,
     options: {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
-        UserLogged: userLogged,
-        idUserLogged: idUserLogged,
+        UserLogged: JSON.stringify(userLogged),
       },
     },
   };

@@ -3,6 +3,12 @@ export const formata_data_hora = (datetime) => {
     return date.toLocaleString("pt-BR");
 }
 
+export const formata_data = (date) => {
+    var options = { year: 'numeric', month: 'long', day: 'numeric' };
+    date = new Date(date);
+    return date.toLocaleString("pt-BR",options );
+}
+
 export const formata_data_hora_para_datetime = (datahora) => {
     let data = datahora.split(" ")[0];
     let hora = datahora.split(" ")[1];
