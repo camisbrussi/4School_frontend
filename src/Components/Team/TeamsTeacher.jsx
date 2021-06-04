@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import Head from '../Helper/Head';
 import { FaUsers, FaEnvelope } from 'react-icons/fa';
+import { UserContext } from '../../Contexts/UserContext';
 import { Link } from 'react-router-dom';
 import styles from './Teams.module.css';
 import { TEAMS_GET_TEACHER } from '../../API/Api_Team';
@@ -13,10 +14,11 @@ import {status_turma} from "../Helper/Functions";
 
 const TeamsTeacher = () => {
   const [teams, setTeams] = useState([]);
+  const { userLogged, token } = React.useContext(UserContext)
 
   useEffect(() => {
     async function getData() {
-      const { url, options } = TEAMS_GET_TEACHER();
+      const { url, options } = TEAMS_GET_TEACHER(userLogged, token);
       const response = await axios.get(url, options);
       let turmas = response.data;
 
@@ -25,8 +27,9 @@ const TeamsTeacher = () => {
       }
       setTeams(turmas);
     }
-    getData();
-  }, []);
+    if(Object.keys(userLogged).length > 0) getData()
+
+  }, [userLogged,token]);
 
   const [filterText, setFilterText] = useState('');
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);

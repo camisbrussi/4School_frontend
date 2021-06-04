@@ -165,10 +165,10 @@ const ActivityParticipants = () => {
         className={stylesBtn.button}
         to={`activityaddparticipants?activity=${activity_id}&name=${activity_name}`}
       >
-        <FaUserPlus size={16} /> Adicionar Participantes
+        <FaUserPlus size={16} /> Gerenciar 
       </Link>
       <Button className={stylesBtn.button} onClick={() => generateReport()}>
-        <FaFileExport size={16} /> Relatório Participantes
+        <FaFileExport size={16} /> Relatório
       </Button>
       </div>
       <div className={styles.activities}>

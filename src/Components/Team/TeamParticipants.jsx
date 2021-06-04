@@ -21,7 +21,7 @@ const TeamParticipants = () => {
     const team_year = new URL(window.location.href).searchParams.get("year");
     const [participants, setParticipants] = useState([]);
     const [team, setTeam] = useState();
-    const { token } = React.useContext(UserContext);
+    const { userLogged, token } = React.useContext(UserContext);
     
     useEffect(() => {
         async function getData() {
@@ -53,8 +53,6 @@ const TeamParticipants = () => {
         const doc = new jsPDF();
         const tableColumn = ["Nome", "CPF", "Data Nascimento"];
         const tableRows = [];
-
-        console.log(participants);
         
         participants.map(participant => {
           const reportData = [
@@ -119,8 +117,9 @@ const TeamParticipants = () => {
             <Head title="Participantes"/>
             <h1 className="title title-2">Participantes de {team_name}</h1>
             <div className={styles.buttons}>
-            <Link className={stylesBtn.button} to={`addstudents?team=${team_id}&name=${team_name}&year=${team_year}`}><FaUserPlus size={16}/> Adicionar Alunos</Link>
-            <Button className={stylesBtn.button} onClick={() => generateReport()}><FaFileExport size={16}/>  Relatório alunos</Button>
+            <Link className={stylesBtn.button} to={`addstudents?team=${team_id}&name=${team_name}&year=${team_year}`}><FaUserPlus size={16}/> Gerenciar</Link>
+
+            <Button className={stylesBtn.button} onClick={() => generateReport()}><FaFileExport size={16}/>  Relatório </Button>
             </div>
             <div className={styles.teams}>
             
