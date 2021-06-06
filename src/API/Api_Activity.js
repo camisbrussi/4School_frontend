@@ -168,3 +168,18 @@ export function CONFIRM_SUBSCRIPTION(id, body, userLogged, token) {
     },
   };
 }
+
+export function CONFIRM_PARTICIPATION(id, body, userLogged, token) {
+  return {
+    url: API_URL + '/activities/confirmparticipation/' + id,
+    body: JSON.stringify(body),
+    options: {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+        UserLogged: JSON.stringify(userLogged),
+      },
+    },
+  };
+}
