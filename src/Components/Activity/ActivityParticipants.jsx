@@ -198,10 +198,9 @@ const ActivityParticipants = () => {
                     }
 
                     let dataInicioEvento = new Date(event.start).setHours(0,0,0,0);
-                    let dataFimEvento = new Date(event.end).setHours(0,0,0,0);
                     let dataAtual = new Date().setHours(0,0,0,0);
 
-                    let permiteConfirmarParticipacao = dataAtual >= dataInicioEvento && dataAtual <= dataFimEvento;
+                    let permiteConfirmarParticipacao = dataAtual >= dataInicioEvento && new Date() <= new Date(event.end);
 
                     return (
                         <>
