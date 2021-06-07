@@ -104,6 +104,14 @@ const AdminPanelHeaderNav = () => {
                 >
                   Auditoria
                 </NavLink>
+                <NavLink
+                  to="/conta/sendmail"
+                  end
+                  activeClassName={styles.active}
+                  className={styles.menu}
+                >
+                  Mensagens e Emails
+                </NavLink>
               </>
             ) : user.type_id === 1 ? (
               <>
