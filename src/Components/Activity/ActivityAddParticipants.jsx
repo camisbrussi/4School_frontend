@@ -23,7 +23,7 @@ const ActivityAddParticipants = () => {
 
     const { userLogged, token } = React.useContext(UserContext);
 
-    const types = [
+    const personTypes = [
         {id: 2, description: "Aluno"},
         {id: 1, description: "Professor"},
         {id: 3, description: "Responsável"}
@@ -72,14 +72,14 @@ const ActivityAddParticipants = () => {
         }
 
         let select = document.getElementById("type");
-        types.map(type => {
+        personTypes.map(type => {
             let option = new Option(type.description, type.id);
             select.add(option);
         });
 
         getTeams();
         getParticipants();
-    }, [activity_id, token, types]);
+    }, [activity_id, token]);
 
     useEffect(() => {
         let select = document.getElementById("team");

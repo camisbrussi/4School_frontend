@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ACTIVITY_PUT, ACTIVITY_SHOW } from "../../API/Api_Activity";
 import FormActivity from "./FormActivity";
+import {formata_data_hora_para_datetime} from "../Helper/Functions";
 
 const ActivityEdit = () => {
   const navigate = useNavigate();
@@ -32,8 +33,8 @@ const ActivityEdit = () => {
       const response = await axios.get(url, options);
       let name = response.data.name;
       let description = response.data.description;
-      let start = response.data.start;
-      let end = response.data.end;
+      let start = formata_data_hora_para_datetime(new Date(response.data.start).toLocaleString()).replace(" ","T");
+      let end = formata_data_hora_para_datetime(new Date(response.data.end).toLocaleString()).replace(" ","T");
       let generate_certificate = response.data.generate_certificate;
       let vacancies = response.data.vacancies;
       let isActive = response.data.status_id === 1;
