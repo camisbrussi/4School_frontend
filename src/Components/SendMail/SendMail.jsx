@@ -4,16 +4,17 @@ import { Link } from "react-router-dom";
 
 import styles from "./SendMail.module.css";
 import stylesBtn from "../Forms/Button.module.css";
-
+import { UserContext } from '../../Contexts/UserContext';
 import { SENDMAIL_GET } from "../../API/Api_SendMail";
 import axios from "axios";
 
 const SendMail = () => {
   const [sendMail, setSendMail] = useState([]);
+  const { userLogged, token } = React.useContext(UserContext);
 
   useEffect(() => {
     async function getData() {
-      const { url, options } = SENDMAIL_GET();
+      const { url, options } = SENDMAIL_GET(token);
       //console.log(url, options)
       const response = await axios.get(url, options);
       //console.log(response.data)

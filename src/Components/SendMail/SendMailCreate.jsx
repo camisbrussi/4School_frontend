@@ -9,7 +9,7 @@ import useFetch from "../../Hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import { RiAddBoxFill } from "react-icons/all";
 import { FaWindowClose } from "react-icons/fa";
-
+import { UserContext } from '../../Contexts/UserContext';
 import { SENDMAIL_POST } from "../../API/Api_SendMail";
 import { TEAM_FILTER, TEAM_FILTER_STUDENTS } from "../../API/Api_Team";
 import { PERSON_FILTER } from "../../API/Api_Person";
@@ -30,6 +30,8 @@ const SendMailCreate = () => {
   const [typeFiltro, setTypeFiltro] = useState(0);
   const [teamFiltro, setTeamFiltro] = useState(0);
   const [atividadeFiltro, setAtividadeFiltro] = useState("");
+  const { userLogged, token } = React.useContext(UserContext);
+
 
   const types = [
     { id: 2, description: "Aluno" },
@@ -44,7 +46,6 @@ const SendMailCreate = () => {
 
   useEffect(() => {
     async function getTeams() {
-      const token = window.localStorage.getItem("token");
       const { url, options } = TEAM_FILTER({ status_id: 1 }, token);
 
       const response = await axios.get(url, options);
@@ -69,7 +70,6 @@ const SendMailCreate = () => {
   }, [teams]);
 
   async function filtraPessoas() {
-    const token = window.localStorage.getItem("token");
     let getParamentes = PERSON_FILTER(
       {
         name: nameFiltro,
@@ -111,7 +111,7 @@ const SendMailCreate = () => {
   useEffect(() => {
       async function getData() {
 
-          const {url, options} = ACTIVITY_GET_PARTICIPANTS(activity_id);
+          const {url, options} = ACTIVITY_GET_PARTICIPANTS(activity_id, token);
           const response = await axios.get(url, options);
           
           const inscricoes = response.data
@@ -122,7 +122,7 @@ const SendMailCreate = () => {
           setIdPerson(pessoas)
       }
       getData();
-  }, []);
+  }, [token]);
 
 
 
@@ -164,7 +164,7 @@ const SendMailCreate = () => {
     const { url, body, options } = SENDMAIL_POST({
       message: message.value,
       destinatarios: idPersons,
-    });
+    }, userLogged, token);
 
     const response = await axios.post(url, body, options);
 
