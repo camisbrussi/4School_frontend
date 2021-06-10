@@ -32,6 +32,10 @@ export const UserStorage = ({children}) => {
             setError(null);
             setLoading(true);
 
+            if (type == 2) { //- Responsavel/Professor
+                login = login.replace(/\D/g, '');
+            }
+
             const {url, body, options} = TOKEN_POST({login, password, type});
             const tokenRes = await axios.post(url, body, options);
 
