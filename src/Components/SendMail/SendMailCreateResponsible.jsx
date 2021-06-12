@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
+import {UserContext} from "../../Contexts/UserContext";
 import Input from "../Forms/Input";
 import Button from "../Forms/Button";
 import Error from "../Helper/Error";
@@ -9,29 +10,29 @@ import useFetch from "../../Hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import { RiAddBoxFill } from "react-icons/all";
 import { FaWindowClose } from "react-icons/fa";
-import { UserContext } from '../../Contexts/UserContext';
+
 import { SENDMAIL_POST } from "../../API/Api_SendMail";
-import { TEAM_FILTER, TEAM_FILTER_STUDENTS } from "../../API/Api_Team";
+import { TEAM_FILTER, TEAM_FILTER_STUDENTS, TEAM_GET_STUDENTS } from "../../API/Api_Team";
 import { PERSON_FILTER } from "../../API/Api_Person";
 
 
-import {ACTIVITY_GET_PARTICIPANTS} from "../../API/Api_Activity";
+import { RESPONSIBLE_GET_STUDENT } from "../../API/Api_SendMail";
 import axios from "axios";
 
-const SendMailCreate = () => {
+const SendMailCreateResponsible = () => {
   const [idPersons, setIdPerson] = useState([]);
   const message = useForm();
   const navigate = useNavigate();
 
   const { loading, error } = useFetch();
   const [objErros, setObjErros] = useState({});
+  const { userLogged, token} = React.useContext(UserContext);
+
 
   const [nameFiltro, setNameFiltro] = useState("");
   const [typeFiltro, setTypeFiltro] = useState(0);
   const [teamFiltro, setTeamFiltro] = useState(0);
   const [atividadeFiltro, setAtividadeFiltro] = useState("");
-  const { userLogged, token } = React.useContext(UserContext);
-
 
   const types = [
     { id: 3, description: "Aluno" },
@@ -42,10 +43,12 @@ const SendMailCreate = () => {
   const [teams, setTeams] = useState([]);
 
   const [pessoasFiltro, setPessoasFiltro] = useState([]);
+  const [responsibleFiltro, setResponsibleFiltro] = useState([]);
   const [pessoasAtividade, setPessoasAtividade] = useState([]);
 
   useEffect(() => {
     async function getTeams() {
+      //const token = window.localStorage.getItem("token");
       const { url, options } = TEAM_FILTER({ status_id: 1 }, token);
 
       const response = await axios.get(url, options);
@@ -70,6 +73,7 @@ const SendMailCreate = () => {
   }, [teams]);
 
   async function filtraPessoas() {
+    //const token = window.localStorage.getItem("token");
     let getParamentes = PERSON_FILTER(
       {
         name: nameFiltro,
@@ -102,24 +106,35 @@ const SendMailCreate = () => {
       dados = response.data;
     }
 
-    setPessoasFiltro(dados);
+    setResponsibleFiltro(dados);
   }
 
-  const activity_id = new URL(window.location.href).searchParams.get("activity");
-  //const activity_name = new URL(window.location.href).searchParams.get("activity");
+  const team_id = new URL(window.location.href).searchParams.get("team");
 
   useEffect(() => {
       async function getData() {
 
-          const {url, options} = ACTIVITY_GET_PARTICIPANTS(activity_id, token);
+          const {url, options} = TEAM_GET_STUDENTS(team_id, token);
           const response = await axios.get(url, options);
-          
-          const inscricoes = response.data
-          const pessoas = []
-          for (let i = 0; i < inscricoes.length; i++){
-            pessoas.push(inscricoes[i].person)
+
+          const alunos = response.data;
+          const responsaveis = [];
+
+         for(let i = 0; i < alunos.length; i++){
+           responsaveis.push(alunos[i].responsible.person) 
+           //= alunos[i].responsible.person
+         }
+
+         console.log(responsaveis)
+         
+         setIdPerson(responsaveis)
+         
+         /* const turma = response.data
+          const responsibles = []
+          for (let i = 0; i < turma.length; i++){
+            responsibles.push(turma[i].person)
           }
-          setIdPerson(pessoas)
+          setIdPerson(responsibles)*/
       }
       getData();
   }, [token]);
@@ -128,16 +143,16 @@ const SendMailCreate = () => {
 
 
   function addPessoa(id) {
-    if (id <= 0 || !pessoasFiltro.length) return;
+    if (id <= 0 || !responsibleFiltro.length) return;
 
-    pessoasFiltro.map((pessoa) => {
-      if (pessoa.id === id) {
-        let pessoas = [...idPersons];
-        pessoa.inActivity = false;
-        pessoas.push(pessoa);
+    responsibleFiltro.map((responsible) => {
+      if (responsible.id === id) {
+        let responsibles = [...idPersons];
+        responsible.inActivity = false;
+        responsibles.push(responsible);
 
         // pessoas = ordernarPessoasAtividade(pessoas);
-        setIdPerson(pessoas);
+        setIdPerson(responsibles);
       }
     });
   }
@@ -178,6 +193,7 @@ const SendMailCreate = () => {
         modalError();
       } else {
         navigate("/conta/sendmail");
+        
       }
     }
   }
@@ -258,27 +274,27 @@ const SendMailCreate = () => {
       <div className="container100 mt-30">
         <div className="container50 mb-30">
           <h3 className="mb-5">Pessoas filtradas</h3>
-          {pessoasFiltro.length ? (
+          {responsibleFiltro.length ? (
             <table>
               <thead>
                 <tr>
                   <th>Nome</th>
                   {/*<th>CPF</th>*/}
-                  <th>Tipo</th>
+                  {/* <th>Tipo</th> */}
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {pessoasFiltro.map((pessoa) => (
-                  <tr key={pessoa.id}>
-                    <td>{pessoa.name}</td>
+                {responsibleFiltro.map((responsible) => (
+                  <tr key={responsible.id}>
+                    <td>{responsible.name}</td>
                     {/*<td>{formataCPF(pessoa.cpf)}</td>*/}
-                    <td>{pessoa.type.description}</td>
+                    {/* <td>{responsible.type.name}</td> */}
                     <td>
                       <RiAddBoxFill
                         className="cursor-pointer"
                         onClick={() => {
-                          addPessoa(pessoa.id);
+                          addPessoa(responsible.id);
                         }}
                         size={16}
                         style={{ color: "green" }}
@@ -301,20 +317,20 @@ const SendMailCreate = () => {
                 <tr>
                   <th>Nome</th>
                   {/*<th>CPF</th>*/}
-                  <th>Tipo</th>
+                  {/* <th>Tipo</th> */}
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {idPersons.map((pessoa) => (
-                  <tr key={pessoa.id}>
-                    <td>{pessoa.name}</td>
+                {idPersons.map((responsible) => (
+                  <tr key={responsible.id}>
+                    <td>{responsible.name}</td>
                     {/*<td>{formataCPF(pessoa.cpf)}</td>*/}
-                    <td>{pessoa.type.description}</td>
+                   {/* {/*} <td>{responsaveis.name}</td> */}
                     <td>
                       <FaWindowClose
                         onClick={() => {
-                          removePessoa(pessoa.id);
+                          removePessoa(responsible.id);
                         }}
                         className="cursor-pointer"
                         size={16}
@@ -358,4 +374,4 @@ const SendMailCreate = () => {
   );
 };
 
-export default SendMailCreate;
+export default SendMailCreateResponsible;
