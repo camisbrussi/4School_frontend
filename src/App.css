@@ -24,14 +24,9 @@ body {
   html {
     font-size: 87.5%;
   }
-}
-
-h1,
-h2,
-h3,
-h4,
-p {
-  margin: 0px;
+  body {
+    margin: 1.5rem;
+  }
 }
 
 ul,
@@ -76,7 +71,6 @@ a {
 
 .title-2 {
   font-size: 2rem;
-  margin-bottom: 30px;
 }
 
 .title::after {

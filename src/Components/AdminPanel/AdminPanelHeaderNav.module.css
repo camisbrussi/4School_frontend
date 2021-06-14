@@ -56,7 +56,7 @@ h1 {
 }
 
 .mobileButton::after {
-  content: "";
+  content: '';
   display: block;
   width: 1.2rem;
   height: 2px;
@@ -128,4 +128,8 @@ h1 {
 
 .navMobile svg {
   margin-right: 0.5rem;
+}
+
+.chat {
+  background: #0aafe6;
 }

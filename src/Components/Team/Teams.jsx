@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import Head from '../Helper/Head';
-import { FaEdit, FaWindowClose, FaUsers } from 'react-icons/fa';
+import { FaEdit, FaWindowClose, FaUsers, FaEnvelope } from 'react-icons/fa';
 import { UserContext } from '../../Contexts/UserContext';
 import { Link } from 'react-router-dom';
 import { Confirm } from 'react-st-modal';
@@ -98,6 +98,14 @@ const Teams = () => {
         cell: team => {
           return (
               <>
+              <Link to={`/conta/sendMail/createsendMailResponsible?team=${team.id}`}>
+            <FaEnvelope
+                  className="mx-5"
+                  size={16}
+                  style={{ color: 'black' }}
+                  title="Enviar e-mail"
+                />
+                 </Link> 
                 <Link to={`participants?team=`+team.id +'&name='+team.name+'&year='+team.year} title="Gerenciar alunos">
                   <IoIosPeople size={16} style={{ color: 'green' }} className="mx-5 link" />
                 </Link>
@@ -137,6 +145,14 @@ const Teams = () => {
       <div className={styles.container100}>
         <p className={styles.list}>
           <span>Menu:</span>
+
+<span>
+<FaEnvelope
+                  size={16}
+                  style={{ color: 'black' }}
+                /> Enviar e-mail
+</span>
+
           <span>
             <IoIosPeople size={16} style={{ color: 'green' }} /> Gerenciar Alunos
           </span>

@@ -3,6 +3,7 @@ import Input from '../Forms/Input';
 import Button from '../Forms/Button';
 import useForm from '../../Hooks/useForm';
 import {UserContext} from '../../Contexts/UserContext';
+import styles from './Login.module.css';
 import Error from '../Helper/Error';
 import Head from '../Helper/Head';
 
@@ -26,7 +27,7 @@ const LoginForm = () => {
         <section className="animeLeft">
             <Head title="Login"/>
             <h1 className="title">Login</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className={styles.formLogin}>
                 <Input label={labelUserField} type="text" name="login" {...login} />
                 <Input label="Senha:" type="password" name="password" {...password} />
 

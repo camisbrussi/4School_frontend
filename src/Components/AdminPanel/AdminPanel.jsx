@@ -46,6 +46,7 @@ import InfoShow from '../Logs/InfoShow';
 
 import SendMail from '../SendMail/SendMail';
 import SendMailCreate from '../SendMail/SendMailCreate';
+import SendMailCreateResponsible from '../SendMail/SendMailCreateResponsible';
 
 import styles from './AdminPanel.module.css';
 
@@ -113,10 +114,8 @@ const { userLogged } = React.useContext(UserContext);
             <Route path="/infos" element={<Info />} />
             <Route path="/infos/:arquivo" element={<InfoShow />} />
             <Route path="/sendMail" element={<SendMail />} />
-            <Route
-              path="/sendMail/createsendMail"
-              element={<SendMailCreate />}
-            />
+            <Route path="/sendMail/createsendMail" element={<SendMailCreate />} />
+            <Route path="/sendMail/createsendMailResponsible" element={<SendMailCreateResponsible />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

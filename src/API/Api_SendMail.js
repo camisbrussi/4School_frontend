@@ -1,9 +1,7 @@
 export const API_URL = 'http://177.44.248.32:8085'
-// export const API_URL = 'http://localhost:3020'
+//export const API_URL = 'http://localhost:3020'
 
-const token = window.localStorage.getItem('token');
-
-export function SENDMAIL_GET() {
+export function SENDMAIL_GET(token) {
     return {
         url: API_URL + '/sendmail',
         options: {
@@ -14,7 +12,7 @@ export function SENDMAIL_GET() {
     };
 }
 
-export function PARTICIPANT_GET_ACTIVITIES_FILTER(body, userLogged) {
+export function PARTICIPANT_GET_ACTIVITIES_FILTER(body, userLogged, token) {
     return {
       url: API_URL + '/sendmail' + userLogged.id,
       options: {
@@ -27,7 +25,7 @@ export function PARTICIPANT_GET_ACTIVITIES_FILTER(body, userLogged) {
     };
   }
 
-export function ACTIVITY_FILTER(body) {
+export function ACTIVITY_FILTER(body, token) {
     return {
         url: API_URL + '/sendmail',
         //body: JSON.stringify(body),
@@ -41,7 +39,7 @@ export function ACTIVITY_FILTER(body) {
     };
   }
 
-export function SENDMAIL_POST(body,userLogged ) {
+export function SENDMAIL_POST(body,userLogged, token ) {
     return {
         url: API_URL + '/sendmail',
         body: JSON.stringify(body),
@@ -55,7 +53,7 @@ export function SENDMAIL_POST(body,userLogged ) {
     };
 }
 
-export function SENDMAIL_SHOW(id) {
+export function SENDMAIL_SHOW(id, token) {
     return {
         url: API_URL + '/sendmail/' + id,
         options: {
@@ -67,7 +65,7 @@ export function SENDMAIL_SHOW(id) {
     };
 }
 
-export function SENDMAIL_PUT(id, body, userLogged) {
+export function SENDMAIL_PUT(id, body, userLogged, token) {
     return {
         url: API_URL + '/sendmail/' + id,
         body: JSON.stringify(body),
@@ -82,7 +80,7 @@ export function SENDMAIL_PUT(id, body, userLogged) {
     };
 }
 
-export function SENDMAIL_DELETE(id, userLogged) {
+export function SENDMAIL_DELETE(id, userLogged, token) {
     return {
         url: API_URL + '/sendmail/' + id,
         options: {
@@ -95,7 +93,7 @@ export function SENDMAIL_DELETE(id, userLogged) {
     };
 }
 
-export function SENDMAIL_POST_STUDENTS(sendmail_id, body, userLogged) {
+export function SENDMAIL_POST_STUDENTS(sendmail_id, body, userLogged, token) {
     return {
         url: API_URL + '/sendmail/addstudents/' + sendmail_id,
         body: JSON.stringify(body),
@@ -109,7 +107,7 @@ export function SENDMAIL_POST_STUDENTS(sendmail_id, body, userLogged) {
     };
 }
 
-export function SENDMAIL_GET_STUDENTS(sendmail_id) {
+export function SENDMAIL_GET_STUDENTS(sendmail_id, token) {
     return {
         url: API_URL + '/sendmail/sendmail/' + sendmail_id,
         options: {
@@ -121,7 +119,7 @@ export function SENDMAIL_GET_STUDENTS(sendmail_id) {
     };
 }
 
-export function SENDMAIL_POST_TEAMS(sendmail_id, body, userLogged) {
+export function SENDMAIL_POST_TEAMS(sendmail_id, body, userLogged, token) {
     return {
         url: API_URL + '/sendmail/addteams/' + sendmail_id,
         body: JSON.stringify(body),
@@ -135,7 +133,7 @@ export function SENDMAIL_POST_TEAMS(sendmail_id, body, userLogged) {
     };
 }
 
-export function SENDMAIL_GET_TEAMS(sendmail_id) {
+export function SENDMAIL_GET_TEAMS(sendmail_id, token) {
     return {
         url: API_URL + '/sendmail/teams/' + sendmail_id,
         options: {
@@ -147,7 +145,7 @@ export function SENDMAIL_GET_TEAMS(sendmail_id) {
     };
 }
 
-export function SENDMAIL_FILTER(body) {
+export function SENDMAIL_FILTER(body, token) {
     return {
         url: API_URL + '/sendmail/filter/sendmail',
         options: {
@@ -160,7 +158,7 @@ export function SENDMAIL_FILTER(body) {
     };
 }
 
-export function SENDMAIL_FILTER_TEAMS(id, body) {
+export function SENDMAIL_FILTER_TEAMS(id, body, token) {
     return {
         url: API_URL + '/sendmail/filterteams/'+id,
         options: {
