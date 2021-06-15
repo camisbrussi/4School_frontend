@@ -110,7 +110,7 @@ const AdminPanelHeaderNav = () => {
                   activeClassName={styles.active}
                   className={styles.menu}
                 >
-                  Mensagens e Emails
+                  Mensagens
                 </NavLink>
               </>
             ) : user.type_id === 1 ? (
@@ -129,7 +129,7 @@ const AdminPanelHeaderNav = () => {
                   activeClassName={styles.active}
                   className={styles.menu}
                 >
-                  Mensagens e Emails
+                  Mensagens
                 </NavLink>
               </>
             ) : (
