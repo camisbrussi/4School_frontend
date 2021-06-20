@@ -3,8 +3,10 @@ import { UserContext } from '../../Contexts/UserContext';
 import styles from './Chat.module.css';
 import io from 'socket.io-client';
 import { FiSend } from 'react-icons/all'
+import { WEB_SOCKET } from '../../API/Api_Chat'
 
-var socket = io('http://localhost:3005', { transport: ['websocket'] });
+
+var socket = io(WEB_SOCKET, { transport: ['websocket'] });
 
 const ChatAdmin = () => {
   const { userLogged } = React.useContext(UserContext);

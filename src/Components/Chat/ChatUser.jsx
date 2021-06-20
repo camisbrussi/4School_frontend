@@ -3,8 +3,9 @@ import { UserContext } from '../../Contexts/UserContext';
 import { FiSend } from 'react-icons/all'
 import io from 'socket.io-client';
 import styles from './Chat.module.css';
+import { WEB_SOCKET } from '../../API/Api_Chat'
 
-var socket = io('http://localhost:3005', { transport: ['websocket'] });
+var socket = io(WEB_SOCKET, { transport: ['websocket'] });
 socket.on('connect', () =>
   console.log('[IO] Connect => A new connection has been established')
 );
