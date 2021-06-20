@@ -131,6 +131,15 @@ const AdminPanelHeaderNav = () => {
                 >
                   Mensagens
                 </NavLink>
+
+                <NavLink
+                  to="/chat"
+                  end
+                  activeClassName={styles.active}
+                  className={styles.menu}
+                >
+                  Atendimento Online
+                </NavLink>
               </>
             ) : (
               ''

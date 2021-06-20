@@ -6,8 +6,10 @@ import NotFound from '../NotFound';
 import Head from '../Helper/Head';
 import Header from '../Header';
 
-import Feed from '../Feed/Feed';
-import FeedAdmin from '../Feed/FeedAdmin';
+import Feed from '../Feed/Feed'
+import ServiceQueue from '../Chat/ServiceQueue'
+import ChatUser from '../Chat/ChatUser';
+import ChatAdmin from '../Chat/ChatAdmin'
 
 import Users from '../User/Users';
 import UserCreate from '../User/UserCreate';
@@ -65,7 +67,7 @@ const { userLogged } = React.useContext(UserContext);
         <Header />
         <div className={styles.forms}>
           <Routes>
-            {user.type_id ? <Route path="/" element={<Feed />} /> : <Route path="/" element={<FeedAdmin />} />};
+            {user.type_id ? <Route path="/" element={<Feed />} /> : <Route path="/" element={<ServiceQueue />} />};
             <Route path="/users" element={<Users />} />
             <Route path="/users/createuser" element={<UserCreate />} />
             <Route path="/users/edit/:id" element={<UserEdit />} />
@@ -109,6 +111,9 @@ const { userLogged } = React.useContext(UserContext);
               element={<TeamStudentsAdd />}
             />
             <Route path="/teams/teacher" element={<TeamsTeacher />} />
+            <Route path='/chat' element={<ChatUser />} />
+            <Route path='/chat/attendance/:id' element={<ChatAdmin />} />
+
             <Route path="/errors" element={<Error />} />
             <Route path="/errors/:arquivo" element={<ErrorShow />} />
             <Route path="/infos" element={<Info />} />
