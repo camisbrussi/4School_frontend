@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { type_user } from '../Helper/Functions'
 import { WEB_SOCKET } from '../../API/Api_Chat'
 
-var socket = io(WEB_SOCKET, { transport : ['websocket'] });
+var socket = io('http://177.44.248.32:8085', { transport : ['websocket'] });
 
 const ServiceQueue = () => {
   const [connectionsUsers, setConnectionsUser] = useState([]);

@@ -5,7 +5,7 @@ import io from 'socket.io-client';
 import styles from './Chat.module.css';
 import { WEB_SOCKET } from '../../API/Api_Chat'
 
-var socket = io(WEB_SOCKET, { transport: ['websocket'] });
+var socket = io('http://177.44.248.32:8085', { transport: ['websocket'] });
 socket.on('connect', () =>
   console.log('[IO] Connect => A new connection has been established')
 );
