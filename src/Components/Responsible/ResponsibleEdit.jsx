@@ -1,31 +1,34 @@
 import React, {useEffect, useState} from "react";
 
 import {useNavigate} from "react-router-dom";
-import { UserContext } from '../../Contexts/UserContext';
+import {UserContext} from '../../Contexts/UserContext';
 import axios from "axios"
 import {RESPONSIBLE_PUT, RESPONSIBLE_SHOW} from "../../API/Api_Responsible";
 import FormPerson from "../Person/FormPerson";
-import { Alert } from "react-st-modal";
+import {Alert} from "react-st-modal";
 import Error from "../Helper/Error";
+import {bloqueiaTela, liberaTela} from "../Helper/Functions";
 
 const ResponsibleEdit = () => {
     const navigate = useNavigate();
-    
+
     var params = window.location.href.substr(1).split("/");
     let id = params[6];
 
-    const { userLogged, token } = React.useContext(UserContext);
-    const [dados,setDados] = useState({});
+    const {userLogged, token} = React.useContext(UserContext);
+    const [dados, setDados] = useState({});
     const [podeAtualziar, setPodeAtualizar] = useState(false);
 
     const [objErros, setObjErros] = useState({});
 
     useEffect(() => {
-      modalError();
+        modalError();
     }, [objErros]);
 
     useEffect(() => {
         async function getData() {
+            bloqueiaTela();
+
             const {url, options} = RESPONSIBLE_SHOW(id, token);
             const response = await axios.get(url, options);
 
@@ -53,8 +56,10 @@ const ResponsibleEdit = () => {
                 idCity = response.data.person.address.city_id;
             }
 
-            setDados({name,cpf,email,birth_date,phones, address, number, complement, district, cep, idCity})
+            setDados({name, cpf, email, birth_date, phones, address, number, complement, district, cep, idCity})
             setPodeAtualizar(true);
+
+            liberaTela();
         }
 
         getData();
@@ -62,37 +67,41 @@ const ResponsibleEdit = () => {
 
     async function modalError() {
         if (Object.keys(objErros).length > 0) {
-          await Alert(
-            objErros.erros.map((val, key) => (
-              <li key={key}>
-                <Error error={val} />
-              </li>
-            )),
-            objErros.msg
-          );
-          setObjErros('');
+            await Alert(
+                objErros.erros.map((val, key) => (
+                    <li key={key}>
+                        <Error error={val}/>
+                    </li>
+                )),
+                objErros.msg
+            );
+            setObjErros('');
         }
-      }
+    }
 
     async function handleSubmit(event, data) {
         event.preventDefault();
-        const {url, body, options} = RESPONSIBLE_PUT(id, data,userLogged, token);
+        bloqueiaTela();
+
+        const {url, body, options} = RESPONSIBLE_PUT(id, data, userLogged, token);
         const response = await axios.put(url, body, options);
         if (response.statusText === 'OK') {
             if (response.data.erros !== undefined && response.data.erros.length) {
-              let erros = { msg: response.data.success, erros: [] };
-              for (let i = 0; i < response.data.erros.length; i++) {
-                erros.erros.push(response.data.erros[i]);
-              }
-              setObjErros(erros);
-              modalError();
+                let erros = {msg: response.data.success, erros: []};
+                for (let i = 0; i < response.data.erros.length; i++) {
+                    erros.erros.push(response.data.erros[i]);
+                }
+                setObjErros(erros);
+                modalError();
             } else {
-              navigate('/conta/responsibles');
+                navigate('/conta/responsibles');
             }
-          }
+        }
+        liberaTela();
     }
 
-    return podeAtualziar ? <FormPerson titulo="Editar Responsável" handleSubmit={handleSubmit} dados={dados} addPassword={true} /> : null;
+    return podeAtualziar ?
+        <FormPerson titulo="Editar Responsável" handleSubmit={handleSubmit} dados={dados} addPassword={true}/> : null;
 };
 
 export default ResponsibleEdit;

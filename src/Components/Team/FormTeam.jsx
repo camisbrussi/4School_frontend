@@ -82,7 +82,7 @@ const FormTeam = ({titulo, handleSubmit, dados, addCheckAtivo}) => {
               label="Registro Ativo"
               type="checkbox"
               name="isActive"
-              checked={isActive}
+              defaultChecked={isActive}
               onChange={(e) => {
                 setIsActive(e.target.checked);
               }}

@@ -11,7 +11,7 @@ import axios from 'axios';
 
 import DataTable from 'react-data-table-component';
 import Filter from '../Tables/Filter';
-import { formata_cpf } from '../Helper/Functions';
+import {bloqueiaTela, formata_cpf, liberaTela} from '../Helper/Functions';
 
 const Teachers = () => {
   const [teachers, setTeachers] = useState([]);
@@ -20,6 +20,8 @@ const Teachers = () => {
 
   useEffect(() => {
     async function getData() {
+      bloqueiaTela();
+
       const { url, options } = TEACHER_GET(token);
       const response = await axios.get(url, options);
       let professores = response.data;
@@ -29,6 +31,8 @@ const Teachers = () => {
       }
 
       setTeachers(professores);
+
+      liberaTela();
     }
 
     if(Object.keys(token).length > 0) getData()
@@ -40,8 +44,10 @@ const Teachers = () => {
       'Inativação de professor'
     );
     if (result) {
+      bloqueiaTela();
       const { url, options } = TEACHER_DELETE(teacherId, userLogged, token);
       await axios.delete(url, options);
+      liberaTela();
       window.location.reload(false);
     }
   }

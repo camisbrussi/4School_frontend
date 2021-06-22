@@ -4,9 +4,9 @@ import Button from "../Forms/Button";
 import Error from "../Helper/Error";
 
 import useFetch from "../../Hooks/useFetch";
-import { UserContext } from '../../Contexts/UserContext';
+import {UserContext} from '../../Contexts/UserContext';
 import {useNavigate} from "react-router-dom";
-import { Alert } from "react-st-modal";
+import {Alert} from "react-st-modal";
 
 import axios from "axios";
 import {RiAddBoxFill} from "react-icons/all";
@@ -15,18 +15,19 @@ import {ACTIVITY_GET_PARTICIPANTS, ACTIVITY_POST_PARTICIPANT} from "../../API/Ap
 import {TEAM_FILTER, TEAM_FILTER_STUDENTS} from "../../API/Api_Team";
 import Select from "../Forms/Select";
 import {PERSON_FILTER} from "../../API/Api_Person";
+import {bloqueiaTela, liberaTela} from "../Helper/Functions";
 
 const ActivityAddParticipants = () => {
     const [nameFiltro, setNameFiltro] = useState("");
     const [typeFiltro, setTypeFiltro] = useState(0);
     const [teamFiltro, setTeamFiltro] = useState(0);
 
-    const { userLogged, token } = React.useContext(UserContext);
+    const {userLogged, token} = React.useContext(UserContext);
 
     const personTypes = [
-        {id: 2, description: "Aluno"},
+        {id: 3, description: "Aluno"},
         {id: 1, description: "Professor"},
-        {id: 3, description: "Responsável"}
+        {id: 2, description: "Responsável"}
     ];
     const [teams, setTeams] = useState([]);
 
@@ -43,11 +44,13 @@ const ActivityAddParticipants = () => {
 
     useEffect(() => {
         modalError();
-      }, [objErros, modalError]);
+    }, [objErros, modalError]);
 
     //- busca os professores que ja estao vinculados com a atividade
     useEffect(() => {
         async function getTeams() {
+            bloqueiaTela();
+
             const {url, options} = TEAM_FILTER(
                 {status_id: 1},
                 token
@@ -55,9 +58,13 @@ const ActivityAddParticipants = () => {
 
             const response = await axios.get(url, options);
             setTeams(response.data);
+
+            liberaTela();
         }
 
         async function getParticipants() {
+            bloqueiaTela();
+
             const {url, options} = ACTIVITY_GET_PARTICIPANTS(activity_id, token);
             const response = await axios.get(url, options);
 
@@ -69,6 +76,8 @@ const ActivityAddParticipants = () => {
             }
 
             setPessoasAtividade(participantes);
+
+            liberaTela();
         }
 
         let select = document.getElementById("type");
@@ -84,12 +93,14 @@ const ActivityAddParticipants = () => {
     useEffect(() => {
         let select = document.getElementById("team");
         teams.map(team => {
-            let option = new Option(team.name+" ("+team.year+")", team.id);
+            let option = new Option(team.name + " (" + team.year + ")", team.id);
             select.add(option);
         });
     }, [teams]);
 
     async function filtraPessoas() {
+        bloqueiaTela();
+
         let getParamentes = PERSON_FILTER(
             {
                 name: nameFiltro,
@@ -100,7 +111,7 @@ const ActivityAddParticipants = () => {
 
         if (teamFiltro > 0) {
             getParamentes = TEAM_FILTER_STUDENTS(teamFiltro,
-                { name: nameFiltro },
+                {name: nameFiltro},
                 token
             );
         }
@@ -122,6 +133,8 @@ const ActivityAddParticipants = () => {
         }
 
         setPessoasFiltro(dados);
+
+        liberaTela();
     }
 
     function addPessoa(id) {
@@ -165,7 +178,7 @@ const ActivityAddParticipants = () => {
 
         return false;
     }
-    
+
     function formataCPF(cpf) {
         return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
     }
@@ -180,6 +193,8 @@ const ActivityAddParticipants = () => {
 
     async function handleSubmit(event) {
         event.preventDefault();
+        bloqueiaTela();
+
         const {url, body, options} = ACTIVITY_POST_PARTICIPANT(activity_id, {
             participants: pessoasAtividade
         }, userLogged, token);
@@ -197,21 +212,23 @@ const ActivityAddParticipants = () => {
                 navigate("/conta/activities/participants/?activity=" + activity_id + "&name=" + activity_name);
             }
         }
+
+        liberaTela();
     }
 
     async function modalError() {
         if (Object.keys(objErros).length > 0) {
-          await Alert(
-            objErros.erros.map((val, key) => (
-              <li key={key}>
-                <Error error={val} />
-              </li>
-            )),
-            objErros.msg
-          );
-          setObjErros("");
+            await Alert(
+                objErros.erros.map((val, key) => (
+                    <li key={key}>
+                        <Error error={val}/>
+                    </li>
+                )),
+                objErros.msg
+            );
+            setObjErros("");
         }
-      }
+    }
 
     return (
         <section className="animeLeft">
@@ -227,13 +244,13 @@ const ActivityAddParticipants = () => {
                 </div>
 
                 <div className="container20">
-                    <Select label="Tipo" name="type" primeiraOpcao={{id:0,name:":: TODOS ::"}} onChange={(e) => {
+                    <Select label="Tipo" name="type" primeiraOpcao={{id: 0, name: ":: TODOS ::"}} onChange={(e) => {
                         setTypeFiltro(e.target.value);
                     }}/>
                 </div>
 
                 <div className="container20">
-                    <Select label="Turma" name="team" primeiraOpcao={{id:0,name:":: TODAS ::"}} onChange={(e) => {
+                    <Select label="Turma" name="team" primeiraOpcao={{id: 0, name: ":: TODAS ::"}} onChange={(e) => {
                         setTeamFiltro(e.target.value);
                     }}/>
                 </div>

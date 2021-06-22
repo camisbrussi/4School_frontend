@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Input from "../Forms/Input";
 import Button from "../Forms/Button";
 import Error from "../Helper/Error";
-import { UserContext } from '../../Contexts/UserContext';
+import {UserContext} from '../../Contexts/UserContext';
 import useFetch from "../../Hooks/useFetch";
 import {useNavigate} from "react-router-dom";
 
@@ -11,6 +11,7 @@ import axios from "axios";
 import {STUDENT_FILTER} from "../../API/Api_Student";
 import {RiAddBoxFill} from "react-icons/all";
 import {FaWindowClose} from "react-icons/fa";
+import {bloqueiaTela, liberaTela} from "../Helper/Functions";
 
 const TeamStudentsAdd = () => {
     const [nameFiltro, setNameFiltro] = useState("");
@@ -21,7 +22,7 @@ const TeamStudentsAdd = () => {
     const [alunosTurma, setAlunosTurma] = useState([]);
 
     const [objErros, setObjErros] = useState({});
-    const { userLogged, token } = React.useContext(UserContext);
+    const {userLogged, token} = React.useContext(UserContext);
 
     const team_id = new URL(window.location.href).searchParams.get("team");
     const team_name = new URL(window.location.href).searchParams.get("name");
@@ -33,16 +34,22 @@ const TeamStudentsAdd = () => {
     //- busca os alunos que ja estao vinculados com a turma
     useEffect(() => {
         async function getStudents() {
-            const { url, options } = TEAM_GET_STUDENTS(new URL(window.location.href).searchParams.get("team"), token);
-            const response = await axios.get(url, options);
+            bloqueiaTela();
 
+            const {url, options} = TEAM_GET_STUDENTS(new URL(window.location.href).searchParams.get("team"), token);
+            const response = await axios.get(url, options);
             setAlunosTurma(response.data);
+
+            liberaTela();
         }
-        if(Object.keys(token).length > 0) getStudents();
-        
+
+        if (Object.keys(token).length > 0) getStudents();
+
     }, [token]);
 
     async function filtraEstudantes() {
+        bloqueiaTela();
+
         const token = window.localStorage.getItem("token");
         const {url, options} = STUDENT_FILTER(
             {
@@ -56,9 +63,11 @@ const TeamStudentsAdd = () => {
 
         const response = await axios.get(url, options);
         setAlunosFiltro(response.data);
+
+        liberaTela();
     }
 
-    function addAluno(id){
+    function addAluno(id) {
         if (id <= 0 || !alunosFiltro.length)
             return;
 
@@ -80,14 +89,14 @@ const TeamStudentsAdd = () => {
         for (let i = 0; i < alunosTurma.length; i++) {
             if (alunosTurma[i].id === id) {
                 let alunos = [...alunosTurma];
-                alunos.splice(i,1);
+                alunos.splice(i, 1);
                 setAlunosTurma(alunos);
                 break;
             }
         }
     }
 
-    function isAlunoInTurma(id){
+    function isAlunoInTurma(id) {
         if (!alunosTurma.length)
             return false;
 
@@ -109,7 +118,7 @@ const TeamStudentsAdd = () => {
     }
 
     function ordernarAlunosTurma(alunos) {
-        alunos.sort(function(a,b) {
+        alunos.sort(function (a, b) {
             return a.person.name < b.person.name ? -1 : a.person.name > b.person.name ? 1 : 0;
         });
 
@@ -118,9 +127,10 @@ const TeamStudentsAdd = () => {
 
     async function handleSubmit(event) {
         event.preventDefault();
+        bloqueiaTela();
 
         const token = window.localStorage.getItem("token");
-        const {url, body, options} = TEAM_POST_STUDENTS(team_id,{students:alunosTurma}, userLogged, token);
+        const {url, body, options} = TEAM_POST_STUDENTS(team_id, {students: alunosTurma}, userLogged, token);
 
         const response = await axios.post(url, body, options);
         //console.log(response);
@@ -135,6 +145,8 @@ const TeamStudentsAdd = () => {
                 navigate("/conta/teams");
             }
         }
+
+        liberaTela();
     }
 
     return (
@@ -145,13 +157,19 @@ const TeamStudentsAdd = () => {
                 <h3 className="mb-5">Filtro de Alunos</h3>
 
                 <div className="container40">
-                    <Input label="Nome" type="text" onChange={(e) => { setNameFiltro(e.target.value) }}/>
+                    <Input label="Nome" type="text" onChange={(e) => {
+                        setNameFiltro(e.target.value)
+                    }}/>
                 </div>
                 <div className="container20">
-                    <Input label="CPF" type="text" onChange={(e) => { setCpfFiltro(e.target.value) }}/>
+                    <Input label="CPF" type="text" onChange={(e) => {
+                        setCpfFiltro(e.target.value)
+                    }}/>
                 </div>
                 <div className="container20">
-                    <Input label="Ano Nascimento" type="text" onChange={(e) => { setAnoFiltro(e.target.value) }}/>
+                    <Input label="Ano Nascimento" type="text" onChange={(e) => {
+                        setAnoFiltro(e.target.value)
+                    }}/>
                 </div>
                 <div className="container20">
                     <label>&nbsp;</label>
@@ -163,27 +181,29 @@ const TeamStudentsAdd = () => {
                 <div className="container50 mb-30">
                     <h3 className="mb-5">Estudantes filtrados</h3>
                     {alunosFiltro.length ? (
-                        <table>
-                            <thead>
+                            <table>
+                                <thead>
                                 <tr>
                                     <th>Nome</th>
                                     <th>CPF</th>
                                     <th>Nascimento</th>
                                     <th></th>
                                 </tr>
-                            </thead>
-                            <tbody>
-                            {alunosFiltro.map(aluno => (
-                                <tr key={aluno.id}>
-                                    <td>{aluno.person.name}</td>
-                                    <td>{formataCPF(aluno.person.cpf)}</td>
-                                    <td>{formataData(aluno.person.birth_date)}</td>
-                                    <td><RiAddBoxFill className="cursor-pointer" onClick={() => {addAluno(aluno.id)}} size={16} style={{color: 'green'}}/></td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>)
-                     : ("Nenhum aluno encontrado")}
+                                </thead>
+                                <tbody>
+                                {alunosFiltro.map(aluno => (
+                                    <tr key={aluno.id}>
+                                        <td>{aluno.person.name}</td>
+                                        <td>{formataCPF(aluno.person.cpf)}</td>
+                                        <td>{formataData(aluno.person.birth_date)}</td>
+                                        <td><RiAddBoxFill className="cursor-pointer" onClick={() => {
+                                            addAluno(aluno.id)
+                                        }} size={16} style={{color: 'green'}}/></td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>)
+                        : ("Nenhum aluno encontrado")}
                 </div>
 
                 <div className="container50 mb-30">
@@ -205,7 +225,9 @@ const TeamStudentsAdd = () => {
                                         <td>{formataCPF(aluno.person.cpf)}</td>
                                         <td>{formataData(aluno.person.birth_date)}</td>
                                         <td>
-                                            <FaWindowClose onClick={() => {removeAluno(aluno.id)}} className="cursor-pointer" size={16} style={{color: 'red'}}/>
+                                            <FaWindowClose onClick={() => {
+                                                removeAluno(aluno.id)
+                                            }} className="cursor-pointer" size={16} style={{color: 'red'}}/>
                                         </td>
                                     </tr>
                                 ))}
@@ -220,11 +242,11 @@ const TeamStudentsAdd = () => {
                 <Error error={error && ""}/>
                 {
                     Object.keys(objErros).length > 0 ?
-                    (
-                        <>
-                            <b><Error error={objErros.msg}/></b>
-                            {objErros.erros.map((val, key) => (<li key={key}><Error error={val}/></li>))}
-                        </>
+                        (
+                            <>
+                                <b><Error error={objErros.msg}/></b>
+                                {objErros.erros.map((val, key) => (<li key={key}><Error error={val}/></li>))}
+                            </>
                         ) : ""
                 }
             </div>

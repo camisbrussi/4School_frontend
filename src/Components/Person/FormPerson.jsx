@@ -10,6 +10,7 @@ import {UserContext} from '../../Contexts/UserContext';
 import {Alert} from 'react-st-modal';
 import {CITY_GET} from '../../API/Api_Address';
 import axios from 'axios';
+import {bloqueiaTela, formataFone, liberaTela} from "../Helper/Functions";
 
 
 function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
@@ -29,6 +30,8 @@ function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
     const [idCity, setIdCity] = useState(0);
     const [cities, setCities] = useState(dados.city ?? []);
     const [isActive, setIsActive] = useState(dados.isActive ?? false);
+
+    const [mask, setMask] = useState("(99) 9 9999-9999");
 
     useEffect(() => {
         setCep(dados.cep ?? '');
@@ -106,6 +109,7 @@ function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
     }
 
     async function searchCep(value) {
+        bloqueiaTela();
 
         var cep = value.replace(/\D/g, '');
         if (cep !== '') {
@@ -139,6 +143,8 @@ function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
         } else {
             limpa_formulário_cep();
         }
+
+        liberaTela();
     }
 
     async function modalError() {
@@ -308,23 +314,27 @@ function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
                     )}
 
                     <div style={{width: '100%', float: 'left'}}>
-                        <div className="container50">
+                        <label className="container100 pb-05rem">Número ( Para salvar o telefone é necessário clicar em Add fone)</label>
+                        <div className="container15">
+                            <label>
+                                <input type="radio" className="d-inline-block" name="tipoFone" onClick={() => {setMask("(99) 9 9999-9999")}} defaultChecked={true}/> Celular<br/>
+                            </label>
+                            <label>
+                                <input type="radio" className="d-inline-block" name="tipoFone" onClick={() => {setMask("(99) 9999-9999")}}/> Telefone
+                            </label>
+                        </div>
+
+                        <div className="container25">
                             <InputMask
-                                label="Número ( Para salvar o telefone é necessário clicar em Add fone) "
                                 type="text"
                                 name="number"
                                 id="number"
-                                mask="(99) 9 9999-9999"
+                                mask={mask}
                             />
                         </div>
-                        <div style={{width: '25%', float: 'left'}}>
+                        <div className="container25">
                             <div className={styles.checkbox}>
-                                <label style={{width: '100%', float: 'left', margin: 0}}>
-                                    &nbsp;
-                                </label>
-                                <label style={{width: '100%', float: 'left', margin: 0}}>
-                                    &nbsp;
-                                </label>
+                                <label className="container100">&nbsp;</label>
                                 <Input
                                     label="É WhatsApp?"
                                     type="checkbox"
@@ -333,21 +343,19 @@ function FormPerson({titulo, handleSubmit, dados, addPassword, addCheckAtivo}) {
                                 />
                             </div>
                         </div>
-                        <div style={{width: '25%', float: 'left'}}>
-                            <label style={{width: '100%', float: 'left', margin: 0}}>
-                                &nbsp;
-                            </label>
-                            <Button onClick={addPhone}>Add fone</Button>
+                        <div className="container25">
+                            <Button style={{margin:"0.2rem"}} onClick={addPhone}>Add fone</Button>
                         </div>
                     </div>
 
                     <div style={{width: '100%', float: 'left'}}>
                         {phones.map((v, k) => {
+                            let fone = formataFone(v.number);
                             return (
                                 <CardPhone
                                     key={k}
                                     indice={k}
-                                    number={v.number}
+                                    number={fone}
                                     is_whatsapp={v.is_whatsapp}
                                     removerPhone={removerPhone}
                                 />

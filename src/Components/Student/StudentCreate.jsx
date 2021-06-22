@@ -9,6 +9,7 @@ import FormPerson from '../Person/FormPerson';
 import {Alert} from 'react-st-modal';
 import Error from '../Helper/Error';
 import {RESPONSIBLE_SHOW} from "../../API/Api_Responsible";
+import {bloqueiaTela, liberaTela} from "../Helper/Functions";
 
 const StudentCreate = () => {
     const navigate = useNavigate();
@@ -28,6 +29,8 @@ const StudentCreate = () => {
 
     useEffect(() => {
         async function getResponsibleData() {
+            bloqueiaTela();
+
             const {url, options} = RESPONSIBLE_SHOW(responsible_id, token);
             const response = await axios.get(url, options);
 
@@ -49,6 +52,7 @@ const StudentCreate = () => {
             }
 
             setFormData({address, number, complement, district, cep, idCity});
+            liberaTela();
         }
 
         getResponsibleData();
@@ -56,6 +60,7 @@ const StudentCreate = () => {
 
     async function handleSubmit(event, data) {
         event.preventDefault();
+        bloqueiaTela();
 
         data.responsible_id = responsible_id;
 
@@ -74,6 +79,8 @@ const StudentCreate = () => {
                 if (response.statusText === 'OK') navigate('/conta/students');
             }
         }
+
+        liberaTela();
     }
 
     async function modalError() {

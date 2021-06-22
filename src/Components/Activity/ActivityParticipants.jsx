@@ -14,7 +14,7 @@ import {
     ACTIVITY_GET_PARTICIPANTS,
     ACTIVITY_SHOW, CONFIRM_PARTICIPATION,
 } from '../../API/Api_Activity';
-import {formata_cpf, formata_data} from '../Helper/Functions';
+import {bloqueiaTela, formata_cpf, formata_data, liberaTela} from '../Helper/Functions';
 import axios from 'axios';
 
 import DataTable from 'react-data-table-component';
@@ -36,6 +36,8 @@ const ActivityParticipants = () => {
 
     useEffect(() => {
         async function getData() {
+            bloqueiaTela();
+
             const {url, options} = ACTIVITY_GET_PARTICIPANTS(activity_id, token);
             const response = await axios.get(url, options);
 
@@ -44,14 +46,18 @@ const ActivityParticipants = () => {
                 participantes[i].person.cpfFormatado = formata_cpf(participantes[i].person.cpf);
             }
             setParticipants(participantes);
+
+            liberaTela();
         }
 
         async function getEvent() {
+            bloqueiaTela();
             const {url, options} = ACTIVITY_SHOW(activity_id, token);
             const response = await axios.get(url, options);
             // console.log(response.data);
             setEvent(response.data);
             setActivityName(response.data.name);
+            liberaTela();
         }
 
         getData();
@@ -64,6 +70,8 @@ const ActivityParticipants = () => {
             'Remover participante'
         );
         if (result) {
+            bloqueiaTela();
+
             const {url, options} = ACTIVITY_DELETE_SUBSCRIPTION(
                 id,
                 userLogged,
@@ -81,10 +89,14 @@ const ActivityParticipants = () => {
                     }
                 }
             }
+
+            liberaTela();
         }
     }
 
     function generateReport() {
+        bloqueiaTela();
+
         const doc = new jsPDF();
         const tableColumn = ['Nome', 'CPF', 'Descrição'];
         const tableRows = [];
@@ -101,11 +113,13 @@ const ActivityParticipants = () => {
         const date = formata_data(event.start);
         doc.text(`Evento: ${event.name}  Data: ${date}`, 14, 15);
         doc.save(`report_${event.name}.pdf`);
+
+        liberaTela();
     }
 
     async function modalConfirmarParicipacao(idInscricao, nroTickets) {
         const data = await CustomDialog(
-            <ModalDialog tickets={nroTickets} />,
+            <ModalDialog tickets={nroTickets}/>,
             {
                 title: 'Confirme a quantidade de participantes!',
                 showCloseIcon: true,
@@ -113,7 +127,9 @@ const ActivityParticipants = () => {
         );
 
         if (data) {
-            const { url, body, options } = CONFIRM_PARTICIPATION(idInscricao, {
+            bloqueiaTela();
+
+            const {url, body, options} = CONFIRM_PARTICIPATION(idInscricao, {
                 number_participation: data,
             }, userLogged, token);
             const response = await axios.put(url, body, options, userLogged);
@@ -123,7 +139,7 @@ const ActivityParticipants = () => {
                     response.data.erros !== undefined &&
                     response.data.erros.length
                 ) {
-                    let erros = { msg: response.data.success, erros: [] };
+                    let erros = {msg: response.data.success, erros: []};
                     for (let i = 0; i < response.data.erros.length; i++) {
                         erros.erros.push(response.data.erros[i]);
                     }
@@ -133,6 +149,8 @@ const ActivityParticipants = () => {
                     window.location.reload(false);
                 }
             }
+
+            liberaTela();
         }
     }
 
@@ -141,7 +159,7 @@ const ActivityParticipants = () => {
             await Alert(
                 objErros.erros.map((val, key) => (
                     <li key={key}>
-                        <Error error={val} />
+                        <Error error={val}/>
                     </li>
                 )),
                 objErros.msg
@@ -197,8 +215,8 @@ const ActivityParticipants = () => {
                         return ("");
                     }
 
-                    let dataInicioEvento = new Date(event.start).setHours(0,0,0,0);
-                    let dataAtual = new Date().setHours(0,0,0,0);
+                    let dataInicioEvento = new Date(event.start).setHours(0, 0, 0, 0);
+                    let dataAtual = new Date().setHours(0, 0, 0, 0);
 
                     let permiteConfirmarParticipacao = dataAtual >= dataInicioEvento && new Date() <= new Date(event.end);
 
@@ -208,20 +226,26 @@ const ActivityParticipants = () => {
                                 <>
                                     {participant.number_participation > 0 ? (
                                         <button title="Editar participação" className="cursor-pointer"
-                                                onClick={() => { modalConfirmarParicipacao(participant.id, participant.number_tickets) }}>
-                                            <FaEdit size={16} style={{ color: 'blue' }} />
+                                                onClick={() => {
+                                                    modalConfirmarParicipacao(participant.id, participant.number_tickets)
+                                                }}>
+                                            <FaEdit size={16} style={{color: 'blue'}}/>
                                         </button>
                                     ) : (
                                         <button title="Confirmar participação" className="cursor-pointer"
-                                                onClick={() => { modalConfirmarParicipacao(participant.id, participant.number_tickets) }}>
-                                            <FaCheck size={16} style={{ color: 'green' }}/>
+                                                onClick={() => {
+                                                    modalConfirmarParicipacao(participant.id, participant.number_tickets)
+                                                }}>
+                                            <FaCheck size={16} style={{color: 'green'}}/>
                                         </button>
                                     )}
                                 </>
                             ) : ("")}
 
                             <button title="Remover" className="cursor-pointer"
-                                    onClick={() => { removerParticipante(participant.id); }}>
+                                    onClick={() => {
+                                        removerParticipante(participant.id);
+                                    }}>
                                 <FaWindowClose size={16} style={{color: 'red'}}/>
                             </button>
                         </>

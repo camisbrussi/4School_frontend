@@ -12,12 +12,13 @@ import {RiAddBoxFill} from "react-icons/all";
 import {FaWindowClose} from "react-icons/fa";
 import {UserContext} from '../../Contexts/UserContext';
 import {SENDMAIL_POST} from "../../API/Api_SendMail";
-import {TEAM_FILTER, TEAM_FILTER_STUDENTS} from "../../API/Api_Team";
+import {TEAM_FILTER, TEAM_FILTER_STUDENTS, TEAM_GET_STUDENTS} from "../../API/Api_Team";
 import {PERSON_FILTER} from "../../API/Api_Person";
 
 import {ACTIVITY_GET_PARTICIPANTS} from "../../API/Api_Activity";
 import axios from "axios";
 import styles from "../Person/Person.module.css";
+import {bloqueiaTela, liberaTela} from "../Helper/Functions";
 
 const SendMailCreate = () => {
     const [idPersons, setIdPerson] = useState([]);
@@ -45,10 +46,13 @@ const SendMailCreate = () => {
 
     useEffect(() => {
         async function getTeams() {
-            const {url, options} = TEAM_FILTER({status_id: 1}, token);
+            bloqueiaTela();
 
+            const {url, options} = TEAM_FILTER({status_id: 1}, token);
             const response = await axios.get(url, options);
             setTeams(response.data);
+
+            liberaTela();
         }
 
         let select = document.getElementById("type");
@@ -69,24 +73,15 @@ const SendMailCreate = () => {
     }, [teams]);
 
     async function filtraPessoas() {
-        let getParamentes = PERSON_FILTER(
-            {
-                name: nameFiltro,
-                type_id: typeFiltro,
-            },
-            token
-        );
+        bloqueiaTela();
+
+        let getParamentes = PERSON_FILTER({name: nameFiltro,type_id: typeFiltro},token);
 
         if (teamFiltro > 0) {
-            getParamentes = TEAM_FILTER_STUDENTS(
-                teamFiltro,
-                {name: nameFiltro},
-                token
-            );
+            getParamentes = TEAM_FILTER_STUDENTS(teamFiltro,{name: nameFiltro}, token);
         }
 
         let {url, options} = getParamentes;
-
         const response = await axios.get(url, options);
 
         let dados = {};
@@ -102,12 +97,16 @@ const SendMailCreate = () => {
         }
 
         setPessoasFiltro(dados);
+
+        liberaTela();
     }
 
     const activity_id = new URL(window.location.href).searchParams.get("activity");
+    const team_id = new URL(window.location.href).searchParams.get("team");
 
     useEffect(() => {
-        async function getData() {
+        async function getActivityData() {
+            bloqueiaTela();
 
             const {url, options} = ACTIVITY_GET_PARTICIPANTS(activity_id, token);
             const response = await axios.get(url, options);
@@ -118,9 +117,32 @@ const SendMailCreate = () => {
                 pessoas.push(inscricoes[i].person)
             }
             setIdPerson(pessoas)
+
+            liberaTela();
         }
 
-        getData();
+        async function getTeamData() {
+            bloqueiaTela();
+
+            const {url, options} = TEAM_GET_STUDENTS(team_id, token);
+            const response = await axios.get(url, options);
+            const alunos = response.data;
+            const responsaveis = [];
+
+            for(let i = 0; i < alunos.length; i++){
+                responsaveis.push(alunos[i].responsible.person);
+            }
+
+            setIdPerson(responsaveis);
+
+            liberaTela();
+        }
+
+        if (activity_id){
+            getActivityData();
+        } else if (team_id) {
+            getTeamData();
+        }
     }, [token]);
 
     function addPessoa(id) {
@@ -157,6 +179,8 @@ const SendMailCreate = () => {
 
     async function handleSubmit(event) {
         event.preventDefault();
+        bloqueiaTela();
+
         const {url, body, options} = SENDMAIL_POST({
             message: message.value,
             send_email: document.getElementById("send_email").checked,
@@ -178,6 +202,8 @@ const SendMailCreate = () => {
                 navigate("/conta/sendmail");
             }
         }
+
+        liberaTela();
     }
 
     async function modalError() {

@@ -131,7 +131,7 @@ export function PARTICIPANT_GET_ACTIVITIES(userLogged, token) {
 
 export function PARTICIPANT_GET_ACTIVITIES_FILTER(body, userLogged, token) {
   return {
-    url: API_URL + '/activities/filter/subscription' + userLogged.id,
+    url: API_URL + '/activities/filter/subscriptions/' + userLogged.id,
     options: {
       headers: {
         'Content-Type': 'application/json',
