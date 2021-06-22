@@ -130,7 +130,9 @@ const SendMailCreate = () => {
             const responsaveis = [];
 
             for(let i = 0; i < alunos.length; i++){
-                responsaveis.push(alunos[i].responsible.person);
+                if (!isResponsibleInArray(responsaveis,alunos[i].responsible.person)) {
+                    responsaveis.push(alunos[i].responsible.person);
+                }
             }
 
             setIdPerson(responsaveis);
@@ -144,6 +146,16 @@ const SendMailCreate = () => {
             getTeamData();
         }
     }, [token]);
+
+    function isResponsibleInArray(array, responsible) {
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].id == responsible.id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     function addPessoa(id) {
         if (id <= 0 || !pessoasFiltro.length) return;

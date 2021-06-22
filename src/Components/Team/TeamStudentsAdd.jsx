@@ -11,7 +11,7 @@ import axios from "axios";
 import {STUDENT_FILTER} from "../../API/Api_Student";
 import {RiAddBoxFill} from "react-icons/all";
 import {FaWindowClose} from "react-icons/fa";
-import {bloqueiaTela, liberaTela} from "../Helper/Functions";
+import {bloqueiaTela, formata_cpf, liberaTela} from "../Helper/Functions";
 
 const TeamStudentsAdd = () => {
     const [nameFiltro, setNameFiltro] = useState("");
@@ -113,10 +113,6 @@ const TeamStudentsAdd = () => {
         return dados[2] + "/" + dados[1] + "/" + dados[0];
     }
 
-    function formataCPF(cpf) {
-        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-    }
-
     function ordernarAlunosTurma(alunos) {
         alunos.sort(function (a, b) {
             return a.person.name < b.person.name ? -1 : a.person.name > b.person.name ? 1 : 0;
@@ -194,7 +190,7 @@ const TeamStudentsAdd = () => {
                                 {alunosFiltro.map(aluno => (
                                     <tr key={aluno.id}>
                                         <td>{aluno.person.name}</td>
-                                        <td>{formataCPF(aluno.person.cpf)}</td>
+                                        <td>{formata_cpf(aluno.person.cpf)}</td>
                                         <td>{formataData(aluno.person.birth_date)}</td>
                                         <td><RiAddBoxFill className="cursor-pointer" onClick={() => {
                                             addAluno(aluno.id)
@@ -222,7 +218,7 @@ const TeamStudentsAdd = () => {
                                 {alunosTurma.map(aluno => (
                                     <tr key={aluno.id}>
                                         <td>{aluno.person.name}</td>
-                                        <td>{formataCPF(aluno.person.cpf)}</td>
+                                        <td>{formata_cpf(aluno.person.cpf)}</td>
                                         <td>{formataData(aluno.person.birth_date)}</td>
                                         <td>
                                             <FaWindowClose onClick={() => {

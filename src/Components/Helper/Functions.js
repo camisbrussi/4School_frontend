@@ -37,6 +37,9 @@ export const formata_data_hora_para_datetime = (datahora) => {
 }
 
 export const formata_cpf = (cpf) => {
+    if (cpf == null)
+        return "";
+
     cpf = cpf.replace(/[^\d]/g, "");
     return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 }
