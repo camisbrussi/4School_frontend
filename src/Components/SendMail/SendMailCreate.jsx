@@ -130,7 +130,7 @@ const SendMailCreate = () => {
             const responsaveis = [];
 
             for(let i = 0; i < alunos.length; i++){
-                if (!isResponsibleInArray(responsaveis,alunos[i].responsible.person)) {
+                if (!isPersonInArray(responsaveis,alunos[i].responsible.person)) {
                     responsaveis.push(alunos[i].responsible.person);
                 }
             }
@@ -147,7 +147,7 @@ const SendMailCreate = () => {
         }
     }, [token]);
 
-    function isResponsibleInArray(array, responsible) {
+    function isPersonInArray(array, responsible) {
         for (let i = 0; i < array.length; i++) {
             if (array[i].id == responsible.id) {
                 return true;
@@ -162,6 +162,10 @@ const SendMailCreate = () => {
 
         pessoasFiltro.map((pessoa) => {
             if (pessoa.id === id) {
+                if (isPersonInArray(idPersons, pessoa)) {
+                    return;
+                }
+
                 let pessoas = [...idPersons];
                 pessoa.inActivity = false;
                 pessoas.push(pessoa);
@@ -173,13 +177,13 @@ const SendMailCreate = () => {
     }
 
     function removePessoa(id) {
-        if (id <= 0 || !pessoasAtividade.length) return;
+        if (id <= 0 || !idPersons.length) return;
 
-        for (let i = 0; i < pessoasAtividade.length; i++) {
-            if (pessoasAtividade[i].id === id) {
-                let professores = [...pessoasAtividade];
-                professores.splice(i, 1);
-                setPessoasAtividade(professores);
+        for (let i = 0; i < idPersons.length; i++) {
+            if (idPersons[i].id === id) {
+                let pessoas = [...idPersons];
+                pessoas.splice(i, 1);
+                setIdPerson(pessoas);
                 break;
             }
         }
